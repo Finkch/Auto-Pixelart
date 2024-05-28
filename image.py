@@ -9,7 +9,7 @@ class Image():
         self.palette_size   = None
         self.width          = None
 
-        self.image          = None
+        self.source         = None
 
         self.colours        = None
 
@@ -21,7 +21,7 @@ class Image():
         self.file = file
         self.path = f'PUT IMAGES HERE/{file}'
 
-        self.image = Pim.open(self.path)
+        self.source = Pim.open(self.path)
 
     def set_palette_size(self, size: int | str) -> None:
         if size in 'd':
