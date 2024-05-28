@@ -55,7 +55,19 @@ def choose_resolution(file):
 
 # Prompts user for whether to process another image
 def choose_continue(file):
-    pass
+    
+    preamble = 'Process another file?'
+
+    valid_choices = ['y', 'n']
+
+    prompts = [
+        '[y]\tYes',
+        '[n]\tNo'
+        ]
+    
+    choice = prompt(preamble, valid_choices, prompts)
+
+    return choice in 'y'
 
 
 # Prompts user, repeating prompt until given a valid input
