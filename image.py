@@ -4,7 +4,7 @@
 from PIL import Image as Pim
 
 class Image():
-    def __init__(self):
+    def __init__(self) -> None:
         self.file           = None
         self.palette_size   = None
         self.width          = None
@@ -17,13 +17,13 @@ class Image():
 
 
     # A few setters
-    def set_file(self, file):
+    def set_file(self, file: str) -> None:
         self.file = file
         self.path = f'PUT IMAGES HERE/{file}'
 
         self.image = Pim.open(self.path)
 
-    def set_palette_size(self, size):
+    def set_palette_size(self, size: int | str) -> None:
         if size in 'd':
             self.palette_size = 8
         elif size in 'a':
@@ -31,7 +31,7 @@ class Image():
         else:
             self.palette_size = size
 
-    def set_resolution(self, width):
+    def set_resolution(self, width: int | str) -> None:
         self.width = width
 
         self.height = 0 # TODO
