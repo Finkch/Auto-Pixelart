@@ -1,4 +1,4 @@
-# Reads files and images
+# Gets user input
 
 from os import listdir
 
