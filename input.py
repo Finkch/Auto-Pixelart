@@ -1,9 +1,10 @@
 # Gets user input
 
 from os import listdir
+from image import Image
 
 # Obtains user's choice for file to process
-def choose_file(file):
+def choose_file(file: Image):
 
     # Obtains a list of files in the input directory
     files = listdir('PUT IMAGES HERE')
@@ -16,11 +17,11 @@ def choose_file(file):
         )
 
     # Returns the file choses
-    return files[int(choice) - 1]
+    file.set_file(files[int(choice) - 1])
 
 
 # Prompts user for desired number of colours in the palette
-def choose_palette_size(file):
+def choose_palette_size(file: Image):
 
     preamble = 'Choose a palette size, the number of colours that will be in the pixel art:'
 
@@ -35,12 +36,12 @@ def choose_palette_size(file):
 
     choice = prompt(preamble, valid_choices, prompts)
 
-    return choice
+    file.set_palette_size(choice)
 
 
 
 # Prompts user for desired resolution of pixel art
-def choose_resolution(file):
+def choose_resolution(file: Image):
     
     preamble = 'Choose the pixel width (note that aspect ratio will be preserved):'
 
@@ -50,11 +51,11 @@ def choose_resolution(file):
 
     choice = prompt(preamble, valid_choices, prompts)
 
-    return choice
+    file.set_resolution(choice)
 
 
 # Prompts user for whether to process another image
-def choose_continue(file):
+def choose_continue():
     
     preamble = 'Process another file?'
 

@@ -1,11 +1,15 @@
 # Class that represents an image
 # This class contains PIL.Image
 
+from PIL import Image as Pim
+
 class Image():
     def __init__(self):
         self.file           = None
         self.palette_size   = None
         self.width          = None
+
+        self.image          = None
 
         self.colours        = None
 
@@ -16,6 +20,8 @@ class Image():
     def set_file(self, file):
         self.file = file
         self.path = f'PUT IMAGES HERE/{file}'
+
+        self.image = Pim.open(self.path)
 
     def set_palette_size(self, size):
         if size in 'd':
