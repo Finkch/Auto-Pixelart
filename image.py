@@ -29,9 +29,9 @@ class Image():
         elif size in 'a':
             self.palette_size = 1 # TODO
         else:
-            self.palette_size = size
+            self.palette_size = int(size)
 
     def set_resolution(self, width: int | str) -> None:
-        self.width = width
+        self.width = int(width)
 
         self.height = 0 # TODO
