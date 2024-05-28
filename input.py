@@ -21,7 +21,22 @@ def choose_file(file):
 
 # Prompts user for desired number of colours in the palette
 def choose_palette_size(file):
-    pass
+
+    preamble = 'Choose a palette size, the number of colours that will be in the pixel art:'
+
+    valid_choices = ['a', 'd']
+    valid_choices += [str(i) for i in range(1, 257)]
+    
+    prompts = [
+        '[a]\tAuto',
+        '[d]\tDefault, 8 colours',
+        ' - \tOr enter an integer from 1 to 256'
+    ]
+
+    choice = prompt(preamble, valid_choices, prompts)
+
+    return choice
+
 
 
 # Prompts user for desired resolution of pixel art
@@ -49,5 +64,8 @@ def prompt(preamble, valid_choices, prompts):
 
         # Obtains user input
         choice = input('% ')
+
+    # Adds an extra new line for good measure
+    print()
     
     return choice
