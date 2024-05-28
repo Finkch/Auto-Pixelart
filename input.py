@@ -10,7 +10,7 @@ def choose_file(file):
 
     # Obtains user's choice
     choice = prompt(
-        preamble        = 'Please chooe file to turn into pixel art:',
+        preamble        = 'Choose a file to turn into pixel art:',
         valid_choices   = [str(i + 1) for i in range(len(files))],
         prompts         = [f'[{i + 1}]\t{files[i]}' for i in range(len(files))]
         )
@@ -41,7 +41,16 @@ def choose_palette_size(file):
 
 # Prompts user for desired resolution of pixel art
 def choose_resolution(file):
-    pass
+    
+    preamble = 'Choose the pixel width (note that aspect ratio will be preserved):'
+
+    valid_choices = [str(i) for i in range(1, 2049)]
+
+    prompts = [' - \t Enter a number from 1 to 2048']
+
+    choice = prompt(preamble, valid_choices, prompts)
+
+    return choice
 
 
 # Prompts user for whether to process another image
