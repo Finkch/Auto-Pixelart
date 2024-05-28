@@ -1,6 +1,9 @@
 # Items in the `PUT IMAGES HERE` directory
 PUT IMAGES HERE/*
 
+# Don't include VSCode stuff
+.vscode
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
