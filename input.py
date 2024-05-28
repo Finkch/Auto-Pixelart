@@ -3,7 +3,7 @@
 from os import listdir
 
 # Obtains user's choice for file to process
-def choose_file():
+def choose_file(file):
 
     # Obtains a list of files in the input directory
     files = listdir('PUT IMAGES HERE')
@@ -20,17 +20,17 @@ def choose_file():
 
 
 # Prompts user for desired number of colours in the palette
-def choose_palette_size():
+def choose_palette_size(file):
     pass
 
 
 # Prompts user for desired resolution of pixel art
-def choose_resolution():
+def choose_resolution(file):
     pass
 
 
 # Prompts user for whether to process another image
-def choose_continue():
+def choose_continue(file):
     pass
 
 
