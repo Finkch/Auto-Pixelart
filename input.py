@@ -72,7 +72,7 @@ def choose_continue():
 
 
 # Prompts user, repeating prompt until given a valid input
-def prompt(preamble, valid_choices, prompts):
+def prompt(preamble: str, valid_choices: list[str], prompts: list[str]):
     
     # Defaults choice to be invalid
     choice = None
