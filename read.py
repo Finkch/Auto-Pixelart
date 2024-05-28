@@ -27,3 +27,18 @@ def choose_file():
 
     # Returns the file choses
     return files[int(choice) - 1]
+
+
+# Prompts user for desired number of colours in the palette
+def choose_palette_size():
+    pass
+
+
+# Prompts user for desired resolution of pixel art
+def choose_resolution():
+    pass
+
+
+# Prompts user for whether to process another image
+def choose_continue():
+    pass
