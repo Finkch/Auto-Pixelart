@@ -1,29 +1,79 @@
 # This file is to run tests to determine performance
 
-from time import process_time as timer
+from time import time_ns as timer
+from logger import log
 
 from colour import *
 
 
-
 # This function is used for debugging
 # It's contents change as necessary
-def run_tests(*args):
+def run_count_colours(*args):
     
+    # The image on which the test will run
     image = args[0]
 
+    # Number of trials and whether to print to debugging console
     trials = 10
-    print_individual = False
-    parallels = [1, 2, 4, 8, 16]
+    printout = False
 
-    fxn_args = [image, parallels]
+    # Creates the tests
+    count_colours_tests = Tests(
+        [count_colours_serial, count_colours_parallel, count_colours_multiprocess],
+        ['Serial', 'Thread', 'Multip'],
+        trials = trials,
+        printout = printout
+    )
 
-    serial = Test(count_colours_serial,         "Serial", trials=trials, print_individual=print_individual)
-    thread = Test(count_colours_two,            "Thread", trials=trials, print_individual=print_individual)
-    multip = Test(count_colours_multiprocess,   "Multip", trials=trials, print_individual=print_individual)
+    # Runs the tests
+    results = count_colours_tests(image)
 
-    serial([image])
+    # Logs the results in the file `colours.txt`
+    log(results, 'colours')
 
+    # Notifies user
+    print('Colour count test finished')
+    
+
+
+
+# This class contains several functions to test against each other
+class Tests:
+    def __init__(self, fxns, names, trials = 10, printout = False) -> None:
+
+        # Creates a test instance for each function supplied
+        self.tests = [Test(fxns[i], names[i], trials=trials, printout=printout)
+                      for i in range(len(fxns))]
+    
+    # Calling this class begins running all tests
+    def __call__(self, *args):
+
+        # Runs tests
+        for test in self.tests:
+            test(*args)
+
+        # Returns the results of the tests
+        return self.get_results()
+
+    # Returns the results as a string
+    def get_results(self):
+        results = []
+
+        # The important stuff goes at the top of the file
+        for test in self.tests:
+            results.append(f'\t-- {test.name} --\n')
+            results.append(test.results())
+            results.append('\n\n')
+
+        # For delimination 
+        results.append(f'\n-------------------------------\n\n')
+
+        # Nitty-gritty goes at the bottom
+        for test in self.tests:
+            results += test.get_results()
+            results.append('\n\n')
+        
+        return results
 
 
 # This class contains the tools to test performance
@@ -34,22 +84,23 @@ class Test:
     ends        = []
 
 
-    def __init__(self, fxn, name, trials = 10, print_individual = False):
-        self.fxn                = fxn
-        self.name               = name
-        self.trials             = trials
+    def __init__(self, fxn, name, trials = 10, printout = False) -> None:
+        self.fxn        = fxn # The function that will be tested
+        self.name       = name
+        self.trials     = trials
 
         # Whether or not to print status during each trial
-        self.print_individual   = print_individual
+        self.printout   = printout
 
     # Calling this function begins a test
-    def __call__(self, *args):
+    def __call__(self, *args) -> None:
 
         # Clears timing lists, in case of multiple consecutive trials
         self.reset()
 
         # Notifies user that the trials have begun
-        self.begin_printout()
+        if self.printout:
+            print(self.begin_printout())
 
         # Run all the trials
         for trial in range(self.trials):
@@ -60,12 +111,13 @@ class Test:
 
             self.end() # Checks time
 
-            # Performs mid-trial printout, if necessary
-            if self.print_individual:
-                self.trial_printout()
+            # Performs mid-trial printout
+            if self.printout:
+                print(self.trial_printout())
 
         # Notifies user of the results and that the test has ended
-        self.end_prinout()
+        if self.printout:
+            print(self.end_prinout())
 
 
     # begin() and end() check the time
@@ -79,19 +131,31 @@ class Test:
 
     # Printouts
     def begin_printout(self):
-        print(f'Being trial of {self.name}!')
+        return f'Being {self.name}:'
 
-    def trial_printout(self):
-        print(f'\t[{len(self.runtimes)}/{self.trials}]\t-\t{self.runtimes[-1]} s')
+    def trial_printout(self, i = -1):
+        if i == -1:
+            return f'\t[{len(self.runtimes)}/{self.trials}]\t-\t{self.runtimes[i] / (10 ** 9)} s'
+        return f'\n\t[{i}/{self.trials}]\t-\t{self.runtimes[i] / (10 ** 9)} s'
 
     def end_prinout(self):
-        print(f'End trial of {self.name}!')
-        self.results()
-        print()
-
+        return f'\nEnd {self.name}.\n{self.results()}\n'
+    
     def results(self):
-        print(f'{self.name} average time:\t{sum(self.runtimes) / len(self.runtimes)} s')
-        print(f'{self.name} real time to run {len(self.runtimes)} trials:\t{self.ends[-1] - self.starts[0]} s')
+        return f'''{self.name} average time:\t\t\t\t{sum(self.runtimes) / len(self.runtimes) / (10 ** 9)} s\n{self.name} real time to run {len(self.runtimes)} trials:\t{(self.ends[-1] - self.starts[0]) / (10 ** 9)} s'''
+    
+    # Returs the results as a list
+    def get_results(self):
+        results = []
+
+        results.append(self.begin_printout())
+
+        for trial in range(self.trials):
+            results.append(self.trial_printout(trial))
+        
+        results.append(self.end_prinout())
+
+        return results
 
 
     # Clears trials times
