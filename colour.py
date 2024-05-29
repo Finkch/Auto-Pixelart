@@ -1,8 +1,10 @@
 # Tracks colour and colour operations
 
 from image import Image
+
 import threading
 from os import cpu_count
+from multiprocessing import Process
 
 from time import process_time as clock
 
@@ -176,3 +178,57 @@ def thread_process_chunk(chunk, results):
         
         # Counts the colour
         results[colour] += 1
+
+
+
+def count_colours_multiprocess(image: Image, process_count = None) -> dict:
+    
+    # Gets the data
+    data = list(image.source.getdata())
+
+    process_results = {}
+    processes = []
+
+    global_results = {}
+
+    # Uses a number of threads equal(-ish) to the number of cores
+    # Makes sure its an even amount of threads
+    if process_count == None:
+        process_count = (cpu_count() // 2) * 2
+
+    # The chunk size
+    chunk_size = int(image.source.height * image.source.width / process_count)
+
+
+    for i in range(process_count):
+
+        # Splits a chunk off the data
+        chunk = data[i * chunk_size : (i + 1) * chunk_size]
+
+        # Gives this process a place to store the results
+        process_results[i] = {}
+
+        process = Process(
+            target = multiprocess_count,
+            args = (chunk, process_results[i])
+        )
+
+        process.start()
+        processes.append(process)
+    
+    for process in processes:
+        process.join()
+
+    
+    # Need to recombine dictionaries here
+
+    return global_results
+
+
+def multiprocess_count(chunk, process_results):
+    for colour in chunk:
+        if colour not in process_results:
+            process_results[colour] = 0
+        process_results[colour] += 1
+
+
