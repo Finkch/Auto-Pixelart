@@ -2,6 +2,30 @@
 
 from time import process_time as timer
 
+from colour import *
+
+
+
+# This function is used for debugging
+# It's contents change as necessary
+def run_tests(*args):
+    
+    image = args[0]
+
+    trials = 10
+    print_individual = False
+    parallels = [1, 2, 4, 8, 16]
+
+    fxn_args = [image, parallels]
+
+    serial = Test(count_colours_serial,         "Serial", trials=trials, print_individual=print_individual)
+    thread = Test(count_colours_two,            "Thread", trials=trials, print_individual=print_individual)
+    multip = Test(count_colours_multiprocess,   "Multip", trials=trials, print_individual=print_individual)
+
+    serial([image])
+
+
+
 # This class contains the tools to test performance
 class Test:
 
