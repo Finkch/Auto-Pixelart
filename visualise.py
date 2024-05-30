@@ -46,21 +46,23 @@ def show_palette(image: Image, choose = weighted_colour):
     
 
     # Gets the width of the palette image
-    # Set a cap on the width
+    # Set constraints on width
     max_width = 2000
-    width = min(len(by_occur), max_width)
+    min_width = 200
+    width = max(min(len(by_occur), max_width), min_width)
     im_width = max(int(width * 1.1), width + 2) # Accounts for very small palettes
 
     # Gets the height of the image
-    height = 500 # The height as seen by a row
+    # Since height depends on width, height is also constrained
+    height = max(int(width / 3), 100)
     row_height = int(height * 1.05)
     im_height = int(len(palettes) * row_height)
 
     # colours per pixel
     # Used for when the image is too small to show all colours
-    cpp = 1
-    if len(by_occur) > width:
-        cpp = len(by_occur) / width
+    #cpp = 1
+    #if len(by_occur) > width:
+    cpp = len(by_occur) / width
 
 
     # Creates a white image, which will be editted to show the palette
@@ -81,7 +83,7 @@ def show_palette(image: Image, choose = weighted_colour):
         for i in range(width):
 
             # Chooses the colour to represent by which is the most occuring
-            colour = palettes[k][i]
+            colour = palettes[k][int(i * cpp)]
             if cpp > 1:
 
                 # Obtains the set of colours to represent in this column
