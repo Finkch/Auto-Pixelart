@@ -5,7 +5,10 @@ from colour import *
 from image import Image
 from PIL import Image as Pim
 
-from performance import run_count_colours
+from visualise import show_palette
+from logger import logger
+
+from performance import *
 
 
 from time import process_time as clock
@@ -41,7 +44,8 @@ def main():
     if test:
         pass
 
-
+    # Shows the plaette of an image
+    show_palette(image)
 
     print('Program end!')
     
