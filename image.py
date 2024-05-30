@@ -35,3 +35,10 @@ class Image():
         self.width = int(width)
 
         self.height = 0 # TODO
+
+    
+    # Brings some PIL.Image methods up to this class
+    def get_colours(self):
+
+        # PIL.Image takes max_colours as an argument
+        return self.source.getcolors(self.source.height * self.source.width)
