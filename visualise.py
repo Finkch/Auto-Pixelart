@@ -10,7 +10,7 @@ from colour import *
 
 
 # Given an image, visualises its palette
-def show_palette(image: Image, use_average = False):
+def show_palette(image: Image, choose = weighted_colour):
 
     # Gets the colours
     colours = sorted(image.get_colours(), reverse = True, key = lambda x : x[0])
@@ -88,10 +88,7 @@ def show_palette(image: Image, use_average = False):
                 sub = palettes[k][int(i * cpp) : int(cpp * (i + 1))]
 
                 # Chooses the most common colour
-                if use_average:
-                    colour = average_colour(sub)
-                else:
-                    colour = common_colour(sub)
+                colour = choose(sub)
 
 
             # Maps the height to be in a reasonable range
