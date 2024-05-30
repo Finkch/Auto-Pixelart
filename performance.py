@@ -2,7 +2,9 @@
 
 from time import time_ns as timer
 from logger import log
-    
+
+
+# Tests are defined below, but above the Tests class
 
 
 
