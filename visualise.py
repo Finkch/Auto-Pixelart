@@ -87,7 +87,8 @@ def show_palette(image: Image, choose = weighted_colour):
                 # Obtains the set of colours to represent in this column
                 sub = palettes[k][int(i * cpp) : int(cpp * (i + 1))]
 
-                # Chooses the most common colour
+                # Chooses a single colour
+                # `choose()` was passed as an argument during the `show_palette()` call!
                 colour = choose(sub)
 
 
