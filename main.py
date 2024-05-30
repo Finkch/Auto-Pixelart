@@ -45,7 +45,7 @@ def main():
         pass
 
     # Shows the plaette of an image
-    show_palette(image)
+    show_palette(image, weighted_colour)
 
     print('Program end!')
     
