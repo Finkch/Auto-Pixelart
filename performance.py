@@ -1,11 +1,41 @@
 # This file is to run tests to determine performance
 
 from time import time_ns as timer
-from logger import log
+from logger import logger
 
+from math import log, e
+from random import randint
 
 # Tests are defined below, but above the Tests class
+def test_logarithms(trials):
+    
+    args = [
+        [randint(1, 10000),
+         randint(1, 10000),
+         randint(1, 5)]
+            for i in range(trials)
+    ]
 
+    printout = False
+
+    logarithms_tests = Tests(
+        [logarithm_divi, logarithm_base],
+        ['Divi', 'Base'],
+        trials = trials,
+        printout = printout
+    )
+
+    results = logarithms_tests(*args, params_per_trial = True)
+
+    logger.log('logarithm_performance', results)
+
+
+
+def logarithm_divi(x, base, p):
+    return (log(x, e) / (2 * log(base, e)) + 0.5) ** p
+
+def logarithm_base(x, base, p):
+    return (log(x, base) / 2 + 0.5) ** p
 
 
 # This class contains several functions to test against each other
@@ -17,11 +47,16 @@ class Tests:
                       for i in range(len(fxns))]
     
     # Calling this class begins running all tests
-    def __call__(self, *args):
+    def __call__(self, *args, params_per_trial = False):
 
         # Runs tests
-        for test in self.tests:
-            test(*args)
+        if params_per_trial:
+            for params in args:
+                for test in self.tests:
+                    test(*params)
+        else:
+            for test in self.tests:
+                test(*args)
 
         # Returns the results of the tests
         return self.get_results()
