@@ -2,37 +2,6 @@
 
 from time import time_ns as timer
 from logger import log
-
-from colour import *
-
-
-# This function is used for debugging
-# It's contents change as necessary
-def run_count_colours(*args):
-    
-    # The image on which the test will run
-    image = args[0]
-
-    # Number of trials and whether to print to debugging console
-    trials = 10
-    printout = False
-
-    # Creates the tests
-    count_colours_tests = Tests(
-        [count_colours_serial, count_colours_parallel, count_colours_multiprocess],
-        ['Serial', 'Thread', 'Multip'],
-        trials = trials,
-        printout = printout
-    )
-
-    # Runs the tests
-    results = count_colours_tests(image)
-
-    # Logs the results in the file `colours.txt`
-    log(results, 'colours')
-
-    # Notifies user
-    print('Colour count test finished')
     
 
 
