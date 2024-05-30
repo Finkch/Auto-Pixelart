@@ -58,10 +58,8 @@ def show_palette(image: Image, choose = weighted_colour):
     row_height = int(height * 1.05)
     im_height = int(len(palettes) * row_height)
 
-    # colours per pixel
     # Used for when the image is too small to show all colours
-    #cpp = 1
-    #if len(by_occur) > width:
+    # cpp: colours per pixel
     cpp = len(by_occur) / width
 
 
