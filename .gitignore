@@ -1,5 +1,6 @@
-# Items in the `PUT IMAGES HERE` directory
+# Items in the `PUT IMAGES HERE` and `output` directories
 PUT IMAGES HERE/*
+output/*
 
 # Ingores the log files
 logs
