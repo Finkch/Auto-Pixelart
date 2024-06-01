@@ -55,6 +55,21 @@ def choose_resolution(file: Image) -> None:
     file.set_resolution(choice)
 
 
+
+# Chooses how many trials to perform
+def choose_trials():
+    
+    preamble = 'Choose how many trials to perform:'
+
+    valid_choices = range(1, int(1e4) + 1)
+
+    prompts = [' - \t Enter a number from 1 to 10000']
+
+    choice = prompt(preamble, valid_choices, prompts)
+
+    return int(choice)
+
+
 # Chooses which tests to perform
 def choose_test():
 
