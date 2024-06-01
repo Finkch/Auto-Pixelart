@@ -95,7 +95,7 @@ def choose_trials() -> int:
     
     choice = prompt(
         preamble        = 'Choose how many trials to perform:', 
-        valid_choices   = range(1, int(1e4) + 1), 
+        valid_choices   = [str(i) for i in range(1, int(1e4) + 1)], 
         prompts         = [' - \t Enter a number from 1 to 10000']
     )
 
@@ -109,11 +109,11 @@ def choose_test() -> Callable:
 
     choice = prompt(
         preamble        = 'Choose which test to run:', 
-        valid_choices   = [str(i) for i in range(len(performance_names))], 
+        valid_choices   = [str(i + 1) for i in range(len(performance_names))], 
         prompts         = [f'[{i + 1}]\t{performance_names[i]}' for i in range(len(performance_names))]
     )
 
-    return performance_functions(int(choice - 1))
+    return performance_functions[int(choice) - 1], performance_names[int(choice) - 1]
 
 
 
