@@ -7,11 +7,6 @@ from logger import logger
 
 
 
-
-
-
-
-
 # This class contains several functions to test against each other
 class Tests:
     def __init__(self, fxns, names, trials = 10, printout = False) -> None:
