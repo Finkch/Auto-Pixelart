@@ -5,18 +5,32 @@ from logger import logger
 
 from performance_tests.test_logarithms import test_logarithms
 
+
+# A list of tests and their names
+#   Order must match!
 performance_functions = [test_logarithms]
 performance_names = ['Logarithms']
 
 
-
-def test_performance():
+# Runs a trial of tests
+def run_test(test_case, trials):
     
-    tests = [test_logarithms]
-    names = ['Logarithms']
+    # Gets the arguments for the test
+    args, fxns, names = test_case(trials)
 
-    
+    # Sets up the test
+    tests = Tests(
+        fxns        = fxns,     # The functions to test
+        names       = names,    # The names to log them under
+        trials      = trials,   # The number of trails
+        printout    = False     # Whether to print to console
+    )
 
+    # Runs the tests
+    results = tests(*args, params_per_trial = True)
+
+    # Returns the results
+    return results
 
 
 # This class contains several functions to test against each other
@@ -118,7 +132,7 @@ class Test:
 
     # Printouts
     def begin_printout(self):
-        return f'Being {self.name}:'
+        return f'Begin {self.name}:'
 
     def trial_printout(self, i = -1):
         if i == -1:
