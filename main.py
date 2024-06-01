@@ -1,14 +1,12 @@
 # A little project to turn images and gifs into pixel art
 
-from input import *
-from colour import *
 from image import Image
 
+from input import *
 from visualise import show_palette
-from logger import logger
-
 from performance import run_test
 
+from logger import logger
 
 
 def main():
