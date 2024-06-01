@@ -57,7 +57,7 @@ def choose_resolution(file: Image) -> None:
 
 
 # Chooses how many trials to perform
-def choose_trials():
+def choose_trials() -> int:
     
     preamble = 'Choose how many trials to perform:'
 
@@ -71,7 +71,7 @@ def choose_trials():
 
 
 # Chooses which tests to perform
-def choose_test():
+def choose_test() -> int:
 
     preamble = 'Choose which test to run:'
 
