@@ -60,21 +60,37 @@ def process_image():
     pim = image.source
     print(pim.format, pim.size, pim.mode)
 
+    # Informs user
+    print('\nImage converted to pixel art!')
+    print('See `outputs` directory for your image.\n')
+
 
 # Looks at the palette of an image
 def visualise_palette():
+    
+    # Selects an image
     image = Image()
     choose_file(image)
 
-    # CHOOSE METHOD OF COMBINING COLOURS
+    # Chooses method of squashing colours
+    choose_colour = choose_averaging()
 
-    show_palette(image)
+    # Converts image to a palette
+    show_palette(image, choose_colour)
+
+    # Informs user
+    print('\nImage converted to palette!')
+    print('See `outputs` directory for your image.\n')
     
 
 # Runs performance tests
 #   TODO
 def test_performance():
-    pass
+    
+
+    # Informs user
+    print('\nTests completed!')
+    print('See `logs` directory for performance data.\n')
 
     
 
