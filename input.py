@@ -36,7 +36,7 @@ def choose_file(file: Image) -> None:
 
     # Obtains user's choice
     choice = prompt(
-        preamble        = 'Choose a file to turn into pixel art:',
+        preamble        = 'Choose a file:',
         valid_choices   = [str(i + 1) for i in range(len(files))],
         prompts         = [f'[{i + 1}]\t{files[i]}' for i in range(len(files))]
     )
