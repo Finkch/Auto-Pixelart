@@ -46,9 +46,8 @@ class Tests:
 
         # Runs tests
         if params_per_trial:
-            for params in args:
-                for test in self.tests:
-                    test(*params)
+            for test in self.tests:
+                test(*args, params_per_trial = params_per_trial)
         else:
             for test in self.tests:
                 test(*args)
@@ -95,7 +94,7 @@ class Test:
         self.printout   = printout
 
     # Calling this function begins a test
-    def __call__(self, *args) -> None:
+    def __call__(self, *args, params_per_trial = False) -> None:
 
         # Clears timing lists, in case of multiple consecutive trials
         self.reset()
@@ -109,9 +108,16 @@ class Test:
             self.begin() # Checks time
 
             # Calls the function to be tested, unpacking arguments into it
-            self.fxn(*args)
+            if params_per_trial:
+                self.fxn(*args[trial])
 
-            self.end(args) # Checks time
+                self.end(args[trial]) # Checks time
+            else:
+                self.fxn(*args)
+
+                self.end(args) # Checks time
+
+            
 
             # Performs mid-trial printout
             if self.printout:
