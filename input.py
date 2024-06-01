@@ -17,9 +17,9 @@ def choose_mode() -> str:
 
     prompts = [
         '[p]\tProcess an image',
-        '[v]\tVisualise the palette of an image'
-        '[t]\tRun performance tests'
-        '[x]\tExit'
+        '[v]\tVisualise the palette of an image',
+        '[t]\tRun performance tests',
+        '[x]\tExit',
     ]
 
     choice = prompt(preamble, valid_choices, prompts)
