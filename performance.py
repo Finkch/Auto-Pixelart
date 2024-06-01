@@ -3,39 +3,13 @@
 from time import time_ns as timer
 from logger import logger
 
-from math import log, e
-from random import randint
-
-# Tests are defined below, but above the Tests class
-def test_logarithms(trials):
-    
-    args = [
-        [randint(1, 10000),
-         randint(1, 10000),
-         randint(1, 5)]
-            for i in range(trials)
-    ]
-
-    printout = False
-
-    logarithms_tests = Tests(
-        [logarithm_divi, logarithm_base],
-        ['Divi', 'Base'],
-        trials = trials,
-        printout = printout
-    )
-
-    results = logarithms_tests(*args, params_per_trial = True)
-
-    logger.log('logarithm_performance', results)
 
 
 
-def logarithm_divi(x, base, p):
-    return (log(x, e) / (2 * log(base, e)) + 0.5) ** p
 
-def logarithm_base(x, base, p):
-    return (log(x, base) / 2 + 0.5) ** p
+
+
+
 
 
 # This class contains several functions to test against each other
