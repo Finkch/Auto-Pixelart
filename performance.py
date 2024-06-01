@@ -144,8 +144,8 @@ class Test:
 
     def trial_printout(self, i = -1):
         if i == -1:
-            return f'\t[{len(self.runtimes)}/{self.trials}]\t-\t{self.runtimes[i] / (10 ** 9)} s\tArguments: {str(self.args[i])}'
-        return f'\n\t[{i}/{self.trials}]\t-\t{self.runtimes[i] / (10 ** 9)} s\tArguments: {str(self.args[i])}'
+            return f'\t[{len(self.runtimes)}/{self.trials}]\t-\t{self.runtimes[i] / (10 ** 9):.3e} s\t\tArguments: {str(self.args[i])}'
+        return f'\n\t[{i}/{self.trials}]\t-\t{self.runtimes[i] / (10 ** 9):.3e} s\t\tArguments: {str(self.args[i])}'
 
     def end_prinout(self):
         return f'\nEnd {self.name}.\n{self.results()}\n'
