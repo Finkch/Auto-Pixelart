@@ -18,31 +18,23 @@ def main():
 
     print('Program start!')
 
-    test = True
-
-    loc = 'PUT IMAGES HERE/'
-
     process = True
 
-    # while process:
+    while process:
 
-    #     image = Image()
-    #     choose_file(image)
-    #     choose_palette_size(image)
-    #     choose_resolution(image)
+        image = Image()
+        choose_file(image)
+        choose_palette_size(image)
+        choose_resolution(image)
 
-    #     pim = image.source
-    #     print(pim.format, pim.size, pim.mode)
+        pim = image.source
+        print(pim.format, pim.size, pim.mode)
 
-    #     process = choose_continue()
+        process = choose_continue()
 
     # Chooses an image to process
     image = Image()
     choose_file(image)
-
-    # Runs some tests
-    if test:
-        pass
 
     # Shows the plaette of an image
     show_palette(image, weighted_colour)
