@@ -5,6 +5,8 @@ from image import Image
 
 from colour import colour_functions, colour_names
 
+from performance import performance_functions, performance_names
+
 from typing import Callable
 
 
@@ -101,19 +103,17 @@ def choose_trials() -> int:
 
 
 # Chooses which tests to perform
-def choose_test() -> int:
+def choose_test() -> Callable:
 
     # Obtains a list of files in the input directory
-    files = listdir('performance_tests')
-    files.remove('.DS_Store')
 
     choice = prompt(
         preamble        = 'Choose which test to run:', 
-        valid_choices   = [str(i) for i in range(len(files))], 
-        prompts         = [f'[{i + 1}]\t{files[i]}' for i in range(len(files))]
+        valid_choices   = [str(i) for i in range(len(performance_names))], 
+        prompts         = [f'[{i + 1}]\t{performance_names[i]}' for i in range(len(performance_names))]
     )
 
-    return int(choice - 1)
+    return performance_functions(int(choice - 1))
 
 
 

@@ -3,6 +3,11 @@
 from time import time_ns as timer
 from logger import logger
 
+from performance_tests.test_logarithms import test_logarithms
+
+performance_functions = [test_logarithms]
+performance_names = ['Logarithms']
+
 
 
 
