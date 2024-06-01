@@ -28,3 +28,7 @@ def weighted_colour(colours):
 def common_colour(colours):
     return max(colours, key = lambda x : x[0])
 
+
+# An easy way of getting the list of functions in this file
+colour_functions    = [average_colour, weighted_colour, common_colour]
+colour_names        = ['Average', 'Weighted', 'Common']

@@ -3,6 +3,10 @@
 from os import listdir
 from image import Image
 
+from colour import colour_functions, colour_names
+
+from typing import Callable
+
 
 # Chooses the operational mode
 def choose_mode() -> str:
@@ -35,7 +39,7 @@ def choose_file(file: Image) -> None:
         preamble        = 'Choose a file to turn into pixel art:',
         valid_choices   = [str(i + 1) for i in range(len(files))],
         prompts         = [f'[{i + 1}]\t{files[i]}' for i in range(len(files))]
-        )
+    )
 
     # Returns the file choses
     file.set_file(files[int(choice) - 1])
@@ -68,11 +72,21 @@ def choose_resolution(file: Image) -> None:
         preamble        = 'Choose the pixel width (note that aspect ratio will be preserved):', 
         valid_choices   = [str(i) for i in range(1, 2049)], 
         prompts         = [' - \t Enter a number from 1 to 2048']
-        )
+    )
 
     file.set_resolution(choice)
 
 
+# Chooses method of combining pixel colours for visualising an image's palette
+def choose_averaging() -> Callable:
+
+    choice = prompt(
+        preamble        = 'Choose method of combining pixel colours:',
+        valid_choices   = [f'{i + 1}' for i in range(len(colour_names))],
+        prompts         = colour_names
+    )
+
+    return colour_functions[int(choice) - 1]
 
 # Chooses how many trials to perform
 def choose_trials() -> int:
@@ -81,7 +95,7 @@ def choose_trials() -> int:
         preamble        = 'Choose how many trials to perform:', 
         valid_choices   = range(1, int(1e4) + 1), 
         prompts         = [' - \t Enter a number from 1 to 10000']
-        )
+    )
 
     return int(choice)
 
@@ -97,7 +111,7 @@ def choose_test() -> int:
         preamble        = 'Choose which test to run:', 
         valid_choices   = [str(i) for i in range(len(files))], 
         prompts         = [f'[{i + 1}]\t{files[i]}' for i in range(len(files))]
-        )
+    )
 
     return int(choice - 1)
 
@@ -115,7 +129,7 @@ def choose_continue() -> bool:
     prompts = [
         '[y]\tYes',
         '[n]\tNo'
-        ]
+    ]
     
     choice = prompt(preamble, valid_choices, prompts)
 
