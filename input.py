@@ -4,6 +4,25 @@ from os import listdir
 from image import Image
 
 
+# Chooses the operational mode
+def choose_mode() -> str:
+
+    preamble = "Choose what you would like to do:"
+
+    valid_choices = ['p', 'v', 't', 'x']
+
+    prompts = [
+        '[p]\tProcess an image',
+        '[v]\tVisualise the palette of an image'
+        '[t]\tRun performance tests'
+        '[x]\tExit'
+    ]
+
+    choice = prompt(preamble, valid_choices, prompts)
+
+    return choice
+
+
 # Obtains user's choice for file to process
 def choose_file(file: Image) -> None:
 
