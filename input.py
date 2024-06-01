@@ -55,6 +55,27 @@ def choose_resolution(file: Image) -> None:
     file.set_resolution(choice)
 
 
+# Chooses which tests to perform
+def choose_test():
+
+    preamble = 'Choose which test to run:'
+
+    # Obtains a list of files in the input directory
+    files = listdir('performance_tests')
+    files.remove('.DS_Store')
+
+    valid_choices = [str(i) for i in range(len(files))]
+
+    prompts = [f'[{i + 1}]\t{files[i]}' for i in range(len(files))]
+
+    choice = prompt(preamble, valid_choices, prompts)
+
+    return int(choice - 1)
+
+
+
+
+
 # Prompts user for whether to process another image
 def choose_continue() -> bool:
     
