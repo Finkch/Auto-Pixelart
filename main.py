@@ -36,13 +36,6 @@ def main():
         process = choose_continue()
 
 
-    # Chooses an image to process
-    image = Image()
-    choose_file(image)
-
-    # Shows the plaette of an image
-    show_palette(image, weighted_colour)
-
     print('Program end!')
 
 
