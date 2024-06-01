@@ -10,6 +10,13 @@ performance_names = ['Logarithms']
 
 
 
+def test_performance():
+    
+    tests = [test_logarithms]
+    names = ['Logarithms']
+
+    
+
 
 
 # This class contains several functions to test against each other

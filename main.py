@@ -7,7 +7,7 @@ from image import Image
 from visualise import show_palette
 from logger import logger
 
-from performance import *
+from performance import run_test
 
 
 
@@ -77,13 +77,23 @@ def visualise_palette():
     
 
 # Runs performance tests
-#   TODO
 def test_performance():
     
+    # Chooses test to run
+    test_funciton, file = choose_test()
+
+    # Chooses number of trails
+    trials = choose_trials()
+
+    # Runs the test
+    results = run_test(test_funciton, trials)
+
+    # Logs the results
+    logger.log(file, results)
 
     # Informs user
     print('\nTests completed!')
-    print('See `logs` directory for performance data.\n')
+    print(f'See `logs/{file}.txt` directory for performance data.\n')
 
     
 
