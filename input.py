@@ -3,6 +3,7 @@
 from os import listdir
 from image import Image
 
+
 # Obtains user's choice for file to process
 def choose_file(file: Image) -> None:
 
@@ -43,14 +44,12 @@ def choose_palette_size(file: Image) -> None:
 
 # Prompts user for desired resolution of pixel art
 def choose_resolution(file: Image) -> None:
-    
-    preamble = 'Choose the pixel width (note that aspect ratio will be preserved):'
 
-    valid_choices = [str(i) for i in range(1, 2049)]
-
-    prompts = [' - \t Enter a number from 1 to 2048']
-
-    choice = prompt(preamble, valid_choices, prompts)
+    choice = prompt(
+        preamble        = 'Choose the pixel width (note that aspect ratio will be preserved):', 
+        valid_choices   = [str(i) for i in range(1, 2049)], 
+        prompts         = [' - \t Enter a number from 1 to 2048']
+        )
 
     file.set_resolution(choice)
 
@@ -59,13 +58,11 @@ def choose_resolution(file: Image) -> None:
 # Chooses how many trials to perform
 def choose_trials() -> int:
     
-    preamble = 'Choose how many trials to perform:'
-
-    valid_choices = range(1, int(1e4) + 1)
-
-    prompts = [' - \t Enter a number from 1 to 10000']
-
-    choice = prompt(preamble, valid_choices, prompts)
+    choice = prompt(
+        preamble        = 'Choose how many trials to perform:', 
+        valid_choices   = range(1, int(1e4) + 1), 
+        prompts         = [' - \t Enter a number from 1 to 10000']
+        )
 
     return int(choice)
 
@@ -73,17 +70,15 @@ def choose_trials() -> int:
 # Chooses which tests to perform
 def choose_test() -> int:
 
-    preamble = 'Choose which test to run:'
-
     # Obtains a list of files in the input directory
     files = listdir('performance_tests')
     files.remove('.DS_Store')
 
-    valid_choices = [str(i) for i in range(len(files))]
-
-    prompts = [f'[{i + 1}]\t{files[i]}' for i in range(len(files))]
-
-    choice = prompt(preamble, valid_choices, prompts)
+    choice = prompt(
+        preamble        = 'Choose which test to run:', 
+        valid_choices   = [str(i) for i in range(len(files))], 
+        prompts         = [f'[{i + 1}]\t{files[i]}' for i in range(len(files))]
+        )
 
     return int(choice - 1)
 
