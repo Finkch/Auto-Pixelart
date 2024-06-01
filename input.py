@@ -83,7 +83,7 @@ def choose_averaging() -> Callable:
     choice = prompt(
         preamble        = 'Choose method of combining pixel colours:',
         valid_choices   = [f'{i + 1}' for i in range(len(colour_names))],
-        prompts         = colour_names
+        prompts         = [f' {i + 1}\t{colour_names[i]}' for i in range(len(colour_names))]
     )
 
     return colour_functions[int(choice) - 1]
