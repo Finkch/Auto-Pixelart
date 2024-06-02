@@ -64,10 +64,10 @@ def visualise_palette():
     choose_file(image)
 
     # Chooses method of squashing colours
-    choose_colour = choose_averaging()
+    choose_colour, choose_name = choose_averaging()
 
     # Converts image to a palette
-    show_palette(image, choose_colour)
+    show_palette(image, choose_colour, choose_name)
 
     # Informs user
     print('\nImage converted to palette!')

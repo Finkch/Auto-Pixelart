@@ -10,7 +10,7 @@ from colour import *
 
 
 # Given an image, visualises its palette
-def show_palette(image: Image, choose = weighted_colour):
+def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted'):
 
     # Gets the colours
     colours = sorted(image.get_colours(), reverse = True, key = lambda x : x[0])
@@ -105,4 +105,4 @@ def show_palette(image: Image, choose = weighted_colour):
 
 
     # Saves the image
-    nim.save(f'outputs/palette_{image.file}')
+    nim.save(f'outputs/palette_{image.file}_{choose_name}')

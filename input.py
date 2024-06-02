@@ -88,7 +88,7 @@ def choose_averaging() -> Callable:
         prompts         = [f' {i + 1}\t{colour_names[i]}' for i in range(len(colour_names))]
     )
 
-    return colour_functions[int(choice) - 1]
+    return colour_functions[int(choice) - 1], colour_names[int(choice) - 1]
 
 # Chooses how many trials to perform
 def choose_trials() -> int:
