@@ -105,4 +105,4 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
 
     # Saves the image
-    nim.save(f'outputs/palette_{image.file}_{choose_name}')
+    nim.save(f'outputs/palette_{image.file_name} ({choose_name}){image.file_extension}')
