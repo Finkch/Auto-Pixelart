@@ -33,7 +33,7 @@ def choose_mode() -> str:
 def choose_file(file: Image) -> None:
 
     # Obtains a list of files in the input directory
-    files = listdir('PUT IMAGES HERE')
+    files = listdir('inputs')
     files.remove('.DS_Store')
 
     # Obtains user's choice
