@@ -1,9 +1,8 @@
-# Items in the `PUT IMAGES HERE` and `output` directories
+# Items in 'empty' directories
 PUT IMAGES HERE/*
 outputs/*
+logs/*
 
-# Ingores the log files
-logs
 
 # Don't include VSCode stuff
 .vscode
