@@ -67,11 +67,11 @@ def visualise_palette():
     choose_colour, choose_name = choose_averaging()
 
     # Converts image to a palette
-    show_palette(image, choose_colour, choose_name)
+    image_name = show_palette(image, choose_colour, choose_name)
 
     # Informs user
     print('\nImage converted to palette!')
-    print('See `outputs` directory for your image.\n')
+    print(f'See `outputs/{image_name}` directory for your image.\n')
     
 
 # Runs performance tests
