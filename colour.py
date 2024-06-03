@@ -3,14 +3,25 @@ from numpy import average
 
 # Returns the average colour in a set of colours
 def average_colour(colours):
-    return (
-        int(average([colour[0] for colour in colours])),
-        (
-            int(average([colour[1][0] for colour in colours])), 
-            int(average([colour[1][1] for colour in colours])), 
-            int(average([colour[1][2] for colour in colours])),
+
+    # In the case `colours` contains frequency information
+    if isinstance(colours[1], tuple):
+        return (
+            int(average([colour[0] for colour in colours])),
+            (
+                int(average([colour[1][0] for colour in colours])), 
+                int(average([colour[1][1] for colour in colours])), 
+                int(average([colour[1][2] for colour in colours])),
+            )
         )
-    )
+    
+    # When `colours` is only RGB
+    else:
+        return (
+                int(average([colour[0] for colour in colours])), 
+                int(average([colour[1] for colour in colours])), 
+                int(average([colour[2] for colour in colours])),
+            )
 
 # Same as average_colour(), but where the weights are the occurances
 def weighted_colour(colours):
