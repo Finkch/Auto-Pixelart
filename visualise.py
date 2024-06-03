@@ -13,7 +13,7 @@ from colour import *
 def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted'):
 
     # Gets the colours
-    colours = sorted(image.get_colours(), reverse = True, key = lambda x : x[0])
+    colours = sorted(image.colours, reverse = True, key = lambda x : x[0])
 
     # Trims colours down to top 10% or 10, whichever is greater
     # But won't trim if the lengths is already 10 or less
@@ -38,10 +38,10 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
     # Logs the colour list
     logger.log('colour_listing',
-        [f'{str(colour)}\t{colour[0] / (image.source.width * image.source.width)}%\n' for colour in by_occur],
-        [f'{str(colour)}\t{colour[0] / (image.source.width * image.source.width)}%\n' for colour in by_colour],
-        [f'{str(colour)}\t{colour[0] / (image.source.width * image.source.width)}%\n' for colour in by_light],
-        [f'{str(colour)}\t{colour[0] / (image.source.width * image.source.width)}%\n' for colour in colours],
+        [f'{str(colour)}\t{colour[0] / (image.width * image.width)}%\n' for colour in by_occur],
+        [f'{str(colour)}\t{colour[0] / (image.width * image.width)}%\n' for colour in by_colour],
+        [f'{str(colour)}\t{colour[0] / (image.width * image.width)}%\n' for colour in by_light],
+        [f'{str(colour)}\t{colour[0] / (image.width * image.width)}%\n' for colour in colours],
         )
     
 
