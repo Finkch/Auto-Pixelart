@@ -5,10 +5,20 @@ from input import choose_palette_size
 from image import Image
 from typing import Callable
 
-def downscale(image: Image, mode: str) -> None:
+# Downscales an image
+def downscale(image: Image, mode: str, downscaling_name: str) -> Image:
+
+    # Creates a new image
+    pixel_art = Image()
+    pixel_art.set_file(f'{image.file_name} ({downscaling_name}).png', 'outputs')
 
     # Gets the function associated with the mode
-    downscaler = get_downscaler(image, mode)
+    downscaler = get_downscaler(image, pixel_art)
+
+    # Runs the downscaler
+    pixel_art = downscaler(image)
+    
+    return pixel_art
 
 
 # Returns the function associated with the mode
