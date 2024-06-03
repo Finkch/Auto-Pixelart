@@ -2,6 +2,7 @@
 # This class contains PIL.Image
 
 from PIL import Image as Pim
+from colour import Colour
 
 class Image():
     def __init__(self) -> None:
@@ -79,4 +80,4 @@ class Image():
         self.height = self.source.height
 
         # PIL.Image takes max_colours as an argument
-        self.colours = self.source.getcolors(self.width * self.height)
+        self.colours = [Colour(colour) for colour in self.source.getcolors(self.width * self.height)]
