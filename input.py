@@ -48,6 +48,38 @@ def choose_file(file: Image) -> None:
     file.set_file(files[int(choice) - 1])
 
 
+
+# Prompts user for desired resolution of pixel art
+def choose_resolution(file: Image) -> None:
+
+    choice = prompt(
+        preamble        = 'Choose the pixel width (note that aspect ratio will be preserved):', 
+        valid_choices   = [str(i) for i in range(1, 2049)], 
+        prompts         = [' - \t Enter a number from 1 to 2048']
+    )
+
+    file.set_resolution(choice)
+
+
+# Prompts user for the algorithm they want to use
+def choose_downscale() -> None:
+
+    preamble = 'Choose an algorithm to use:'
+
+    valid_choices = ['n', 'l', 'c', 's']
+
+    prompts = [
+        '[n]\tNearest Neighbour\t(Downscaling)',
+        '[l]\tBilinear\t(Downscaling)',     # NYI, not yet implemented
+        '[c]\tBicubic\t(Downscaling)',      # NYI
+        '[s]\tSinc/Lanczos\t(Downscaling)', # NYI
+    ]
+
+    choice = prompt(preamble, valid_choices, prompts)
+
+    return choice
+
+
 # Prompts user for desired number of colours in the palette
 def choose_palette_size(file: Image) -> None:
 
@@ -65,19 +97,6 @@ def choose_palette_size(file: Image) -> None:
     choice = prompt(preamble, valid_choices, prompts)
 
     file.set_palette_size(choice)
-
-
-
-# Prompts user for desired resolution of pixel art
-def choose_resolution(file: Image) -> None:
-
-    choice = prompt(
-        preamble        = 'Choose the pixel width (note that aspect ratio will be preserved):', 
-        valid_choices   = [str(i) for i in range(1, 2049)], 
-        prompts         = [' - \t Enter a number from 1 to 2048']
-    )
-
-    file.set_resolution(choice)
 
 
 # Chooses method of combining pixel colours for visualising an image's palette
