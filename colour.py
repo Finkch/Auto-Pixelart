@@ -47,13 +47,18 @@ def get_average_colour(colours, weights = None):
 
 
 class Colour:
-    def __init__(self, colour: tuple = None):
+    def __init__(self, colour: tuple = None) -> None:
+
+        # In case the colour encodes frequency as well
         if isinstance(colour[1], tuple):
             self.frequency = colour[0]
             self.RGB = colour[1]
+
+        # If the colour is only RGB
         else:
             self.RGB = colour
         
+        # Sets the channels
         self.R = self.RGB[0]
         self.G = self.RGB[1]
         self.B = self.RGB[2]
