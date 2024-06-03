@@ -62,11 +62,17 @@ def choose_resolution(file: Image) -> None:
 
 
 # Prompts user for the algorithm they want to use
-def choose_downscale() -> None:
+def choose_downscale() -> tuple[str, str]:
 
     preamble = 'Choose an algorithm to use:'
 
     valid_choices = ['n', 'l', 'c', 's']
+    method_names = [
+        'Nearest Neighbour',
+        'Bilinear',
+        'Bicubic',
+        'Sinc'
+    ]
 
     prompts = [
         '[n]\tNearest Neighbour\t(Downscaling)',
@@ -77,7 +83,7 @@ def choose_downscale() -> None:
 
     choice = prompt(preamble, valid_choices, prompts)
 
-    return choice
+    return choice, method_names(valid_choices.index(choice))
 
 
 # Prompts user for desired number of colours in the palette
