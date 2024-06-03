@@ -46,8 +46,13 @@ def main():
 def process_image():
     image = Image()
     choose_file(image)
-    choose_resolution(image)
+
+    pixel_art = Image()
+    width = choose_resolution()
+    pixel_art.set_resolution(width, image)
+
     downscale_mode, downscale_name = choose_downscale()
+    
 
     # Runs
     pixel_art = downscale(image, downscale_mode, downscale_name)
