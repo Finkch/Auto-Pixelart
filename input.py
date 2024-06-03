@@ -50,7 +50,7 @@ def choose_file(file: Image) -> None:
 
 
 # Prompts user for desired resolution of pixel art
-def choose_resolution(file: Image) -> None:
+def choose_resolution() -> int:
 
     choice = prompt(
         preamble        = 'Choose the pixel width (note that aspect ratio will be preserved):', 
@@ -58,7 +58,7 @@ def choose_resolution(file: Image) -> None:
         prompts         = [' - \t Enter a number from 1 to 2048']
     )
 
-    file.set_resolution(choice)
+    return int(choice)
 
 
 # Prompts user for the algorithm they want to use
