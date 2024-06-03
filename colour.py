@@ -1,6 +1,8 @@
 # Tracks colour and colour operations
 from numpy import average
 
+from logger import logger
+
 
 # Class to represent RGB colour
 class Colour:
@@ -13,7 +15,10 @@ class Colour:
             self.B = args[2]
 
         # In case the colour encodes frequency as well
-        elif not isinstance(args[0], int | float):
+        elif isinstance(args[0][1], tuple):
+
+            logger.loga('cc', args)
+
             self.frequency = args[0][0]
             self.R = args[0][1][0]
             self.G = args[0][1][1]
