@@ -64,10 +64,11 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
 
     # Creates a white image, which will be editted to show the palette
-    nim = Pim.new(mode = 'RGB', size = (im_width, im_height), color = 'white')
+    palette = Image()
+    palette.read(Pim.new(mode = 'RGB', size = (im_width, im_height), color = 'white'))
 
     # Obtains the map to pixels in the new image
-    pixels = nim.load()
+    pixels = palette.source.load()
 
 
     # Paints the three palette visualisations onto the image
@@ -105,6 +106,6 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
 
     # Saves the image
-    image_name = f'palette_{image.file_name} ({choose_name}){image.file_extension}'
-    nim.save(f'outputs/{image_name}')
-    return image_name
+    palette.set_file(f'palette_{image.file_name} ({choose_name}){image.file_extension}', inputs = False)
+    palette.save()
+    return palette
