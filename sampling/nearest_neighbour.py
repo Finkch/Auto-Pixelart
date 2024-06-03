@@ -4,6 +4,7 @@
 #   that point in the original.
 
 from image import Image
+
 from PIL.Image import NEAREST
 
 from logger import logger
