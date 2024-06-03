@@ -9,8 +9,6 @@ from downscale import downscale
 
 from logger import logger
 
-from PIL.Image import NEAREST
-
 
 def main():
 
