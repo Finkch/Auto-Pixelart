@@ -46,6 +46,20 @@ def get_average_colour(colours, weights = None):
     )
 
 
+class Colour:
+    def __init__(self, colour: tuple = None):
+        if isinstance(colour[1], tuple):
+            self.frequency = colour[0]
+            self.RGB = colour[1]
+        else:
+            self.RGB = colour
+        
+        self.R = self.RGB[0]
+        self.G = self.RGB[1]
+        self.B = self.RGB[2]
+
+
+
 # An easy way of getting the list of functions in this file
 colour_functions    = [average_colour, weighted_colour, common_colour]
 colour_names        = ['Average', 'Weighted', 'Common']
