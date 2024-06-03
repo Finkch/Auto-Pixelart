@@ -8,12 +8,11 @@ class Image():
         self.file           = None
         self.palette_size   = None
         self.width          = None
+        self.height         = None
 
         self.source         = None
 
         self.colours        = None
-
-        self.height         = 0 # TODO
 
 
     # A few setters
@@ -48,12 +47,13 @@ class Image():
     # Reads an image into the source attribute
     def read(self, path: str) -> None:
         self.source = Pim.open(path)
+        self.update()
+
+
+    # Sets some values, incase the source image has changed
+    def update(self) -> None:
         self.width = self.source.width
         self.height = self.source.height
 
-    
-    # Brings some PIL.Image methods up to this class
-    def get_colours(self):
-
         # PIL.Image takes max_colours as an argument
-        return self.source.getcolors(self.source.height * self.source.width)
+        self.colours = self.source.getcolors(self.width * self.height)
