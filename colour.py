@@ -6,14 +6,14 @@ from numpy import average
 class Colour:
     def __init__(self, *args, frequency: int = 1) -> None:
 
-        if isinstance(args[0], int):
+        if isinstance(args[0], int | float):
             self.frequency = frequency
             self.R = args[0]
             self.G = args[1]
             self.B = args[2]
 
         # In case the colour encodes frequency as well
-        elif isinstance(args[0][1], tuple):
+        elif not isinstance(args[0], int | float):
             self.frequency = args[0][0]
             self.R = args[0][1][0]
             self.G = args[0][1][1]
@@ -30,7 +30,7 @@ class Colour:
         self.R = max(0, min(255, int(self.R)))
         self.G = max(0, min(255, int(self.G)))
         self.B = max(0, min(255, int(self.B)))
-        self.frequency = int(frequency)
+        self.frequency = int(self.frequency)
 
         # Packages the three channels together
         self.RGB = (self.R, self.G, self.B)
@@ -106,7 +106,7 @@ def average_colour(colours: list[Colour], weights: list[int] | None = None) -> C
         average([colour.R for colour in colours], weights = weights),
         average([colour.G for colour in colours], weights = weights),
         average([colour.B for colour in colours], weights = weights),
-        frequency = average(colour.frequency for colour in colours)
+        frequency = average([colour.frequency for colour in colours]) if not weights else average(weights)
     )
 
 # Same as average_colour(), but where the weights are the frequencies
