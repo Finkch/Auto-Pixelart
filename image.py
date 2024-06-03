@@ -38,8 +38,8 @@ class Image():
             self.palette_size = int(size)
 
     # Sets the resolution of this image, based off of a source image
-    def set_resolution(self, width: int | str, source) -> None:
-        self.width = int(width)
+    def set_resolution(self, width: int, source) -> None:
+        self.width = width
 
         # Preserves aspect ratio
         self.height = int(self.width / source.width * source.height)
