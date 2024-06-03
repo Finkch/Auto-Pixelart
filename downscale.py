@@ -1,22 +1,33 @@
 # This file downscales images
 
-from input import choose_palette_size
+from input import choose_palette_size, choose_resolution
 
 from image import Image
 from typing import Callable
 
 from PIL import Image as Pim
 
+import sampling
+import sampling.nearest_neighbour
+
 # Downscales an image
 def downscale(image: Image, mode: str, downscaling_name: str) -> Image:
 
     # Creates a new image
     pixel_art = Image()
+
+    # Sets the resolution of the new image
+    width = choose_resolution()
+    pixel_art.set_resolution(width, image)
+
+    # Creates the source for the new image
     pixel_art.set_file(f'{image.file_name} ({downscaling_name}).png', inputs = False)
     pixel_art.read(Pim.new(mode = 'RGB', size = (pixel_art.width, pixel_art.height)))
 
+
     # Gets the function associated with the mode
     downscaler = get_downscaler(pixel_art, mode)
+
 
     # Runs the downscaler
     pixel_art = downscaler(image, pixel_art)
@@ -35,7 +46,7 @@ def get_downscaler(image: Image, mode: str) -> Callable:
     # Finds the associated function
     match mode:
         case 'n':
-            pass
+            return sampling.nearest_neighbour.nearest_neighbour
         case 'l':   # NYI, not yet implemented
             pass
         case 'c':   # NYI
