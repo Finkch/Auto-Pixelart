@@ -83,7 +83,7 @@ def choose_downscale() -> tuple[str, str]:
 
     choice = prompt(preamble, valid_choices, prompts)
 
-    return choice, method_names(valid_choices.index(choice))
+    return choice, method_names[valid_choices.index(choice)]
 
 
 # Prompts user for desired number of colours in the palette
