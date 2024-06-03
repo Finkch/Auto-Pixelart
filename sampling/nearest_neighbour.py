@@ -5,5 +5,32 @@
 
 from image import Image
 
-def nearest_neighbour(image: Image, pixel_art: Image) -> Image:
-    pass
+from logger import logger
+
+def nearest_neighbour(image: Image, pixel_art: Image, log = False) -> Image:
+    
+    # Pixel map of the source and downscale
+    source_map = image.source.load()
+    pixel_map = pixel_art.source.load()
+
+    # Obtains the scaling factor
+    #   ! This is a float !
+    scale = image.width / pixel_art.width
+
+    # Iterates over all the points in the pixel
+    for i in range(pixel_art.width):
+        for j in range(pixel_art.height):
+
+            # Gets the correspnding coordinates in the original image
+            si, sj = int(i * scale), int(j * scale)
+
+            # Paints the new image
+            pixel_map[i, j] = source_map[si, sj]
+            
+            # Logs
+            if log:
+                logger.loga('nearest_neighbour', f'[{i}, {j}]:\t{pixel_map[i, j]} <- [{si}, {sj}]:\t{source_map[si, sj]}')
+
+    return pixel_art
+
+    
