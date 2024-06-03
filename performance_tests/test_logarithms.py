@@ -5,8 +5,6 @@
 from random import randint
 from math import log, e
 
-from logger import logger
-
 
 # Returns the arguments and functions for this test case
 def test_logarithms(trials):
