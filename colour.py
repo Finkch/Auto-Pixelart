@@ -37,7 +37,7 @@ class Colour:
     
     # tostring
     def __str__(self):
-        return f'{self.RGB}'
+        return f'({self.RGB}, {self.frequency})'
     
     # Addition
     def __add__(self, other):
