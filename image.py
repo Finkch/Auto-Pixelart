@@ -17,11 +17,11 @@ class Image():
 
 
     # A few setters
-    def set_file(self, file: str) -> None:
+    def set_file(self, file: str, location: str = 'inputs') -> None:
         self.file = file
         self.file_name = file[:file.index('.')]
         self.file_extension = file[file.index('.'):]
-        self.path = f'inputs/{file}'
+        self.path = f'{location}/{file}'
 
         self.source = Pim.open(self.path)
 
