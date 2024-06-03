@@ -46,22 +46,87 @@ def get_average_colour(colours, weights = None):
     )
 
 
+
+# Class to represent RGB colour
 class Colour:
     def __init__(self, colour: tuple = None) -> None:
 
         # In case the colour encodes frequency as well
         if isinstance(colour[1], tuple):
             self.frequency = colour[0]
-            self.RGB = colour[1]
+            self.R = colour[1][0]
+            self.G = colour[1][1]
+            self.B = colour[1][2]
 
         # If the colour is only RGB
         else:
-            self.RGB = colour
+            # Sets the channels
+            self.R = colour[0]
+            self.G = colour[1]
+            self.B = colour[2]
         
-        # Sets the channels
-        self.R = self.RGB[0]
-        self.G = self.RGB[1]
-        self.B = self.RGB[2]
+        # Enforces each channel to be an int and within an appropriate range
+        self.R = max(0, min(255, int(self.R)))
+        self.G = max(0, min(255, int(self.G)))
+        self.B = max(0, min(255, int(self.B)))
+
+        # Packages the three channels together
+        self.RGB = [self.R, self.G, self.B]
+
+    # Addition
+    def __add__(self, other):
+        if isinstance(other, Colour):
+            return Colour(
+                self.R + other.R,
+                self.G + other.G,
+                self.B + other.B
+            )
+        elif isinstance(other, int | float):
+            return Colour(
+                self.R + other,
+                self.G + other,
+                self.B + other
+            )
+        elif isinstance(other[1], tuple):
+            return self + Colour(other)
+        else:
+            raise TypeError(f'Colour addition not supported with type "{type(other)}"')
+        
+    # Subtraction
+    def __sub__(self, other):
+        if isinstance(other, Colour):
+            return Colour(
+                self.R - other.R,
+                self.G - other.G,
+                self.B - other.B
+            )
+        elif isinstance(other, int | float):
+            return Colour(
+                self.R - other,
+                self.G - other,
+                self.B - other
+            )
+        elif isinstance(other[1], tuple):
+            return self - Colour(other)
+        else:
+            raise TypeError(f'Colour addition not supported with type "{type(other)}"')
+        
+    # Multiplication
+    def __mul__(self, other):
+        return Colour(
+            self.R * other,
+            self.G * other,
+            self.B * other
+        )
+    
+    # Division
+    def __truediv__(self, other):
+        return Colour(
+            self.R / other,
+            self.G / other,
+            self.B / other
+        )
+
 
 
 
