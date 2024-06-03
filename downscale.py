@@ -8,6 +8,7 @@ from typing import Callable
 from PIL import Image as Pim
 
 import sampling
+import sampling.bilinear
 import sampling.nearest_neighbour
 
 # Downscales an image
@@ -47,11 +48,11 @@ def get_downscaler(image: Image, mode: str) -> Callable:
     match mode:
         case 'n':
             return sampling.nearest_neighbour.nearest_neighbour
-        case 'l':   # NYI, not yet implemented
-            pass
+        case 'l':
+            return sampling.bilinear.bilinear
         case 'c':   # NYI
-            pass
+            return None
         case 's':   # NYI
-            pass
+            return None
         case _:
             raise ValueError(f'No such downscaling case as "{mode}"') 
