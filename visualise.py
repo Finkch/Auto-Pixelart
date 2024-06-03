@@ -13,7 +13,7 @@ from colour import *
 def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted'):
 
     # Gets the colours
-    colours = sorted(image.colours, reverse = True, key = lambda x : x[0])
+    colours = sorted(image.colours, reverse = True, key = lambda x : x.frequency)
 
     # Trims colours down to top 10% or 10, whichever is greater
     # But won't trim if the lengths is already 10 or less
@@ -23,14 +23,14 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
 
     # Sorts by occurances
-    by_occur = sorted(trimmed, reverse = True, key = lambda x : x[0])
-    maxi = by_occur[0][0] # Gets the greatest number of occurances - used later
+    by_occur = sorted(trimmed, reverse = True, key = lambda x : x.frequency)
+    maxi = by_occur[0] # Gets the greatest number of occurances - used later
 
     # Sorts by colour
-    by_colour = sorted(trimmed, reverse = True, key = lambda x : (x[1][0], x[1][1], x[1][2]))
+    by_colour = sorted(trimmed, reverse = True, key = lambda x : x.RGB)
 
     # Sorts by lightness
-    by_light = sorted(trimmed, reverse = True, key = lambda x : x[1][0] + x[1][1] + x[1][2])
+    by_light = sorted(trimmed, reverse = True, key = lambda x : x.R + x.G + x.B)
 
     # Bundles the three choices
     palettes = [by_occur, by_colour, by_light]
@@ -38,10 +38,10 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
     # Logs the colour list
     logger.log('colour_listing',
-        [f'{str(colour)}\t{colour[0] / (image.width * image.width)}%\n' for colour in by_occur],
-        [f'{str(colour)}\t{colour[0] / (image.width * image.width)}%\n' for colour in by_colour],
-        [f'{str(colour)}\t{colour[0] / (image.width * image.width)}%\n' for colour in by_light],
-        [f'{str(colour)}\t{colour[0] / (image.width * image.width)}%\n' for colour in colours],
+        [f'{colour}\t{colour.frequency / (image.width * image.width)}%\n' for colour in by_occur],
+        [f'{colour}\t{colour.frequency / (image.width * image.width)}%\n' for colour in by_colour],
+        [f'{colour}\t{colour.frequency / (image.width * image.width)}%\n' for colour in by_light],
+        [f'{colour}\t{colour.frequency / (image.width * image.width)}%\n' for colour in colours],
         )
     
 
@@ -94,7 +94,7 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
 
             # Maps the height to be in a reasonable range
-            mapped = int((log(colour[0], maxi) / 2 + 0.5) ** 5 * height)
+            mapped = int((log(colour.frequency, maxi.frequency) / 2 + 0.5) ** 5 * height)
 
             # Gets the position in the row; centred vertically
             start = int((height - mapped) / 2)
@@ -102,7 +102,7 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
             # Paints the coloumn
             for j in range(start, stop):
-                pixels[i + x_off, j + y_off] = colour[1]
+                pixels[i + x_off, j + y_off] = colour.RGB
 
 
     # Saves the image
