@@ -38,10 +38,12 @@ class Image():
         else:
             self.palette_size = int(size)
 
-    def set_resolution(self, width: int | str) -> None:
+    # Sets the resolution of this image, based off of a source image
+    def set_resolution(self, width: int | str, source) -> None:
         self.width = int(width)
 
-        self.height = 0 # TODO
+        # Preserves aspect ratio
+        self.height = int(self.width / source.width * source.height)
 
     # Reads an image into the source attribute
     def read(self, path: str) -> None:
