@@ -4,19 +4,20 @@ from time import time_ns as timer
 from logger import logger
 
 from performance_tests.test_logarithms import test_logarithms
+from performance_tests.test_sampling import *
 
 
 # A list of tests and their names
 #   Order must match!
-performance_functions = [test_logarithms]
-performance_names = ['Logarithms']
+performance_functions = [test_logarithms, test_nearest_neighbour]
+performance_names = ['Logarithms', 'Nearest Neighbour']
 
 
 # Runs a trial of tests
 def run_test(test_case, trials):
     
     # Gets the arguments for the test
-    args, fxns, names = test_case(trials)
+    args, fxns, names, params_per_trial = test_case(trials)
 
     # Sets up the test
     tests = Tests(
@@ -27,7 +28,7 @@ def run_test(test_case, trials):
     )
 
     # Runs the tests
-    results = tests(*args, params_per_trial = True)
+    results = tests(*args, params_per_trial = params_per_trial)
 
     # Returns the results
     return results

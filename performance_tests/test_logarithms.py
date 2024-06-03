@@ -17,7 +17,7 @@ def test_logarithms(trials):
             for i in range(trials) # Creates a set of arguments per trial
     ]
 
-    return args, [logarithm_divi, logarithm_base], ['Divi', 'Base']
+    return args, [logarithm_divi, logarithm_base], ['Divi', 'Base'], True
 
 
 
