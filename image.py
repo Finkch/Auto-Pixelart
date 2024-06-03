@@ -17,13 +17,18 @@ class Image():
 
 
     # A few setters
-    def set_file(self, file: str, location: str = 'inputs') -> None:
+    def set_file(self, file: str, inputs: bool = True) -> None:
         self.file = file
         self.file_name = file[:file.index('.')]
         self.file_extension = file[file.index('.'):]
-        self.path = f'{location}/{file}'
 
-        self.source = Pim.open(self.path)
+        # Reads the image if its an input
+        # Also sets the path
+        if inputs:
+            self.path = f'inputs/{file}'
+            self.source = Pim.open(self.path)
+        else:
+            self.path = f'outputs/{file}'
 
     def set_palette_size(self, size: int | str) -> None:
         if size in 'd':
