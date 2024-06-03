@@ -47,15 +47,16 @@ def process_image():
     image = Image()
     choose_file(image)
     choose_resolution(image)
-    downscale_mode = choose_downscale()
+    downscale_mode, downscale_name = choose_downscale()
 
     # Runs
-    downscale(image, downscale_mode)
+    pixel_art = downscale(image, downscale_mode, downscale_name)
+
 
 
     # Informs user
     print('\nImage converted to pixel art!')
-    print('See `outputs` directory for your image.\n')
+    print(f'See `outputs/{pixel_art.file}` directory for your image.\n')
 
 
 # Looks at the palette of an image
