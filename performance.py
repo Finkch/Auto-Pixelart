@@ -9,8 +9,8 @@ from performance_tests.test_sampling import *
 
 # A list of tests and their names
 #   Order must match!
-performance_functions = [test_logarithms, test_nearest_neighbour]
-performance_names = ['Logarithms', 'Nearest Neighbour']
+performance_functions = [test_logarithms, test_nearest_neighbour, test_bilinear]
+performance_names = ['Logarithms', 'Nearest Neighbour', 'Bilinear']
 
 
 # Runs a trial of tests
