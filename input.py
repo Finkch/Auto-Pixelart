@@ -52,13 +52,31 @@ def choose_file(file: Image) -> None:
 # Prompts user for desired resolution of pixel art
 def choose_resolution() -> int:
 
-    choice = prompt(
-        preamble        = 'Choose the pixel width (note that aspect ratio will be preserved):', 
-        valid_choices   = [str(i) for i in range(1, 2049)], 
-        prompts         = [' - \t Enter a number from 1 to 2048']
-    )
+    preamble = 'Choose the pixel width (note that aspect ratio will be preserved):'
+    
+    valid_choices = ['a', 's', 'd', 'f', 'g', 'h'] + [str(i) for i in range(1, 2049)]
+    
+    prompts = [
+        '[a]\t8',
+        '[s]\t16',
+        '[d]\t32',
+        '[f]\t64',
+        '[g]\t128',
+        '[h]\t256',
+        ' - \t Enter a number from 1 to 2048'
+    ]
 
-    return int(choice)
+    choice = prompt(preamble, valid_choices, prompts)
+
+    # Returns the chosen size
+    match choice:
+        case 'a': return 8
+        case 's': return 16
+        case 'd': return 32
+        case 'f': return 64
+        case 'g': return 128
+        case 'h': return 256
+        case _:   return int(choice)
 
 
 # Prompts user for the algorithm they want to use
