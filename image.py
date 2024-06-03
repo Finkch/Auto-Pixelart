@@ -44,6 +44,13 @@ class Image():
         # Preserves aspect ratio
         self.height = int(self.width / source.width * source.height)
 
+    # Scale the image using nearest neighbour
+    def scale(self, width: int) -> None:
+        height = int(width / self.width * self.height)
+
+        self.source = self.source.resize((width, height), resample = Pim.NEAREST)
+        self.update()
+
     # Reads an image into the source attribute
     def read(self, source: str | Pim.Image) -> None:
         if isinstance(source, str):
