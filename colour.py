@@ -16,12 +16,16 @@ def average_colour(colours):
         return get_average_colour(colours)
 
 # Same as average_colour(), but where the weights are the occurances
-def weighted_colour(colours):
-    weights = [colour[0] for colour in colours]
-    return (
-        int(average(weights)),
-        get_average_colour(colours, weights)
-    )
+def weighted_colour(colours, weights = None):
+    if not weights:
+        weights = [colour[0] for colour in colours]
+
+        return (
+            int(average(weights)),
+            get_average_colour(colours, weights)
+        )
+    else:
+        return get_average_colour(colours, weights)
 
 # Returns the most common colour in a set
 def common_colour(colours):
