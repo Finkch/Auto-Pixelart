@@ -60,6 +60,10 @@ class Image():
         else:
             raise ValueError(f'Cannot read type "{type(source)}"')
         self.update()
+    
+    # Makes a new source image
+    def new(self) -> None:
+        self.source = Pim.new(mode = 'RGB', size = (self.width, self.height))
 
     # Saves the source image
     def save(self):
