@@ -4,6 +4,7 @@
 #   that point in the original.
 
 from image import Image
+from PIL.Image import NEAREST
 
 from logger import logger
 
@@ -32,5 +33,9 @@ def nearest_neighbour(image: Image, pixel_art: Image, log = False) -> Image:
                 logger.loga('nearest_neighbour', f'[{i}, {j}]:\t{pixel_map[i, j]} <- [{si}, {sj}]:\t{source_map[si, sj]}')
 
     return pixel_art
+
+# Using PIL's resizing method
+def nearest_neighbour_pil(image: Image, pixel_art: Image, log = False):
+    pixel_art.source = image.source.resize((pixel_art.width, pixel_art.height), resample = NEAREST)
 
     
