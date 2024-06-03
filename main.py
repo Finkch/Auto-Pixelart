@@ -52,6 +52,7 @@ def process_image():
 
     # Runs
     pixel_art = downscale(image, downscale_mode, downscale_name)
+    pixel_art.save()
 
 
     # Informs user
