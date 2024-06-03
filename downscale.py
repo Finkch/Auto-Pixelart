@@ -13,10 +13,10 @@ def downscale(image: Image, mode: str, downscaling_name: str) -> Image:
     pixel_art.set_file(f'{image.file_name} ({downscaling_name}).png', 'outputs')
 
     # Gets the function associated with the mode
-    downscaler = get_downscaler(image, pixel_art)
+    downscaler = get_downscaler(pixel_art, mode)
 
     # Runs the downscaler
-    pixel_art = downscaler(image)
+    pixel_art = downscaler(image, pixel_art)
     
     return pixel_art
 
