@@ -54,6 +54,13 @@ class Image():
             raise ValueError(f'Cannot read type "{type(source)}"')
         self.update()
 
+    # Saves the source image
+    def save(self):
+        if not self.source:
+            raise ReferenceError('Cannot save image because image source does not exist.')
+        
+        self.source.save(self.path)
+
 
     # Sets some values, incase the source image has changed
     def update(self) -> None:
