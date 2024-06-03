@@ -5,6 +5,7 @@ from image import Image
 from input import *
 from visualise import show_palette
 from performance import run_test
+from downscale import downscale
 
 from logger import logger
 
@@ -45,11 +46,12 @@ def main():
 def process_image():
     image = Image()
     choose_file(image)
-    choose_palette_size(image)
     choose_resolution(image)
+    downscale_mode = choose_downscale()
 
-    pim = image.source
-    print(pim.format, pim.size, pim.mode)
+    # Runs
+    downscale(image, downscale_mode)
+
 
     # Informs user
     print('\nImage converted to pixel art!')
