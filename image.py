@@ -45,8 +45,13 @@ class Image():
         self.height = int(self.width / source.width * source.height)
 
     # Reads an image into the source attribute
-    def read(self, path: str) -> None:
-        self.source = Pim.open(path)
+    def read(self, source: str | Pim.Image) -> None:
+        if isinstance(source, str):
+            self.source = Pim.open(source)
+        elif isinstance(source, Pim.Image):
+            self.source = source
+        else:
+            raise ValueError(f'Cannot read type "{type(source)}"')
         self.update()
 
 
