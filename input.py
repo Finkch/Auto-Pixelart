@@ -63,7 +63,7 @@ def choose_resolution() -> int:
         '[f]\t64',
         '[g]\t128',
         '[h]\t256',
-        ' - \t Enter a number from 1 to 2048'
+        ' - \tEnter a number from 1 to 2048'
     ]
 
     choice = prompt(preamble, valid_choices, prompts)
@@ -76,6 +76,31 @@ def choose_resolution() -> int:
         case 'f': return 64
         case 'g': return 128
         case 'h': return 256
+        case _:   return int(choice)
+
+def choose_upscale(image: Image) -> int:
+
+    preamble = 'Choose width of the upscaled image:'
+
+    valid_choices = ['a', 's', 'd', 'f', 'g'] + [i for i in range(image.width, 4097)]
+
+    prompts = [
+        '[a]\t256',
+        '[s]\t512',
+        '[d]\t1024',
+        '[f]\t2048',
+        '[g]\t4096',
+        f' -\tEnter a number between {image.width} and 4096'
+    ]
+
+    choice = prompt(preamble, valid_choices, prompts)
+
+    match choice:
+        case 'a': return 256
+        case 's': return 512
+        case 'd': return 1024
+        case 'f': return 2048
+        case 'g': return 4096
         case _:   return int(choice)
 
 
@@ -164,10 +189,8 @@ def choose_test() -> Callable:
 
 
 # Prompts user for whether to process another image
-def choose_continue() -> bool:
+def choose_continue(preamble = 'Process another file?') -> bool:
     
-    preamble = 'Process another file?'
-
     valid_choices = ['y', 'n']
 
     prompts = [

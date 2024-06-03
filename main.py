@@ -9,6 +9,8 @@ from downscale import downscale
 
 from logger import logger
 
+from PIL.Image import NEAREST
+
 
 def main():
 
@@ -42,7 +44,6 @@ def main():
 # The three menu options
 
 # Processes an image into pixel art
-#   TODO
 def process_image():
     image = Image()
     choose_file(image)
@@ -52,6 +53,13 @@ def process_image():
 
     # Runs
     pixel_art = downscale(image, downscale_mode, downscale_name)
+    pixel_art.update() # In case further changes are made
+    
+    # Upscales the image
+    if choose_continue('Upscale image?'):
+        new_width = choose_upscale(pixel_art)
+        pixel_art.scale(new_width)
+    
     pixel_art.save()
 
 
