@@ -26,7 +26,7 @@ class Image():
         # Also sets the path
         if inputs:
             self.path = f'inputs/{file}'
-            self.source = Pim.open(self.path)
+            self.read(self.path)
         else:
             self.path = f'outputs/{file}'
 
@@ -42,6 +42,12 @@ class Image():
         self.width = int(width)
 
         self.height = 0 # TODO
+
+    # Reads an image into the source attribute
+    def read(self, path: str) -> None:
+        self.source = Pim.open(path)
+        self.width = self.source.width
+        self.height = self.source.height
 
     
     # Brings some PIL.Image methods up to this class
