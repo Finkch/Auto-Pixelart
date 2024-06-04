@@ -7,9 +7,11 @@ from typing import Callable
 
 from PIL import Image as Pim
 
+import sampling.bicubic
 import sampling.bilinear
 import sampling.nearest_neighbour
 import sampling.bilinear
+import sampling.sinc
 
 # Downscales an image
 def downscale(image: Image, mode: str, downscaling_name: str) -> Image:
@@ -47,12 +49,12 @@ def get_downscaler(image: Image, mode: str) -> Callable:
     # Finds the associated function
     match mode:
         case 'n':
-            return sampling.nearest_neighbour.nearest_neighbour
+            return sampling.nearest_neighbour.nearest_neighbour_pil
         case 'l':
-            return sampling.bilinear.bilinear
+            return sampling.bilinear.bilinear_pil
         case 'c':
-            return sampling.bilinear.bilinear
-        case 's':   # NYI
-            return None
+            return sampling.bicubic.bicubic_pil
+        case 's':
+            return sampling.sinc.sinc_pil
         case _:
             raise ValueError(f'No such downscaling case as "{mode}"') 
