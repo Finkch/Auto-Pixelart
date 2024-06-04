@@ -11,7 +11,7 @@ from PIL.Image import BILINEAR
 
 from logger import logger
 
-
+# This function is bugged and its output is the same as nearest neighbour
 def bilinear(image: Image, pixel_art: Image, log: bool = False) -> Image:
 
     # Pixel map of the source and downscale
@@ -58,3 +58,4 @@ def bilinear(image: Image, pixel_art: Image, log: bool = False) -> Image:
 # Using PIL's resizing method
 def bilinear_pil(image: Image, pixel_art: Image, log: bool = False) -> Image:
         pixel_art.source = image.source.resize((pixel_art.width, pixel_art.height), resample = BILINEAR)
+        return pixel_art

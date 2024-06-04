@@ -38,5 +38,6 @@ def nearest_neighbour(image: Image, pixel_art: Image, log = False) -> Image:
 # Using PIL's resizing method
 def nearest_neighbour_pil(image: Image, pixel_art: Image, log = False):
     pixel_art.source = image.source.resize((pixel_art.width, pixel_art.height), resample = NEAREST)
+    return pixel_art
 
     

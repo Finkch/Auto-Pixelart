@@ -11,5 +11,6 @@ from logger import logger
 
 
 # Using PIL's resizing method
-def bicubic(image: Image, pixel_art: Image, log = False):
+def bicubic_pil(image: Image, pixel_art: Image, log = False):
     pixel_art.source = image.source.resize((pixel_art.width, pixel_art.height), resample = BICUBIC)
+    return pixel_art
