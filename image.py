@@ -83,33 +83,18 @@ class Image():
         self.width = self.source.width
         self.height = self.source.height
 
-        self.get_colours_parallel_m(4)
+        # Updates the colour list
+        self.get_colours()
 
 
-    def get_colours_serial(self, a = None) -> None:
+    def get_colours(self) -> None:
 
         # PIL.Image takes max_colours as an argument
         cols = self.source.getcolors(self.width * self.height)
 
         # Processes serially
-        self.colours = [Colour(colour) for colour in cols]
+        self.colours = [Colour(*frequency_colour[1], frequency = frequency_colour[0]) for frequency_colour in cols]
 
-    def get_colours_parallel(self, processes = cpu_count()) -> None:
-
-        # Grabs the frequency colours from the source
-        cols = self.source.getcolors(self.width * self.height)
-
-        # Processes the colours in parallel
-        with Pool(processes) as pool:
-            self.colours = pool.map(colourise, cols)
-
-    # To compare how fast it is to simply grab the object
-    def baseline_colours(self, a = None):
-        self.colours = self.source.getcolors(self.width * self.height)
-
-# Converts frequency colour to Colour
-# Needed to parallise
-def colourise(frequency_colour: tuple) -> Colour:
-    return Colour(frequency_colour)
+        return self.colours
         
         
