@@ -6,32 +6,16 @@ from logger import logger
 
 # Class to represent RGB colour
 class Colour:
-    def __init__(self, *args, frequency: int = 1) -> None:
+    def __init__(self, R: int, G: int, B: int, frequency: int = 1) -> None:
 
-        if isinstance(args[0], int | float):
-            self.frequency = frequency
-            self.R = args[0]
-            self.G = args[1]
-            self.B = args[2]
+        # Grabs the channels
+        self.R = R
+        self.G = G
+        self.B = B
 
-        # In case the colour encodes frequency as well
-        elif isinstance(args[0][1], tuple):
-
-            logger.loga('cc', args)
-
-            self.frequency = args[0][0]
-            self.R = args[0][1][0]
-            self.G = args[0][1][1]
-            self.B = args[0][1][2]
-
-        # If the colour is only RGB
-        else:
-            self.frequency = frequency
-            self.R = args[0][0]
-            self.G = args[0][1]
-            self.B = args[0][2]
+        self.frequency = frequency
         
-        # Enforces each channel to be an int and within an appropriate range
+        # # Enforces each channel to be an int and within an appropriate range
         self.R = max(0, min(255, int(self.R)))
         self.G = max(0, min(255, int(self.G)))
         self.B = max(0, min(255, int(self.B)))
