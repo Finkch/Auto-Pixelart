@@ -5,12 +5,13 @@ from logger import logger
 
 from performance_tests.test_logarithms import test_logarithms
 from performance_tests.test_sampling import *
+from performance_tests.test_colours import test_colours
 
 
 # A list of tests and their names
 #   Order must match!
-performance_functions = [test_logarithms, test_nearest_neighbour, test_bilinear]
-performance_names = ['Logarithms', 'Nearest Neighbour', 'Bilinear']
+performance_functions = [test_logarithms, test_nearest_neighbour, test_bilinear, test_colours]
+performance_names = ['Logarithms', 'Nearest Neighbour', 'Bilinear', 'Colours']
 
 
 # Runs a trial of tests
