@@ -7,9 +7,9 @@ from typing import Callable
 
 from PIL import Image as Pim
 
-import sampling
 import sampling.bilinear
 import sampling.nearest_neighbour
+import sampling.bilinear
 
 # Downscales an image
 def downscale(image: Image, mode: str, downscaling_name: str) -> Image:
@@ -50,8 +50,8 @@ def get_downscaler(image: Image, mode: str) -> Callable:
             return sampling.nearest_neighbour.nearest_neighbour
         case 'l':
             return sampling.bilinear.bilinear
-        case 'c':   # NYI
-            return None
+        case 'c':
+            return sampling.bilinear.bilinear
         case 's':   # NYI
             return None
         case _:
