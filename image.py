@@ -4,6 +4,10 @@
 from PIL import Image as Pim
 from colour import Colour
 
+from multiprocessing import Pool
+from threading import Thread
+from os import cpu_count
+
 class Image():
     def __init__(self) -> None:
         self.file           = None
@@ -79,5 +83,33 @@ class Image():
         self.width = self.source.width
         self.height = self.source.height
 
+        self.get_colours_parallel_m(4)
+
+
+    def get_colours_serial(self, a = None) -> None:
+
         # PIL.Image takes max_colours as an argument
-        self.colours = [Colour(colour) for colour in self.source.getcolors(self.width * self.height)]
+        cols = self.source.getcolors(self.width * self.height)
+
+        # Processes serially
+        self.colours = [Colour(colour) for colour in cols]
+
+    def get_colours_parallel(self, processes = cpu_count()) -> None:
+
+        # Grabs the frequency colours from the source
+        cols = self.source.getcolors(self.width * self.height)
+
+        # Processes the colours in parallel
+        with Pool(processes) as pool:
+            self.colours = pool.map(colourise, cols)
+
+    # To compare how fast it is to simply grab the object
+    def baseline_colours(self, a = None):
+        self.colours = self.source.getcolors(self.width * self.height)
+
+# Converts frequency colour to Colour
+# Needed to parallise
+def colourise(frequency_colour: tuple) -> Colour:
+    return Colour(frequency_colour)
+        
+        
