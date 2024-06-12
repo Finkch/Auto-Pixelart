@@ -5,12 +5,12 @@ from logger import logger
 
 from performance_tests.test_logarithms import test_logarithms
 from performance_tests.test_sampling import *
-from performance_tests.test_colour import test_RGV_HSV
+from performance_tests.test_colour import *
 
 
 # A list of tests and their names
 #   Order must match!
-performance_functions = [test_logarithms, test_nearest_neighbour, test_bilinear, test_RGV_HSV]
+performance_functions = [test_logarithms, test_nearest_neighbour, test_bilinear, test_RGB_HSV]
 performance_names = ['Logarithms', 'Nearest Neighbour', 'Bilinear', 'RGB vs. HSV']
 
 

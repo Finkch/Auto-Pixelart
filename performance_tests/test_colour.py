@@ -4,7 +4,7 @@ from colour import Colour
 from random import randint
 
 # Tests how much performance loss is in calculating both RGB and HSV
-def test_RGV_HSV(trials):
+def test_RGB_HSV(trials):
 
     # Each trial will use a random colour
     args = [
