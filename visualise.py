@@ -97,7 +97,10 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 #   NOTE: this also return the most common element, which 
 #   is used in calculations later.
 def colourings(colours: list[Colour], use_HSV: bool = False) -> tuple[list, Colour]:
-        
+
+    # Sorts colours by frequency    
+    colours = sorted(colours, reverse = True, key = lambda x : x.frequency)
+
     # Trims colours down to top 10% or 10, whichever is greater
     # But won't trim if the lengths is already 10 or less
     trimmed = colours[ : min( 
