@@ -5,6 +5,9 @@ from image import Image
 from random import randint
 
 # Tests how much performance loss is in calculating both RGB and HSV
+''' RESULTS
+        It is roughly 2/5ths faster to ignore the HSV values
+'''
 def test_RGB_HSV(trials):
 
     # Each trial will use a random colour
@@ -18,12 +21,22 @@ def test_RGB_HSV(trials):
     return args, [colour_RGB, colour_HSV], ['RGB', 'HSV'], True
 
 # Tests how much performance loss is in calculating both RGB and HSV
+''' RESULTS
+        It is roughly 2/5ths faster to ignore the HSV values
+'''
 def test_image_RGB_HSV(trials):
     args = []
 
     return args, [image_RGB, image_HSV], ['RGB', 'HSV'], False
 
 # Tests the effectiveness of downsizing an image before getting its palette
+''' RESULTS
+        Downscaling a bit helps a lot, but downscaling lots doesn't help much.
+        1/2 size was 2x as fast, but 1/30 was only 4x as fast.
+        > 0.927s for Nora.jpg at original size (3072px)
+        > 0.483s for Nora.jpg at ~half size (1500px)
+        > 0.241s for Nora.jpg at ~1/30th size (100px)
+'''
 def test_get_palette(trials):
     args = []
 
