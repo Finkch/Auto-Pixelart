@@ -172,7 +172,13 @@ def common_colour(colours: list[Colour]) -> Colour:
 # Given a palette and a colour to compare, returns the palette item
 # that most closely matches the input colour
 def closest_colour(palette: list[Colour], colour: Colour) -> Colour:
-    pass
+    return min(palette, key = lambda c: sum([
+            (c.R - colour.R) ** 2,
+            (c.G - colour.G) ** 2,
+            (c.B - colour.B) ** 2
+        ])
+    )
+
 
 
 
