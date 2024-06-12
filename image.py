@@ -5,8 +5,6 @@ from PIL import Image as Pim
 from colour import Colour
 
 from multiprocessing import Pool
-from threading import Thread
-from os import cpu_count
 
 class Image():
     def __init__(self) -> None:
