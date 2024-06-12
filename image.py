@@ -7,7 +7,7 @@ from colour import Colour
 from multiprocessing import Pool
 
 class Image():
-    def __init__(self, use_HSV: bool = False) -> None:
+    def __init__(self, HSV: bool = True) -> None:
         self.file           = None
         self.palette_size   = None
         self.width          = None
@@ -17,7 +17,7 @@ class Image():
 
         self.colours        = None
 
-        self.use_HSV = use_HSV
+        self.is_HSV = HSV
 
 
     # A few setters
@@ -93,7 +93,7 @@ class Image():
         cols = self.source.getcolors(self.width * self.height)
 
         # Processes serially
-        self.colours = [Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = self.use_HSV) for frequency_colour in cols]
+        self.colours = [Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = self.is_HSV) for frequency_colour in cols]
 
         return self.colours
         
