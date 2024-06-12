@@ -1,7 +1,5 @@
 # Tracks colour and colour operations
-from numpy import average
-
-from logger import logger
+from numpy import average, array, ndarray
 
 
 # Class to represent RGB colour
@@ -24,7 +22,7 @@ class Colour:
         self.frequency = int(self.frequency)
 
         # Packages the three channels together
-        self.RGB = (self.R, self.G, self.B)
+        self.RGB = array((self.R, self.G, self.B))
 
         self.HSV = None
 
@@ -147,7 +145,7 @@ class Colour:
         self.H = int(round(h, 0))
         self.S = int(round(s, 0))
         self.V = int(round(v, 0))
-        self.HSV = (self.H, self.S, self.V)
+        self.HSV = array((self.H, self.S, self.V))
         return self.HSV
 
 
@@ -170,6 +168,11 @@ def weighted_colour(colours: list[Colour], weights: list[int] | None = None) -> 
 # Returns the most common colour in a set
 def common_colour(colours: list[Colour]) -> Colour:
     return max(colours, key = lambda x : x.frequency)
+
+# Given a palette and a colour to compare, returns the palette item
+# that most closely matches the input colour
+def closest_colour(palette: list[Colour], colour: Colour) -> Colour:
+    pass
 
 
 
