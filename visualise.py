@@ -133,10 +133,10 @@ def HSV_colourings(colours: list[Colour]) -> tuple[list, Colour]:
     by_occur = sorted(colours, reverse = True, key = lambda x : x.frequency)
 
     # By hue
-    by_hue = sorted(colours, reverse = True, key = lambda x: x.H)
+    by_hue = sorted(colours, reverse = True, key = lambda x: (x.H, x.V))
 
     # By saturation
-    by_saturation = sorted(colours, reverse = True, key = lambda x: (x.S, x.H))
+    by_saturation = sorted(colours, reverse = False, key = lambda x: (x.S, x.H))
 
     # By value
     by_value = sorted(colours, reverse = True, key = lambda x: (x.V, x.H))
