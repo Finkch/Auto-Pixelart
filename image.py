@@ -4,6 +4,8 @@
 from PIL import Image as Pim
 from colour import Colour
 
+from logger import logger
+
 class Image():
     def __init__(self, HSV: bool = True) -> None:
         self.file           = None
@@ -94,5 +96,40 @@ class Image():
         self.colours = [Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = self.is_HSV) for frequency_colour in cols]
 
         return self.colours
+    
+    # Gets best representation for the image's palette.
+    # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
+    def get_palette(self, size: int, top: int = None, width: int = None) -> list[Colour]:
+        if not top:
+            top = size
+
+        # Gets a copy of the image to process
+        image = self.source.copy()
+
+        # Reduces image size to speed up the computation
+        if width:
+            height = int(width / image.width * image.height)
+            image.thumbnail((width, height))
+
+        # Reduces the colours in the image.
+        # Internally, k-mean clustering is used
+        paletted = image.convert('P', palette = Pim.ADAPTIVE, colors = size)
+        image_palette = paletted.getpalette()
+
+        # Retrieves a list of dominent colours
+        colour_counts = sorted(paletted.getcolors(), reverse = True)
+
+        # Gets the top dominent colours
+        palette = []
+        for i in range(top):
+
+            # Gets the index of the item
+            pindex = colour_counts[i][1]
+
+            # Palette is just a list of values (not tuples), 
+            # so we need to stride over items
+            palette.append(image_palette[pindex * 3 : pindex * 3 + 3])
+
+        return palette
         
         
