@@ -109,19 +109,21 @@ def choose_downscale() -> tuple[str, str]:
 
     preamble = 'Choose an algorithm to use:'
 
-    valid_choices = ['n', 'l', 'c', 's']
+    valid_choices = ['n', 'l', 'c', 's', 'k']
     method_names = [
         'Nearest Neighbour',
         'Bilinear',
         'Bicubic',
-        'Sinc'
+        'Sinc',
+        'k-Means Palette'
     ]
 
     prompts = [
         '[n]\tNearest Neighbour\t(Downscaling)',
-        '[l]\tBilinear\t(Downscaling)',     # NYI, not yet implemented
-        '[c]\tBicubic\t(Downscaling)',      # NYI
-        '[s]\tSinc/Lanczos\t(Downscaling)', # NYI
+        '[l]\tBilinear\t(Downscaling)',
+        '[c]\tBicubic\t(Downscaling)',
+        '[s]\tSinc/Lanczos\t(Downscaling)',
+        '[k]\tk-Means Palette'
     ]
 
     choice = prompt(preamble, valid_choices, prompts)
