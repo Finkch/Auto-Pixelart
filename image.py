@@ -4,8 +4,6 @@
 from PIL import Image as Pim
 from colour import Colour
 
-from multiprocessing import Pool
-
 class Image():
     def __init__(self, HSV: bool = True) -> None:
         self.file           = None
