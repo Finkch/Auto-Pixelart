@@ -13,7 +13,7 @@ from colour import *
 def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted', use_HSV = False):
 
     # Obtains the set of palettes and the most common element
-    palettes, maxi = colourings(image.colours)
+    palettes, maxi = colourings(image.colours, use_HSV)
 
 
     # Logs the colour list
@@ -82,9 +82,13 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
             for j in range(start, stop):
                 pixels[i + x_off, j + y_off] = colour.RGB
 
+    # Appends the sorting method
+    col_type = 'RGB'
+    if use_HSV:
+        col_type = 'HSV'
 
     # Saves the image
-    palette.set_file(f'palette_{image.file_name} ({choose_name}){image.file_extension}', inputs = False)
+    palette.set_file(f'palette_{image.file_name} ({choose_name}, {col_type}){image.file_extension}', inputs = False)
     palette.save()
     return palette
 
