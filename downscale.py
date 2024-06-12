@@ -9,6 +9,7 @@ from PIL import Image as Pim
 
 import sampling.bicubic
 import sampling.bilinear
+import sampling.kmean
 import sampling.nearest_neighbour
 import sampling.bilinear
 import sampling.sinc
@@ -56,5 +57,7 @@ def get_downscaler(image: Image, mode: str) -> Callable:
             return sampling.bicubic.bicubic_pil
         case 's':
             return sampling.sinc.sinc_pil
+        case 'k':
+            return sampling.kmean.palettised
         case _:
             raise ValueError(f'No such downscaling case as "{mode}"') 
