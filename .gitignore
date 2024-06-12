@@ -3,6 +3,9 @@ inputs/*
 outputs/*
 logs/*
 
+# Silly MacOS .DS_Store
+.DS_Store
+*/.DS_Store
 
 # Don't include VSCode stuff
 .vscode
