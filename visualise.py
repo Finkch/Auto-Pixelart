@@ -10,46 +10,24 @@ from colour import *
 
 
 # Given an image, visualises its palette
-def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted'):
+def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted', use_HSV = False):
 
-    # Gets the colours
-    colours = sorted(image.colours, reverse = True, key = lambda x : x.frequency)
-
-    # Trims colours down to top 10% or 10, whichever is greater
-    # But won't trim if the lengths is already 10 or less
-    trimmed = colours[ : min( 
-                            max(int(len(colours) / 10), 10)
-                        , len(colours) )]
-
-
-    # Sorts by occurances
-    by_occur = sorted(trimmed, reverse = True, key = lambda x : x.frequency)
-    maxi = by_occur[0] # Gets the greatest number of occurances - used later
-
-    # Sorts by colour
-    by_colour = sorted(trimmed, reverse = True, key = lambda x : x.RGB)
-
-    # Sorts by lightness
-    by_light = sorted(trimmed, reverse = True, key = lambda x : x.R + x.G + x.B)
-
-    # Bundles the three choices
-    palettes = [by_occur, by_colour, by_light]
+    # Obtains the set of palettes and the most common element
+    palettes, maxi = colourings(image.colours)
 
 
     # Logs the colour list
     logger.log('colour_listing',
-        [f'{colour}\t{colour.frequency / (image.width * image.width)}%\n' for colour in by_occur],
-        [f'{colour}\t{colour.frequency / (image.width * image.width)}%\n' for colour in by_colour],
-        [f'{colour}\t{colour.frequency / (image.width * image.width)}%\n' for colour in by_light],
-        [f'{colour}\t{colour.frequency / (image.width * image.width)}%\n' for colour in colours],
-        )
+        *[[f'{colour}\t{colour.frequency / (image.width * image.width)}%\n' for colour in palette
+                ] for palette in palettes]
+    )
     
 
     # Gets the width of the palette image
     # Set constraints on width
     max_width = 2000
     min_width = 200
-    width = max(min(len(by_occur), max_width), min_width)
+    width = max(min(len(palettes[0]), max_width), min_width)
     im_width = max(int(width * 1.1), width + 2) # Accounts for very small palettes
 
     # Gets the height of the image
@@ -60,7 +38,7 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
     # Used for when the image is too small to show all colours
     # cpp: colours per pixel
-    cpp = len(by_occur) / width
+    cpp = len(palettes[0]) / width
 
 
     # Creates a white image, which will be editted to show the palette
@@ -109,3 +87,55 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
     palette.set_file(f'palette_{image.file_name} ({choose_name}){image.file_extension}', inputs = False)
     palette.save()
     return palette
+
+
+# Returns a list of possible ways to visualise the palette.
+#   NOTE: this also return the most common element, which 
+#   is used in calculations later.
+def colourings(colours: list[Colour], use_HSV: bool = False) -> tuple[list, Colour]:
+        
+    # Trims colours down to top 10% or 10, whichever is greater
+    # But won't trim if the lengths is already 10 or less
+    trimmed = colours[ : min( 
+                            max(int(len(colours) / 10), 10)
+                        , len(colours) )]
+
+
+    if use_HSV:
+        return HSV_colourings(trimmed)
+    
+    return RGB_colourings(trimmed)
+
+def RGB_colourings(colours: list[Colour]) -> tuple[list, Colour]:
+
+    # Sorts by occurances
+    by_occur = sorted(colours, reverse = True, key = lambda x : x.frequency)
+
+    # Sorts by colour
+    by_colour = sorted(colours, reverse = True, key = lambda x : x.RGB)
+
+    # Sorts by lightness
+    by_light = sorted(colours, reverse = True, key = lambda x : x.R + x.G + x.B)
+
+    # Bundles the choices
+    return [by_occur, by_colour, by_light], by_occur[0]
+
+def HSV_colourings(colours: list[Colour]) -> tuple[list, Colour]:
+
+    # Updates each colour with its HSV
+    [colour.get_HSV() for colour in colours]
+
+    # By occurances
+    by_occur = sorted(colours, reverse = True, key = lambda x : x.frequency)
+
+    # By hue
+    by_hue = sorted(colours, reverse = True, key = lambda x: x.H)
+
+    # By saturation
+    by_saturation = sorted(colours, reverse = True, key = lambda x: (x.S, x.H))
+
+    # By value
+    by_value = sorted(colours, reverse = True, key = lambda x: (x.V, x.H))
+
+    # Bundles the choices
+    return [by_occur, by_hue, by_saturation, by_value], by_occur[0]
