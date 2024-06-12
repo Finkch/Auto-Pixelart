@@ -115,9 +115,6 @@ def colourings(colours: list[Colour], use_HSV: bool = False) -> tuple[list, Colo
 
 def RGB_colourings(colours: list[Colour]) -> tuple[list, Colour]:
 
-    # Sorts by occurances
-    by_occur = sorted(colours, reverse = True, key = lambda x : x.frequency)
-
     # Sorts by colour
     by_colour = sorted(colours, reverse = True, key = lambda x : x.RGB)
 
@@ -125,15 +122,12 @@ def RGB_colourings(colours: list[Colour]) -> tuple[list, Colour]:
     by_light = sorted(colours, reverse = True, key = lambda x : x.R + x.G + x.B)
 
     # Bundles the choices
-    return [by_occur, by_colour, by_light], by_occur[0]
+    return [colours, by_colour, by_light], colours[0]
 
 def HSV_colourings(colours: list[Colour]) -> tuple[list, Colour]:
 
     # Updates each colour with its HSV
     [colour.get_HSV() for colour in colours]
-
-    # By occurances
-    by_occur = sorted(colours, reverse = True, key = lambda x : x.frequency)
 
     # By hue
     by_hue = sorted(colours, reverse = True, key = lambda x: (x.H, x.V))
@@ -145,4 +139,4 @@ def HSV_colourings(colours: list[Colour]) -> tuple[list, Colour]:
     by_value = sorted(colours, reverse = True, key = lambda x: (x.V, x.H))
 
     # Bundles the choices
-    return [by_occur, by_hue, by_saturation, by_value], by_occur[0]
+    return [colours, by_hue, by_saturation, by_value], colours[0]
