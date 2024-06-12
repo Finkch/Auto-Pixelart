@@ -128,7 +128,7 @@ class Image():
 
             # Palette is just a list of values (not tuples), 
             # so we need to stride over items
-            palette.append(image_palette[pindex * 3 : pindex * 3 + 3])
+            palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = True))
 
         return palette
         
