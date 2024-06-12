@@ -76,8 +76,11 @@ def visualise_palette():
     # Chooses method of squashing colours
     choose_colour, choose_name = choose_averaging()
 
+    # Gets colour sorting type
+    use_HSV = choose_colour_type()
+
     # Converts image to a palette
-    image = show_palette(image, choose_colour, choose_name)
+    image = show_palette(image, choose_colour, choose_name, use_HSV)
 
     # Informs user
     print('\nImage converted to palette!')
