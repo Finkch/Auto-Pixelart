@@ -3,8 +3,7 @@
 
 from PIL import Image as Pim
 from colour import Colour
-
-from logger import logger
+from numpy import array, ndarray
 
 class Image():
     def __init__(self, HSV: bool = True) -> None:
@@ -99,7 +98,7 @@ class Image():
     
     # Gets best representation for the image's palette.
     # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
-    def get_palette(self, size: int, top: int = None, width: int = None) -> list[Colour]:
+    def get_palette(self, size: int, top: int = None, width: int = None) -> ndarray[Colour]:
         if not top:
             top = size
 
@@ -130,6 +129,6 @@ class Image():
             # so we need to stride over items
             palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = True))
 
-        return palette
+        return array(palette)
         
         
