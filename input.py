@@ -159,6 +159,16 @@ def choose_averaging() -> Callable:
 
     return colour_functions[int(choice) - 1], colour_names[int(choice) - 1]
 
+# Chooses whether to use HSV (True) ir RGB (False)
+def choose_colour_type() -> bool:
+    choice = prompt(
+        preamble        = 'Use RGB or HSV to sort:',
+        valid_choices   = ['r', 'h'],
+        prompts         = ['[r]\tRGB', '[h]\tHSV']
+    )
+
+    return 'h' in choice
+
 # Chooses how many trials to perform
 def choose_trials() -> int:
     
