@@ -6,7 +6,7 @@ from colour import Colour
 from numpy import array, ndarray
 
 class Image():
-    def __init__(self, HSV: bool = False) -> None:
+    def __init__(self, file = None, HSV: bool = False) -> None:
         self.file           = None
         self.palette_size   = None
         self.width          = None
@@ -16,7 +16,11 @@ class Image():
 
         self.colours        = None
 
-        self.is_HSV = HSV
+        self.is_HSV         = HSV
+
+        if self.file:
+            self.set_file(file)
+
 
 
     # A few setters
@@ -28,10 +32,17 @@ class Image():
         # Reads the image if its an input
         # Also sets the path
         if inputs:
-            self.path = f'inputs/{file}'
+            self.location = 'inputs'
+            self.update_file()
             self.read(self.path)
         else:
-            self.path = f'outputs/{file}'
+            self.location = 'outputs'
+            self.update_file()
+
+    def update_file(self) -> None:
+        self.file = f'{self.file_name}{self.file_extension}'
+        self.path = f'{self.location}/{self.file}'
+
 
     def set_palette_size(self, size: int | str) -> None:
         if size in 'd':
@@ -81,6 +92,7 @@ class Image():
     def update(self) -> None:
         self.width = self.source.width
         self.height = self.source.height
+        self.size = (self.width, self.height)
 
         # Updates the colour list
         self.get_colours()
