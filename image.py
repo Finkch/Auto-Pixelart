@@ -6,7 +6,7 @@ from colour import Colour
 from numpy import array, ndarray
 
 class Image():
-    def __init__(self, HSV: bool = True) -> None:
+    def __init__(self, HSV: bool = False) -> None:
         self.file           = None
         self.palette_size   = None
         self.width          = None
@@ -130,7 +130,7 @@ class Image():
 
             # Palette is just a list of values (not tuples), 
             # so we need to stride over items
-            palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = True))
+            palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.is_HSV))
 
         return array(palette)
         
