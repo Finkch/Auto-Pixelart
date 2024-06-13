@@ -18,7 +18,10 @@ class Logger:
         with open(f'{loc}/{file}.txt', 'w') as f:
             for data in datas:
                 for line in data:
-                    f.write(line)
+                    line_str = f'{line}'
+                    f.write(line_str)
+                    if '\n' not in line_str:
+                        f.write('\n')
                 f.write('\n\n-----------------\n\n\n')
 
     # Logs data is is passed, appending it to the file
