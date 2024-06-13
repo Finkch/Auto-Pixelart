@@ -91,8 +91,11 @@ class Image():
         # PIL.Image takes max_colours as an argument
         cols = self.source.getcolors(self.width * self.height)
 
-        # Processes serially
-        self.colours = [Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = self.is_HSV) for frequency_colour in cols]
+        match self.source.mode:
+            case 'RGB':
+                self.colours = [Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = self.is_HSV) for frequency_colour in cols]
+            case 'P':
+                pass
 
         return self.colours
     
