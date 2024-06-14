@@ -8,14 +8,10 @@ from sampling.kmean import pil_palette, put_palette, paint_palette
 
 # Creates a pair of images to test on
 def setup_test():
-    source = Image()
-    source.set_file('Nora.jpg')
+    source = Image('Nora.jpg')
 
-    target = Image()
-    target.set_resolution(256, source)
+    target = Image('na.png', location = 'na', size = source.get_size(256))
     target.set_palette_size('d')
-    target.set_file(f'performance_test.png', inputs = False)
-    target.new()
 
     args = (source, target)
 
