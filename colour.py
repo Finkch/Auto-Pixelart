@@ -1,5 +1,5 @@
 # Tracks colour and colour operations
-from numpy import average, array, ndarray
+from numpy import average
 
 
 # Class to represent RGB colour
@@ -22,7 +22,7 @@ class Colour:
         self.frequency = int(self.frequency)
 
         # Packages the three channels together
-        self.RGB = array((self.R, self.G, self.B))
+        self.RGB = (self.R, self.G, self.B)
 
         self.HSV = None
 
@@ -145,7 +145,7 @@ class Colour:
         self.H = int(round(h, 0))
         self.S = int(round(s, 0))
         self.V = int(round(v, 0))
-        self.HSV = array((self.H, self.S, self.V))
+        self.HSV = (self.H, self.S, self.V)
         return self.HSV
 
 
