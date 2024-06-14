@@ -10,10 +10,10 @@ from image import Image
 #   arg[0]: input file name with extensions
 #
 # Optional parameters:
-#   'd': [d]ownscaling algorithm
-#   'w': [w]idth of pixel art image
-#   'p': number of colours in the [p]alette
-#   'u': resolution to [u]pscale to
+#   --d: [d]ownscaling algorithm
+#   --w: [w]idth of pixel art image
+#   --p: number of colours in the [p]alette
+#   --u: resolution to [u]pscale to
 def auto(args: list, kwargs: dict) -> None:
     
     # Sets defaults and gets optional parameters
