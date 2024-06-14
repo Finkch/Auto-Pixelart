@@ -6,7 +6,7 @@ from colour import Colour
 from numpy import array, ndarray
 
 class Image():
-    def __init__(self, file = None, HSV: bool = False) -> None:
+    def __init__(self, file: str, location: str = 'inputs', size: tuple = None, colours: int = None, HSV: bool = False) -> None:
         self.file           = None
         self.palette_size   = None
         self.width          = None
@@ -18,67 +18,58 @@ class Image():
 
         self.is_HSV         = HSV
 
-        if file:
-            self.set_file(file)
+        self.load(file, location, size)
+        self.set_palette_size(colours)
 
+
+    # Loads an image from a file
+    def load(self, file: str, location: str, size: tuple) -> None:
+        self.set_file(file, location)
+        
+        # Creates the source image
+        if location == 'inputs':
+            self.source = Pim.open(self.path)
+            self.set_resolution(None)
+        else:
+            self.set_resolution(size)
+            self.source = Pim.new('RGB', self.size)
 
 
     # A few setters
-    def set_file(self, file: str, inputs: bool = True) -> None:
+    def set_file(self, file: str, location: str) -> None:
         self.file = file
         self.file_name = file[:file.index('.')]
         self.file_extension = file[file.index('.'):]
-
-        # Reads the image if its an input
-        # Also sets the path
-        if inputs:
-            self.location = 'inputs'
-            self.update_file()
-            self.read(self.path)
-        else:
-            self.location = 'outputs'
-            self.update_file()
-
-    def update_file(self) -> None:
-        self.file = f'{self.file_name}{self.file_extension}'
+        self.location = location
         self.path = f'{self.location}/{self.file}'
 
+    def set_resolution(self, size: tuple) -> None:
+        if size:
+            self.size   = size
+            self.width  = size[0]
+            self.height = size[1]
+        else:
+            self.size   = self.source.size
+            self.width  = self.size[0]
+            self.height = size[1]
 
     def set_palette_size(self, size: int | str) -> None:
-        if size in 'd':
+        if not size or size == 'd':
             self.palette_size = 8
-        elif size in 'a':
+        elif size == 'a':
             self.palette_size = 1 # TODO
         else:
             self.palette_size = int(size)
 
-    # Sets the resolution of this image, based off of a source image
-    def set_resolution(self, width: int, source) -> None:
-        self.width = width
-
-        # Preserves aspect ratio
-        self.height = int(self.width / source.width * source.height)
-
-    # Scale the image using nearest neighbour
-    def scale(self, width: int) -> None:
-        height = int(width / self.width * self.height)
-
-        self.source = self.source.resize((width, height), resample = Pim.NEAREST)
-        self.update()
-
-    # Reads an image into the source attribute
-    def read(self, source: str | Pim.Image) -> None:
-        if isinstance(source, str):
-            self.source = Pim.open(source)
-        elif isinstance(source, Pim.Image):
-            self.source = source
+    # Gets the scaled size of the source.
+    #   If absolute, then `scale` will match the width (preserving aspect ratio).
+    #   Otherwise, decrease size by a factor of `scale`.
+    def scaled_size(self, scale: int | float, absolute: bool = True) -> tuple:
+        if absolute:
+            return scale, int(scale / self.width * self.height)
         else:
-            raise ValueError(f'Cannot read type "{type(source)}"')
-        self.update()
+            return int(self.width / scale), int(self.height / scale)
     
-    # Makes a new source image
-    def new(self) -> None:
-        self.source = Pim.new(mode = 'RGB', size = (self.width, self.height))
 
     # Saves the source image
     def save(self):
@@ -88,26 +79,17 @@ class Image():
         self.source.save(self.path)
 
 
-    # Sets some values, incase the source image has changed
-    def update(self) -> None:
-        self.width = self.source.width
-        self.height = self.source.height
-        self.size = (self.width, self.height)
-
-        # Updates the colour list
-        self.get_colours()
-
-
-    def get_colours(self) -> None:
+    # Gets a list of the image's colours
+    def get_colours(self) -> ndarray:
 
         # PIL.Image takes max_colours as an argument
         cols = self.source.getcolors(self.width * self.height)
 
         match self.source.mode:
             case 'RGB':
-                self.colours = [Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = self.is_HSV) for frequency_colour in cols]
+                self.colours = array([Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = self.is_HSV) for frequency_colour in cols])
             case 'P':
-                pass
+                self.colours = None
 
         return self.colours
     
