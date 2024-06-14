@@ -105,7 +105,7 @@ def choose_upscale(image: Image) -> int:
 
 
 # Prompts user for the algorithm they want to use
-def choose_downscale() -> tuple[str, str]:
+def choose_downscale(choice: str = None) -> tuple[str, str]:
 
     preamble = 'Choose an algorithm to use:'
 
@@ -126,7 +126,12 @@ def choose_downscale() -> tuple[str, str]:
         '[k]\tk-Means Palette'
     ]
 
-    choice = prompt(preamble, valid_choices, prompts)
+    if not choice:
+        choice = prompt(preamble, valid_choices, prompts)
+
+    if choice not in valid_choices:
+        raise ValueError(f'Invalid choice for downsampler: "{choice}"')
+
 
     return choice, method_names[valid_choices.index(choice)]
 
