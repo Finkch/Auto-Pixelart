@@ -39,7 +39,7 @@ class Image():
     def set_file(self, file: str, location: str) -> None:
         self.file = file
         self.file_name = file[:file.index('.')]
-        self.file_extension = file[file.index('.'):]
+        self.file_extension = file[file.index('.') + 1:]
         self.location = location
         self.path = f'{self.location}/{self.file}'
 
@@ -60,6 +60,15 @@ class Image():
             self.palette_size = 1 # TODO
         else:
             self.palette_size = int(size)
+
+    # Updates the name and path
+    def update_name(self, name: str, extension: str = None) -> None:
+        if extension:
+            self.file_extension = extension
+
+        self.file_name = name
+        self.file = f'{self.file_name}.{self.file_extension}'
+        self.path = f'{self.location}/{self.file}'
 
     # Gets the scaled size of the source.
     #   If absolute, then `scale` will match the width (preserving aspect ratio).
