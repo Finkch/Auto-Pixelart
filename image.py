@@ -75,6 +75,12 @@ class Image():
         self.file = f'{self.file_name}.{self.file_extension}'
         self.path = f'{self.location}/{self.file}'
 
+    # Updates size to match its source.
+    # Yes, this is the same as set_resultion with no supplied
+    # arguments, but this convention is more clear.
+    def update_size(self) -> None:
+        self.set_resolution(None)
+
     # Gets the scaled size of the source.
     #   If absolute, then `scale` will match the width (preserving aspect ratio).
     #   Otherwise, decrease size by a factor of `scale`.
