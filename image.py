@@ -2,6 +2,7 @@
 # This class contains PIL.Image
 
 from PIL import Image as Pim
+from PIL.Image import NEAREST
 from colour import Colour
 from numpy import array, ndarray
 
@@ -84,7 +85,7 @@ class Image():
     # Gets the scaled size of the source.
     #   If absolute, then `scale` will match the width (preserving aspect ratio).
     #   Otherwise, decrease size by a factor of `scale`.
-    def scaled_size(self, scale: int | float, absolute: bool = True) -> tuple:
+    def get_size(self, scale: int | float, absolute: bool = True) -> tuple:
         if absolute:
             return scale, int(scale / self.width * self.height)
         else:

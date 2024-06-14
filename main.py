@@ -43,27 +43,45 @@ def main():
 
 # Processes an image into pixel art
 def process_image():
-    image = Image()
-    choose_file(image)
+    
+    # Chooses parameters
+    file = choose_file()
+    width = choose_resolution()
+    downscaler, downscaler_name, need_palette = choose_downscale()
+    
+    palette_size = 'd'
+    if need_palette:
+        palette_size = choose_palette_size()
 
-    # Gets the downscaling method
-    downscale_mode, downscale_name = choose_downscale()
+    upscale_width = choose_upscale()
 
+    # Creates the input and output images
+    input: Image    = Image(file)
+    output: Image   = Image(
+        file        = input.file, 
+        location    = 'outputs',
+        size        = input.get_size(width),
+        colours     = palette_size
+    )
+
+    # Updates the output image's name
+    output.update_name(f'{input.file_name} ({downscaler_name})')
+    
     # Runs
-    pixel_art = downscale(image, downscale_mode, downscale_name)
-    pixel_art.update() # In case further changes are made
-    
-    # Upscales the image
-    if choose_continue('Upscale image?'):
-        new_width = choose_upscale(pixel_art)
-        pixel_art.scale(new_width)
-    
-    pixel_art.save()
+    output = downscaler(input, output)
 
+    # Upscales the image
+    if upscale_width:
+        output.set_resolution(output.scaled_size(upscale_width))
+        upscaler = choose_downscale('n')[0]
+        upscaler(output, output)
+    
+    # Saves the image
+    output.save()
 
     # Informs user
     print('\nImage converted to pixel art!')
-    print(f'See `outputs/{pixel_art.file}` directory for your image.\n')
+    print(f'See `{output.path}` directory for your image.\n')
 
 
 # Looks at the palette of an image
