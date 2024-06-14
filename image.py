@@ -33,7 +33,7 @@ class Image():
             self.set_resolution(None)
         else:
             self.set_resolution(size)
-            self.source = Pim.new('RGB', self.size)
+            self.source = Pim.new('RGB', self.size, color = 'white')
 
     # Sets source to be a PIL image
     def set(self, image: Pim.Image) -> None:
@@ -125,6 +125,8 @@ class Image():
                 self.colours = array([Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = self.is_HSV) for frequency_colour in cols])
             case 'P':
                 self.colours = None
+            case _:
+                ValueError(f'Invalid image mode "{self.source.mode}"')
 
         return self.colours
     
