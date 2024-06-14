@@ -1,13 +1,12 @@
 # Gets user input
 
 from os import listdir
-from image import Image
-
-from colour import colour_functions, colour_names
-
-from performance import performance_functions, performance_names
 
 from typing import Callable
+
+from colour import colour_functions, colour_names
+from performance import performance_functions, performance_names
+
 
 
 # Chooses the operational mode
