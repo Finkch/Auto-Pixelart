@@ -3,6 +3,9 @@ inputs/*
 outputs/*
 logs/*
 
+# Scripts to facilitate testing
+*.sh
+
 # Silly MacOS .DS_Store
 .DS_Store
 */.DS_Store
