@@ -18,7 +18,7 @@ class Image():
 
         self.is_HSV         = HSV
 
-        if self.file:
+        if file:
             self.set_file(file)
 
 
