@@ -5,7 +5,16 @@ from os import listdir
 from typing import Callable
 
 from colour import colour_functions, colour_names
+from image import Image
 from performance import performance_functions, performance_names
+
+import sampling.bicubic
+import sampling.bilinear
+import sampling.kmean
+import sampling.nearest_neighbour
+import sampling.bilinear
+import sampling.sinc
+
 
 
 
@@ -130,9 +139,25 @@ def choose_downscale(choice: str = None) -> tuple[str, str]:
 
     if choice not in valid_choices:
         raise ValueError(f'Invalid choice for downsampler: "{choice}"')
+    
+
+    downscalers = [
+        sampling.nearest_neighbour.nearest_neighbour_pil,
+        sampling.bilinear.bilinear_pil,
+        sampling.bicubic.bicubic_pil,
+        sampling.sinc.sinc_pil,
+        sampling.kmean.palettised
+    ]
+
+    # Whether or not a palette size needs to be selected
+    need_palette = choice in ['k']
 
 
-    return choice, method_names[valid_choices.index(choice)]
+    return (
+        downscalers[valid_choices.index(choice)], 
+        method_names[valid_choices.index(choice)], 
+        need_palette
+    )
 
 
 # Prompts user for desired number of colours in the palette
