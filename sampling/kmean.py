@@ -9,7 +9,7 @@ import PIL.Image as Pim
 #   3: Repaint as closest colour
 def palettised(image: Image, pixel_art: Image, log: bool = False) -> Image:
     
-    return paint_palette(image, pixel_art, log)
+    return put_palette(image, pixel_art, log)
 
 
 def pil_palette(image: Image, pixel_art: Image, log: bool = False) -> Image:
