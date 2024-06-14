@@ -5,7 +5,6 @@
 from sys import argv
 from input import choose_downscale
 from image import Image
-from downscale import downscale
 
 # Runs the program.
 #   arg[0]: input file name with extensions
@@ -33,22 +32,30 @@ def auto(args: list, kwargs: dict) -> None:
 
     # Gets the downscaler.
     #   Defaults to 'k', k-mean clustering
-    downscale_mode, downscale_name = choose_downscale(method)
+    downscaler, downscaler_name, need_palette = choose_downscale(method)
 
-    # Obtains the source image
-    image = Image(args[0])
+    # Obtains input and output images
+    input: Image    = Image(args[0])
+    output: Image   = Image(
+        file        = input.file, 
+        location    = 'outputs',
+        size        = input.get_size(width),
+        colours     = palette
+    )
+
+    # Updates the name of the output
+    output.update_name(f'{input.file_name} ({downscaler_name})', extension = 'png')
 
     # Downscales the image
-    pixel_art = downscale(image, downscale_mode, downscale_name, width, palette)
-    pixel_art.update()
+    output = downscaler(input, output)
 
     # Upscales the image, if specified
     if 'u' in kwargs:
-        pixel_art.scale(int(kwargs['u']))
+        output.resize(int(kwargs['u']))
 
     # Saves the image
-    pixel_art.save()
-    print(f'See `outputs/{pixel_art.file}` for your image.\n')
+    output.save()
+    print(f'See `{output.path}` for your image.\n')
 
 
 
