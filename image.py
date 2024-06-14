@@ -57,7 +57,7 @@ class Image():
         else:
             self.size   = self.source.size
             self.width  = self.size[0]
-            self.height = size[1]
+            self.height = self.size[1]
 
     def set_palette_size(self, size: int | str) -> None:
         if not size or size == 'd':
