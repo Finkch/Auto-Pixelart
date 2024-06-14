@@ -5,14 +5,14 @@
 from sys import argv
 
 
-def auto(*args):
-    r = read_arguments(*args)
-    print(r)
+# Runs the program
+def auto(args: list, kwargs: dict) -> None:
+    print(args, kwargs)
 
 
 # Reads argv as a list, grabbing arguments
 # and key-word arguments.
-def read_arguments(*args) -> tuple[list, dict]:
+def read_arguments(args: list) -> tuple[list, dict]:
     
     largs = []
     kwargs = {}
@@ -37,4 +37,4 @@ def read_arguments(*args) -> tuple[list, dict]:
 if __name__ == '__main__':
 
     # We remove the file name - don't need it
-    auto(*argv[1:])
+    auto(*read_arguments(argv[1:]))
