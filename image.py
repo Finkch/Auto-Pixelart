@@ -72,7 +72,7 @@ class Image():
     
 
     # Saves the source image
-    def save(self):
+    def save(self) -> None:
         if not self.source:
             raise ReferenceError('Cannot save image because image source does not exist.')
         
