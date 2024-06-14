@@ -5,7 +5,6 @@ from image import Image
 from input import *
 from visualise import show_palette
 from performance import run_test
-from downscale import downscale
 
 from logger import logger
 
@@ -57,6 +56,11 @@ def process_image():
 
     # Creates the input and output images
     input: Image    = Image(file)
+
+    # Defaults to input image's width
+    if not width:
+        width = input.width
+
     output: Image   = Image(
         file        = input.file, 
         location    = 'outputs',
@@ -72,9 +76,7 @@ def process_image():
 
     # Upscales the image
     if upscale_width:
-        output.set_resolution(output.scaled_size(upscale_width))
-        upscaler = choose_downscale('n')[0]
-        upscaler(output, output)
+        output.resize(upscale_width)
     
     # Saves the image
     output.save()
@@ -88,8 +90,7 @@ def process_image():
 def visualise_palette():
     
     # Selects an image
-    image = Image()
-    choose_file(image)
+    image = Image(choose_file())
 
     # Chooses method of squashing colours
     choose_colour, choose_name = choose_averaging()
