@@ -15,13 +15,16 @@ import sampling.bilinear
 import sampling.sinc
 
 # Downscales an image
-def downscale(image: Image, mode: str, downscaling_name: str) -> Image:
+def downscale(image: Image, mode: str, downscaling_name: str, width: int = None, palette: str = None) -> Image:
 
     # Creates a new image
     pixel_art = Image()
 
     # Sets the resolution of the new image
-    width = choose_resolution()
+    if not width:
+        width = choose_resolution()
+    elif width == -1:
+        width = image.width
     pixel_art.set_resolution(width, image)
 
     # Creates the source for the new image
@@ -30,7 +33,7 @@ def downscale(image: Image, mode: str, downscaling_name: str) -> Image:
 
 
     # Gets the function associated with the mode
-    downscaler = get_downscaler(pixel_art, mode)
+    downscaler = get_downscaler(pixel_art, mode, palette)
 
 
     # Runs the downscaler
@@ -40,12 +43,16 @@ def downscale(image: Image, mode: str, downscaling_name: str) -> Image:
 
 
 # Returns the function associated with the mode
-def get_downscaler(image: Image, mode: str) -> Callable:
+def get_downscaler(image: Image, mode: str, palette: str = None) -> Callable:
 
     # The array contains a list of modes that purely downscale
     # Thus we can't impose palette constraints
     if mode not in ['n', 'l', 'c', 's']:
-        choose_palette_size(image)
+
+        if not palette:
+            choose_palette_size(image)
+        else:
+            image.set_palette_size(palette)
 
     # Finds the associated function
     match mode:
