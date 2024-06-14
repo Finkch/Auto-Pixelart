@@ -2,7 +2,7 @@
 # This class contains PIL.Image
 
 from PIL import Image as Pim
-from PIL.Image import NEAREST
+from PIL.Image import NEAREST, LANCZOS
 from colour import Colour
 from numpy import array, ndarray
 
@@ -85,11 +85,25 @@ class Image():
     # Gets the scaled size of the source.
     #   If absolute, then `scale` will match the width (preserving aspect ratio).
     #   Otherwise, decrease size by a factor of `scale`.
-    def get_size(self, scale: int | float, absolute: bool = True) -> tuple:
+    def get_size(self, scale: int | float = None, absolute: bool = True) -> tuple:
+        if not scale:
+            return self.size
+        
         if absolute:
             return scale, int(scale / self.width * self.height)
         else:
             return int(self.width / scale), int(self.height / scale)
+        
+    # Scales source to given size.
+    # Valid choices for method inlcude `n` = `NEAREST` and `s` `SINC/LANCZOS`
+    def resize(self, scale: int | float, absolute: bool = True, method: int = 'n') -> None:
+        match method:
+            case 'n': method = NEAREST
+            case 's': method = LANCZOS
+            case _:   ValueError(f'Unknown resampling method "{method}"')
+
+        self.source = self.source.resize(self.get_size(scale, absolute), resample = method)
+        self.update_size()
     
 
     # Saves the source image
