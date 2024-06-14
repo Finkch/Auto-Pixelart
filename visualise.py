@@ -13,8 +13,12 @@ from colour import *
 def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted', use_HSV = False):
 
     # Obtains the set of palettes and the most common element
-    palettes, maxi = colourings(image.colours, use_HSV)
+    palettes, maxi = colourings(image.get_colours(), use_HSV)
 
+    # Appends the sorting method
+    col_type = 'RGB'
+    if use_HSV:
+        col_type = 'HSV'
 
     # Logs the colour list
     logger.log('colour_listing',
@@ -42,8 +46,7 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
 
 
     # Creates a white image, which will be editted to show the palette
-    palette = Image()
-    palette.read(Pim.new(mode = 'RGB', size = (im_width, im_height), color = 'white'))
+    palette = Image(f'palette_{image.file_name} ({choose_name}, {col_type}).{image.file_extension}', location = 'outputs', size =(im_width, im_height))
 
     # Obtains the map to pixels in the new image
     pixels = palette.source.load()
@@ -82,13 +85,7 @@ def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted
             for j in range(start, stop):
                 pixels[i + x_off, j + y_off] = colour.RGB
 
-    # Appends the sorting method
-    col_type = 'RGB'
-    if use_HSV:
-        col_type = 'HSV'
-
     # Saves the image
-    palette.set_file(f'palette_{image.file_name} ({choose_name}, {col_type}){image.file_extension}', inputs = False)
     palette.save()
     return palette
 
@@ -116,10 +113,10 @@ def colourings(colours: list[Colour], use_HSV: bool = False) -> tuple[list, Colo
 def RGB_colourings(colours: list[Colour]) -> tuple[list, Colour]:
 
     # Sorts by colour
-    by_colour = sorted(colours, reverse = True, key = lambda x : x.RGB)
+    by_colour = sorted(colours, reverse = True, key = lambda x : list(x.RGB))
 
     # Sorts by lightness
-    by_light = sorted(colours, reverse = True, key = lambda x : x.R + x.G + x.B)
+    by_light = sorted(colours, reverse = True, key = lambda x : sum(x.RGB))
 
     # Bundles the choices
     return [colours, by_colour, by_light], colours[0]
