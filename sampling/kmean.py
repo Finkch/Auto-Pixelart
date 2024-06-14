@@ -7,33 +7,33 @@ import PIL.Image as Pim
 #   1: Downscale image (sinc) to desired size
 #   2: For each pixel, find which in the palette is the closet
 #   3: Repaint as closest colour
-def palettised(image: Image, pixel_art: Image, log: bool = False) -> Image:
+def palettised(input: Image, output: Image) -> Image:
     
-    return put_palette(image, pixel_art, log)
+    return put_palette(input, output)
 
 
-def pil_palette(image: Image, pixel_art: Image, log: bool = False) -> Image:
+def pil_palette(input: Image, output: Image) -> Image:
 
     # Creates a copy of the image
-    pixel_art.source = image.source.copy()
+    output.source = input.source.copy()
 
     # Creates and sets a colour palette
-    pixel_art.source = pixel_art.source.convert(
+    output.source = output.source.convert(
         'P', 
         palette = Pim.ADAPTIVE,
-        colors = pixel_art.palette_size
+        colors = output.palette_size
     )
 
     # Downscales to desired size
-    pixel_art.source.thumbnail((pixel_art.width, pixel_art.height))
+    output.source.thumbnail((output.width, output.height))
 
     # Returns
-    return pixel_art
+    return output
 
-def put_palette(image: Image, pixel_art: Image, log: bool = False) -> Image:
+def put_palette(input: Image, output: Image) -> Image:
     
     # Obtains the palette
-    palette = image.get_palette(pixel_art.palette_size)
+    palette = input.get_palette(output.palette_size)
 
     # Converts the palette into PIL palette
     pilette = []
@@ -43,35 +43,35 @@ def put_palette(image: Image, pixel_art: Image, log: bool = False) -> Image:
         pilette.append(colour.B)
 
     # Creates an image of the palette
-    palette_image = Pim.new('P', (pixel_art.palette_size, 1))
+    palette_image = Pim.new('P', (output.palette_size, 1))
     palette_image.putpalette(pilette)
 
     # Quantises the image to use the palette image's colours
-    pixel_art.source = image.source.quantize(palette = palette_image, dither = 0)
+    output.source = input.source.quantize(palette = palette_image, dither = 0)
 
     # Downsizes
-    pixel_art.source.thumbnail((pixel_art.width, pixel_art.height), resample = NEAREST)
+    output.source.thumbnail((output.width, output.height), resample = NEAREST)
 
-    return pixel_art
+    return output
 
 
-def paint_palette(image: Image, pixel_art: Image, log: bool = False) -> Image:
+def paint_palette(input: Image, output: Image) -> Image:
     
     # Gets the palette of the image
-    palette = image.get_palette(pixel_art.palette_size)
+    palette = input.get_palette(output.palette_size)
 
     # Downscales the original image
-    pixel_art.source = image.source.resize((pixel_art.width, pixel_art.height), resample = NEAREST)
+    output.source = input.source.resize((output.width, output.height), resample = NEAREST)
 
     # Pixel map of the source and downscaled
-    pixel_map = pixel_art.source.load()
+    pixel_map = output.source.load()
 
     # A map of colouring to speed up the process
     palette_map = {}
 
     # Iterates over every pixel to paint
-    for i in range(pixel_art.width):
-        for j in range(pixel_art.height):
+    for i in range(output.width):
+        for j in range(output.height):
 
             # Gets the colour
             colour = Colour(*pixel_map[i, j])
@@ -88,4 +88,4 @@ def paint_palette(image: Image, pixel_art: Image, log: bool = False) -> Image:
             # Paints the corresponding pixel
             pixel_map[i, j] = palette_map[ct]
 
-    return pixel_art
+    return output
