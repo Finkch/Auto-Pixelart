@@ -12,18 +12,18 @@ from PIL.Image import BILINEAR
 from logger import logger
 
 # This function is bugged and its output is the same as nearest neighbour
-def bilinear(image: Image, pixel_art: Image, log: bool = False) -> Image:
+def bilinear(input: Image, output: Image, log: bool = False) -> Image:
 
     # Pixel map of the source and downscale
-    source_map = image.source.load()
-    pixel_map = pixel_art.source.load()
+    source_map = input.source.load()
+    pixel_map = output.source.load()
 
     # Obtains the scaling factor
     #   ! This is a float !
-    scale = image.width / pixel_art.width
+    scale = input.width / output.width
 
     # Iterates over all the points in the pixel
-    for i in range(pixel_art.width):
+    for i in range(output.width):
 
         # Gets the correspnding coordinates in the original image of i/x
         # s: source, f: floor, c: ceiling
@@ -32,7 +32,7 @@ def bilinear(image: Image, pixel_art: Image, log: bool = False) -> Image:
         sir = sif + 1
         
 
-        for j in range(pixel_art.height):
+        for j in range(output.height):
             
             # Coordinates in the j/y
             sj = j * scale
@@ -53,9 +53,9 @@ def bilinear(image: Image, pixel_art: Image, log: bool = False) -> Image:
             if log:
                 logger.loga('bilinear', f'[{i}, {j}]:\t{pixel_map[i, j]} <- [{si}-{sif}-{sir}, {sj}-{sjf}-{sjr}]')
 
-    return pixel_art
+    return output
 
 # Using PIL's resizing method
-def bilinear_pil(image: Image, pixel_art: Image, log: bool = False) -> Image:
-        pixel_art.source = image.source.resize((pixel_art.width, pixel_art.height), resample = BILINEAR)
-        return pixel_art
+def bilinear_pil(input: Image, output: Image, log: bool = False) -> Image:
+        output.source = input.source.resize((output.width, output.height), resample = BILINEAR)
+        return output

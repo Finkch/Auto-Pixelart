@@ -9,19 +9,19 @@ from PIL.Image import NEAREST
 
 from logger import logger
 
-def nearest_neighbour(image: Image, pixel_art: Image, log = False) -> Image:
+def nearest_neighbour(input: Image, output: Image, log = False) -> Image:
     
     # Pixel map of the source and downscale
-    source_map = image.source.load()
-    pixel_map = pixel_art.source.load()
+    source_map = input.source.load()
+    pixel_map = output.source.load()
 
     # Obtains the scaling factor
     #   ! This is a float !
-    scale = image.width / pixel_art.width
+    scale = input.width / output.width
 
     # Iterates over all the points in the pixel
-    for i in range(pixel_art.width):
-        for j in range(pixel_art.height):
+    for i in range(output.width):
+        for j in range(output.height):
 
             # Gets the correspnding coordinates in the original image
             si, sj = int(i * scale), int(j * scale)
@@ -33,11 +33,11 @@ def nearest_neighbour(image: Image, pixel_art: Image, log = False) -> Image:
             if log:
                 logger.loga('nearest_neighbour', f'[{i}, {j}]:\t{pixel_map[i, j]} <- [{si}, {sj}]:\t{source_map[si, sj]}')
 
-    return pixel_art
+    return output
 
 # Using PIL's resizing method
-def nearest_neighbour_pil(image: Image, pixel_art: Image, log = False):
-    pixel_art.source = image.source.resize((pixel_art.width, pixel_art.height), resample = NEAREST)
-    return pixel_art
+def nearest_neighbour_pil(input: Image, output: Image, log = False):
+    output.source = input.source.resize((output.width, output.height), resample = NEAREST)
+    return output
 
     
