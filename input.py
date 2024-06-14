@@ -30,7 +30,7 @@ def choose_mode() -> str:
 
 
 # Obtains user's choice for file to process
-def choose_file(file: Image) -> None:
+def choose_file() -> str:
 
     # Obtains a list of files in the input directory
     files = listdir('inputs')
@@ -45,7 +45,7 @@ def choose_file(file: Image) -> None:
     )
 
     # Returns the file choses
-    file.set_file(files[int(choice) - 1])
+    return files[int(choice) - 1]
 
 
 
@@ -78,11 +78,11 @@ def choose_resolution() -> int:
         case 'h': return 256
         case _:   return int(choice)
 
-def choose_upscale(image: Image) -> int:
+def choose_upscale() -> int:
 
     preamble = 'Choose width of the upscaled image:'
 
-    valid_choices = ['a', 's', 'd', 'f', 'g'] + [i for i in range(image.width, 4097)]
+    valid_choices = ['a', 's', 'd', 'f', 'g'] + [i + 1 for i in range(4096)]
 
     prompts = [
         '[a]\t256',
@@ -90,7 +90,7 @@ def choose_upscale(image: Image) -> int:
         '[d]\t1024',
         '[f]\t2048',
         '[g]\t4096',
-        f' -\tEnter a number between {image.width} and 4096'
+        f' -\tEnter a number between 1 and 4096'
     ]
 
     choice = prompt(preamble, valid_choices, prompts)
@@ -137,7 +137,7 @@ def choose_downscale(choice: str = None) -> tuple[str, str]:
 
 
 # Prompts user for desired number of colours in the palette
-def choose_palette_size(file: Image) -> None:
+def choose_palette_size() -> str:
 
     preamble = 'Choose a palette size, the number of colours that will be in the pixel art:'
 
@@ -152,7 +152,7 @@ def choose_palette_size(file: Image) -> None:
 
     choice = prompt(preamble, valid_choices, prompts)
 
-    file.set_palette_size(choice)
+    return choice
 
 
 # Chooses method of combining pixel colours for visualising an image's palette
