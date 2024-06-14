@@ -34,6 +34,11 @@ class Image():
             self.set_resolution(size)
             self.source = Pim.new('RGB', self.size)
 
+    # Sets source to be a PIL image
+    def set(self, image: Pim.Image) -> None:
+        self.source = image
+        self.set_resolution(self.source.size)
+
 
     # A few setters
     def set_file(self, file: str, location: str) -> None:
