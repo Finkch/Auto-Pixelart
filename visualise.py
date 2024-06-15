@@ -9,6 +9,28 @@ from logger import logger
 from colour import *
 
 
+# Given an image, show it's palette
+def show_palette(image: Image) -> None:
+    palette = image.get_palette()
+
+    output = Image(
+        file        =  f'palette_{image.file}', 
+        location    = 'outputs',
+        size        = (len(palette), 1)
+    )
+
+    pixel_map = output.source.load()
+
+    for i in range(palette):
+        pixel_map[i] = palette[i]
+
+
+    output.resize(150 * len(palette))
+    output.save()
+    return output
+
+
+
 # Given an image, visualises its colours
 def show_colours(image: Image, choose = weighted_colour, choose_name = 'weighted', use_HSV = False):
 
