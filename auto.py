@@ -5,6 +5,7 @@
 from sys import argv
 from input import choose_downscale
 from image import Image
+from visualise import show_colours, show_palette
 
 # Runs the program.
 #   arg[0]: input file name with extensions
@@ -17,6 +18,10 @@ from image import Image
 def auto(args: list, kwargs: dict) -> None:
     
     # Sets defaults and gets optional parameters
+    mode = 'p'
+    if 'm' in kwargs:
+        mode = kwargs['m']
+
     method = 'k'
     if 'd' in kwargs:
         method = kwargs['d']
@@ -46,8 +51,16 @@ def auto(args: list, kwargs: dict) -> None:
     # Updates the name of the output
     output.update_name(f'{input.file_name} ({downscaler_name})', extension = 'png')
 
-    # Downscales the image
-    output = downscaler(input, output)
+    match mode:
+        case 'p':
+            # Downscales the image
+            output = downscaler(input, output)
+
+        # Shows colours or palette
+        case 'vc':
+            output = show_colours(input, use_HSV = True)
+        case 'vp':
+            output = show_palette(input)
 
     # Upscales the image, if specified
     if 'u' in kwargs:
