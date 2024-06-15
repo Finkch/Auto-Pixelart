@@ -9,7 +9,7 @@ from logger import logger
 from colour import *
 
 
-# Given an image, visualises its palette
+# Given an image, visualises its colours
 def show_colours(image: Image, choose = weighted_colour, choose_name = 'weighted', use_HSV = False):
 
     # Obtains the set of palettes and the most common element
@@ -46,7 +46,7 @@ def show_colours(image: Image, choose = weighted_colour, choose_name = 'weighted
 
 
     # Creates a white image, which will be editted to show the palette
-    palette = Image(f'palette_{image.file_name} ({choose_name}, {col_type}).{image.file_extension}', location = 'outputs', size =(im_width, im_height))
+    palette = Image(f'colours_{image.file_name} ({choose_name}, {col_type}).{image.file_extension}', location = 'outputs', size =(im_width, im_height))
 
     # Obtains the map to pixels in the new image
     pixels = palette.source.load()
