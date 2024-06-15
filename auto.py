@@ -40,7 +40,7 @@ def auto(args: list, kwargs: dict) -> None:
     downscaler, downscaler_name, need_palette = choose_downscale(method)
 
     # Obtains input and output images
-    input: Image    = Image(args[0])
+    input: Image    = Image(args[0], colours = palette)
     output: Image   = Image(
         file        = input.file, 
         location    = 'outputs',
