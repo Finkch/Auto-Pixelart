@@ -5,7 +5,6 @@ from os import listdir
 from typing import Callable
 
 from colour import colour_functions, colour_names
-from image import Image
 from performance import performance_functions, performance_names
 
 import sampling.bicubic
@@ -62,9 +61,10 @@ def choose_resolution() -> int:
 
     preamble = 'Choose the pixel width (note that aspect ratio will be preserved):'
     
-    valid_choices = ['a', 's', 'd', 'f', 'g', 'h'] + [str(i) for i in range(1, 2049)]
+    valid_choices = ['x', 'a', 's', 'd', 'f', 'g', 'h'] + [str(i) for i in range(1, 2049)]
     
     prompts = [
+        '[x]\tSame as image resolution',
         '[a]\t8',
         '[s]\t16',
         '[d]\t32',
@@ -78,6 +78,7 @@ def choose_resolution() -> int:
 
     # Returns the chosen size
     match choice:
+        case 'x': return -1
         case 'a': return 8
         case 's': return 16
         case 'd': return 32
@@ -90,9 +91,10 @@ def choose_upscale() -> int:
 
     preamble = 'Choose width of the upscaled image:'
 
-    valid_choices = ['a', 's', 'd', 'f', 'g'] + [i + 1 for i in range(4096)]
+    valid_choices = ['x', 'a', 's', 'd', 'f', 'g'] + [i + 1 for i in range(4096)]
 
     prompts = [
+        '[x]\tSame as image resolution',
         '[a]\t256',
         '[s]\t512',
         '[d]\t1024',
@@ -104,6 +106,7 @@ def choose_upscale() -> int:
     choice = prompt(preamble, valid_choices, prompts)
 
     match choice:
+        case 'x': return -1
         case 'a': return 256
         case 's': return 512
         case 'd': return 1024
