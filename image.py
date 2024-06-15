@@ -4,6 +4,7 @@
 from PIL import Image as Pim
 from PIL.Image import NEAREST, LANCZOS
 from colour import Colour
+from palette import Palette
 from numpy import array, ndarray
 
 class Image():
@@ -16,6 +17,7 @@ class Image():
         self.source         = None
 
         self.colours        = None
+        self.palette        = None
 
         self.is_HSV         = HSV
 
@@ -130,42 +132,9 @@ class Image():
 
         return self.colours
     
-    # Gets best representation for the image's palette.
-    # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
-    def get_palette(self, size: int = None, top: int = None, width: int = None) -> ndarray[Colour]:
-        if not size:
-            size = self.palette_size
-        
-        if not top:
-            top = size
-
-        # Gets a copy of the image to process
-        image = self.source.copy()
-
-        # Reduces image size to speed up the computation
-        if width:
-            height = int(width / image.width * image.height)
-            image.thumbnail((width, height))
-
-        # Reduces the colours in the image.
-        # Internally, k-mean clustering is used
-        paletted = image.convert('P', palette = Pim.ADAPTIVE, colors = size)
-        image_palette = paletted.getpalette()
-
-        # Retrieves a list of dominent colours
-        colour_counts = sorted(paletted.getcolors(), reverse = True)
-
-        # Gets the top dominent colours
-        palette = []
-        for i in range(top):
-
-            # Gets the index of the item
-            pindex = colour_counts[i][1]
-
-            # Palette is just a list of values (not tuples), 
-            # so we need to stride over items
-            palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.is_HSV))
-
-        return array(palette)
+    # Returns the RGB/HSV for the chosen palette
+    def get_palette(self) -> Palette:
+        self.palette = Palette(self.source, self.palette_size, self.is_HSV)
+        return self.palette.palette
         
         
