@@ -86,7 +86,7 @@ class Image():
     #   If absolute, then `scale` will match the width (preserving aspect ratio).
     #   Otherwise, decrease size by a factor of `scale`.
     def get_size(self, scale: int | float = None, absolute: bool = True) -> tuple:
-        if not scale:
+        if not scale or scale < 1:
             return self.size
         
         if absolute:
