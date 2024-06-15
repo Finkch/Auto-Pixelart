@@ -33,7 +33,7 @@ def pil_palette(input: Image, output: Image) -> Image:
 def put_palette(input: Image, output: Image) -> Image:
     
     # Obtains the palette
-    palette = input.get_palette(output.palette_size)
+    palette = input.get_palette()
 
     # Converts the palette into PIL palette
     pilette = []
@@ -58,7 +58,7 @@ def put_palette(input: Image, output: Image) -> Image:
 def paint_palette(input: Image, output: Image) -> Image:
     
     # Gets the palette of the image
-    palette = input.get_palette(output.palette_size)
+    palette = input.get_palette()
 
     # Downscales the original image
     output.source = input.source.resize((output.width, output.height), resample = NEAREST)
