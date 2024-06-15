@@ -133,6 +133,9 @@ class Image():
     # Gets best representation for the image's palette.
     # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
     def get_palette(self, size: int = None, top: int = None, width: int = None) -> ndarray[Colour]:
+        if not size:
+            size = self.palette_size
+        
         if not top:
             top = size
 
