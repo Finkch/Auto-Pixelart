@@ -11,20 +11,26 @@ from colour import *
 
 # Given an image, show it's palette
 def show_palette(image: Image) -> None:
+    
+    # Obtains the palette
     palette = image.get_palette()
 
+    # Creates output image
     output = Image(
         file        =  f'palette_{image.file}', 
         location    = 'outputs',
         size        = (len(palette), 1)
     )
 
+    # Gets access to the pixels
     pixel_map = output.source.load()
 
+    # Colours the image to be the 
     for i in range(len(palette)):
         pixel_map[i, 0] = palette[i].RGB
 
 
+    # Makes the image a reasonable size
     output.resize(150 * len(palette))
     output.save()
     return output
