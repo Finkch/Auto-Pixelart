@@ -21,8 +21,8 @@ def show_palette(image: Image) -> None:
 
     pixel_map = output.source.load()
 
-    for i in range(palette):
-        pixel_map[i] = palette[i]
+    for i in range(len(palette)):
+        pixel_map[i, 0] = palette[i].RGB
 
 
     output.resize(150 * len(palette))
