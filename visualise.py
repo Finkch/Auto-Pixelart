@@ -15,23 +15,27 @@ def show_palette(image: Image) -> None:
     # Obtains the palette
     palette = image.get_palette()
 
+    width   = min(len(palette), 16)
+    height  = int(len(palette) / 16)
+
     # Creates output image
     output = Image(
         file        =  f'palette_{image.file}', 
         location    = 'outputs',
-        size        = (len(palette), 1)
+        size        = (width, height)
     )
 
     # Gets access to the pixels
     pixel_map = output.source.load()
 
     # Colours the image to be the 
-    for i in range(len(palette)):
-        pixel_map[i, 0] = palette[i].RGB
+    for i in range(width):
+        for j in range(height):
+            pixel_map[i, j] = palette[i + j * 16].RGB
 
 
     # Makes the image a reasonable size
-    output.resize(150 * len(palette))
+    output.resize(150 * width)
     output.save()
     return output
 
