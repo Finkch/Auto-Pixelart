@@ -10,7 +10,7 @@ from colour import *
 
 
 # Given an image, visualises its palette
-def show_palette(image: Image, choose = weighted_colour, choose_name = 'weighted', use_HSV = False):
+def show_colours(image: Image, choose = weighted_colour, choose_name = 'weighted', use_HSV = False):
 
     # Obtains the set of palettes and the most common element
     palettes, maxi = colourings(image.get_colours(), use_HSV)
