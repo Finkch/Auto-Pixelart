@@ -121,6 +121,54 @@ def show_colours(image: Image, choose = weighted_colour, choose_name = 'weighted
     palette.save()
     return palette
 
+# Paints a colour wheel to visualise an image's palette
+def show_colour_wheel(image: Image):
+    
+    # Grabs the colours
+    colours = image.get_colours(use_HSV = True)
+
+    # Dimensions of the visualisation
+    d = 256
+    bw = 4
+    bh = 4
+
+    # Output image
+    output = Image(
+        f'wheel_{image.file}',
+        location = 'outputs',
+        size = (2 * d + bw, d + bh),
+        HSV = True
+    )
+
+    # Access to the pixel
+    pixel_map = output.source.load()
+
+
+    # Paints a line to separate the two
+    for i in range(bw):
+        for j in range(d + bh):
+            pixel_map[d + i, j] = (0, 0, 0)
+
+    # Paints a small rainbow at the bottom for comparison
+    for i in range(d):
+        for j in range(bh):
+            pixel_map[i, d + j] = (i, 255, 255)
+            pixel_map[d + bw +  i, d + j] = (i, 255, 255)
+
+
+    # Paints the palette
+    for colour in colours:
+        h = colour.H
+        s = colour.S
+        v = colour.V
+
+        pixel_map[h, s] = (h, s, 255)
+        pixel_map[d + bh + h, v] = (h, 255, v)
+
+    output.save()
+    return output
+
+
 
 # Returns a list of possible ways to visualise the palette.
 #   NOTE: this also return the most common element, which 
