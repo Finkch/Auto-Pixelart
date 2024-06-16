@@ -51,7 +51,7 @@ class Palette:
         return array(palette)
     
     # Saves the palette as an image
-    def save(self, file_name: str) -> None:
+    def save(self, file_name: str) -> Pim.Image:
 
         # Gets the dimensions of the image
         width   = min(len(self.palette), 16)
@@ -87,6 +87,8 @@ class Palette:
         # Saves a reasonably sized version
         output = output.resize((width * 150, height * 150), resample = NEAREST)
         output.save(f'palettes/{file_name}_large.png')
+
+        return output
 
             
             
