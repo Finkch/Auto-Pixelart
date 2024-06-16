@@ -5,7 +5,7 @@
 from sys import argv
 from input import choose_downscale
 from image import Image
-from visualise import show_colours, show_palette
+from visualise import show_colours, show_palette, show_colour_wheel
 
 # Runs the program.
 #   arg[0]: input file name with extensions
@@ -61,6 +61,8 @@ def auto(args: list, kwargs: dict) -> None:
             output = show_colours(input, use_HSV = True)
         case 'vp':
             output = show_palette(input)
+        case 'vw':
+            output = show_colour_wheel(input)
 
     # Upscales the image, if specified
     if 'u' in kwargs:
