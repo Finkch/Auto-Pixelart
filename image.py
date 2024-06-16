@@ -91,7 +91,7 @@ class Image():
     #   If absolute, then `scale` will match the width (preserving aspect ratio).
     #   Otherwise, decrease size by a factor of `scale`.
     def get_size(self, scale: int | float = None, absolute: bool = True) -> tuple:
-        if not scale or scale < 1:
+        if not scale or scale <= 0:
             return self.size
         
         if absolute:
@@ -106,7 +106,7 @@ class Image():
             case 'n': method = NEAREST
             case 's': method = LANCZOS
             case _:   ValueError(f'Unknown resampling method "{method}"')
-            
+
         self.source = self.source.resize(self.get_size(scale, absolute), resample = method)
         self.update_size()
     
