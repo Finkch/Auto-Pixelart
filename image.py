@@ -21,12 +21,14 @@ class Image():
 
         self.is_HSV         = HSV
 
-        self.load(file, location, size)
+        mode = 'HSV' if self.is_HSV else 'RGB'
+
+        self.load(file, location, size, mode)
         self.set_palette_size(colours)
 
 
     # Loads an image from a file
-    def load(self, file: str, location: str, size: tuple) -> None:
+    def load(self, file: str, location: str, size: tuple, mode: str = 'RGB') -> None:
         self.set_file(file, location)
         
         # Creates the source image
@@ -35,7 +37,7 @@ class Image():
             self.set_resolution(None)
         else:
             self.set_resolution(size)
-            self.source = Pim.new('RGB', self.size, color = 'white')
+            self.source = Pim.new(mode, self.size, color = 'white')
 
     # Sets source to be a PIL image
     def set(self, image: Pim.Image) -> None:
@@ -113,18 +115,26 @@ class Image():
         if not self.source:
             raise ReferenceError('Cannot save image because image source does not exist.')
         
+        if self.is_HSV:
+            self.source = self.source.convert('RGB')
         self.source.save(self.path)
 
 
     # Gets a list of the image's colours
-    def get_colours(self) -> ndarray:
+    def get_colours(self, use_HSV: bool = None) -> ndarray:
+
+        # Use RGB or HSV.
+        # Prioritises passes arguments.
+        HSV = use_HSV
+        if use_HSV == None:
+            HSV = self.is_HSV
 
         # PIL.Image takes max_colours as an argument
         cols = self.source.getcolors(self.width * self.height)
 
         match self.source.mode:
             case 'RGB':
-                self.colours = array([Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = self.is_HSV) for frequency_colour in cols])
+                self.colours = array([Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = HSV) for frequency_colour in cols])
             case 'P':
                 self.colours = None
             case _:
