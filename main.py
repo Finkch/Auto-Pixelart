@@ -3,7 +3,7 @@
 from image import Image
 
 from input import *
-from visualise import show_colours
+from visualise import show_colour_wheel
 from performance import run_test
 
 from logger import logger
@@ -93,13 +93,13 @@ def visualise_palette():
     image = Image(choose_file())
 
     # Chooses method of squashing colours
-    choose_colour, choose_name = choose_averaging()
+    # choose_colour, choose_name = choose_averaging()
 
-    # Gets colour sorting type
-    use_HSV = choose_colour_type()
+    # # Gets colour sorting type
+    # use_HSV = choose_colour_type()
 
     # Converts image to a palette
-    image = show_colours(image, choose_colour, choose_name, use_HSV)
+    image = show_colour_wheel(image)
 
     # Informs user
     print('\nImage converted to palette!')
