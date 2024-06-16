@@ -192,6 +192,9 @@ def show_colour_wheel(image: Image):
                 except Exception:
                     pass # In case this draws out-of-bounds
 
+    # Upsizes the output
+    output.resize(scale = 0.5, absolute = False)
+
 
     output.save()
     return output
