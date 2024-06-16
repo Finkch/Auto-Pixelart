@@ -30,7 +30,11 @@ def auto(args: list, kwargs: dict) -> None:
     if 'w' in kwargs:
         width = int(kwargs['w'])
 
-    palette = 8
+    colours = 8
+    if 'c' in kwargs:
+        colours = kwargs['c']
+
+    palette = None
     if 'p' in kwargs:
         palette = kwargs['p']
 
@@ -40,12 +44,12 @@ def auto(args: list, kwargs: dict) -> None:
     downscaler, downscaler_name, need_palette = choose_downscale(method)
 
     # Obtains input and output images
-    input: Image    = Image(args[0], colours = palette)
+    input: Image    = Image(args[0], colours = colours, palette = palette)
     output: Image   = Image(
         file        = input.file, 
         location    = 'outputs',
         size        = input.get_size(width),
-        colours     = palette
+        colours     = input.palette_size
     )
 
     # Updates the name of the output
