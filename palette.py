@@ -19,7 +19,7 @@ class Palette:
     # Returns a deep copy of the palette
     def copy(self):
         return Palette(
-            self.save('t'),
+            self.image(),
             self.colours,
             self.HSV
         )
@@ -57,9 +57,9 @@ class Palette:
             palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.HSV))
 
         return array(palette)
-
-    # Saves the palette as an image
-    def save(self, file_name: str) -> Pim.Image:
+    
+    # Returns an image representation of the palette
+    def image(self) -> Pim.Image:
 
         # Gets the dimensions of the image
         width   = min(len(self.palette), 16)
@@ -89,11 +89,20 @@ class Palette:
         if self.HSV:
             output = output.convert('RGB')
 
+        return output
+
+
+    # Saves the palette as an image
+    def save(self, file_name: str) -> Pim.Image:
+
+        # Gets the image
+        output = self.image()
+
         # Saves minimum sized image
         output.save(f'palettes/{file_name}.png')
 
         # Saves a reasonably sized version
-        output = output.resize((width * 150, height * 150), resample = NEAREST)
+        output = output.resize((output.width * 150, output.height * 150), resample = NEAREST)
         output.save(f'palettes/{file_name}_large.png')
 
         return output
