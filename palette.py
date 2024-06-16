@@ -15,6 +15,14 @@ class Palette:
     # Calling a Palette will return an ndarray of values
     def __call__(self) -> ndarray[tuple]:
         return array([colour() for colour in self.palette])
+    
+    # Returns a deep copy of the palette
+    def copy(self):
+        return Palette(
+            self.save('t'),
+            self.colours,
+            self.HSV
+        )
 
 
     # Gets best representation for the image's palette.
@@ -49,7 +57,7 @@ class Palette:
             palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.HSV))
 
         return array(palette)
-    
+
     # Saves the palette as an image
     def save(self, file_name: str) -> Pim.Image:
 
