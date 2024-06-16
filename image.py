@@ -27,7 +27,7 @@ class Image():
         self.load(file, location, size, mode)
 
         if palette:
-            self.set_palette(palette)
+            self.set_palette(palette, colours)
 
 
     # Loads an image from a file
