@@ -80,8 +80,6 @@ class Palette:
         return output
 
             
-    # Gets best representation for the image's palette.
-    # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
     def get(self, dwidth: int = None) -> ndarray[Colour]:
 
         # Gets a copy of the image to process
@@ -95,6 +93,12 @@ class Palette:
         if dwidth:
             dheight = int(dwidth / image.width * image.height)
             image.thumbnail((dwidth, dheight))
+
+        return self.get_auto(image)
+
+    # Gets best representation for the image's palette.
+    # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
+    def get_auto(self, image: Pim.Image) -> ndarray[Colour]:
 
         # Reduces the colours in the image.
         # Internally, k-mean clustering is used
@@ -132,4 +136,5 @@ class Palette:
             palette.append(Colour(*colour[i][1]) for colour in colours)
 
         return array(palette)
+
 
