@@ -126,20 +126,20 @@ class Image():
     # Gets a list of the image's colours
     def get_colours(self, use_HSV: bool = None) -> ndarray:
 
+        # Use RGB or HSV.
+        # Prioritises passes arguments.
+        HSV = use_HSV
+        if use_HSV == None:
+            HSV = self.is_HSV
+
         # If colours already exist, return them.
         # Pah, I can't check if it's None because numpy arrays
         # find that ambiguous, but I can't any() it because None
         # isn't iterable - it's a catch 22. Hence this weird solution.
         #   Cheers to:
         #   https://stackoverflow.com/questions/41928835/how-to-access-the-nonetype-type
-        if isinstance(use_HSV, type(None)):
-            return array([colour.copy(use_HSV) for colour in self.colours])
-
-        # Use RGB or HSV.
-        # Prioritises passes arguments.
-        HSV = use_HSV
-        if use_HSV == None:
-            HSV = self.is_HSV
+        if not isinstance(self.colours, type(None)):
+            return array([colour.copy(HSV) for colour in self.colours])
 
         # PIL.Image takes max_colours as an argument
         cols = self.source.getcolors(self.width * self.height)
@@ -157,15 +157,15 @@ class Image():
     # Returns the RGB/HSV for the chosen palette
     def get_palette(self, use_HSV: bool = None) -> Palette:
 
-        # Returns existing palette, if there is one
-        if self.palette:
-            return self.palette.copy(use_HSV)
-
         # Use RGB or HSV.
         # Prioritises passes arguments.
         HSV = use_HSV
         if use_HSV == None:
             HSV = self.is_HSV
+
+        # Returns existing palette, if there is one
+        if self.palette:
+            return self.palette.copy(HSV)
 
         palette = Palette(self.source, self.palette_size, HSV)
         return palette
