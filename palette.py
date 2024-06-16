@@ -29,43 +29,6 @@ class Palette:
             HSV
         )
 
-
-    # Gets best representation for the image's palette.
-    # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
-    def get(self, dwidth: int = None) -> ndarray[Colour]:
-
-        # Gets a copy of the image to process
-        image = self.source.copy()
-
-        # Automatically grabs the palette size for palette images
-        if self.colours == -1:
-            self.colours = len(image.getcolors(image.width * image.height))
-
-        # Reduces image size to speed up the computation
-        if dwidth:
-            dheight = int(dwidth / image.width * image.height)
-            image.thumbnail((dwidth, dheight))
-
-        # Reduces the colours in the image.
-        # Internally, k-mean clustering is used
-        paletted = image.convert('P', palette = Pim.ADAPTIVE, colors = self.colours)
-        image_palette = paletted.getpalette()
-
-        # Retrieves a list of dominent colours
-        colour_counts = sorted(paletted.getcolors(), reverse = True)
-
-        # Gets the top dominent colours
-        palette = []
-        for i in range(self.colours):
-
-            # Gets the index of the item
-            pindex = colour_counts[i][1]
-
-            # Palette is just a list of values (not tuples), 
-            # so we need to stride over items
-            palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.HSV))
-
-        return array(palette)
     
     # Returns an image representation of the palette
     def image(self) -> Pim.Image:
@@ -117,4 +80,56 @@ class Palette:
         return output
 
             
-            
+    # Gets best representation for the image's palette.
+    # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
+    def get(self, dwidth: int = None) -> ndarray[Colour]:
+
+        # Gets a copy of the image to process
+        image = self.source.copy()
+
+        # Automatically grabs the palette size for palette images
+        if self.colours == -1:
+            return self.from_palette_image(image)
+
+        # Reduces image size to speed up the computation
+        if dwidth:
+            dheight = int(dwidth / image.width * image.height)
+            image.thumbnail((dwidth, dheight))
+
+        # Reduces the colours in the image.
+        # Internally, k-mean clustering is used
+        paletted = image.convert('P', palette = Pim.ADAPTIVE, colors = self.colours)
+        image_palette = paletted.getpalette()
+
+        # Retrieves a list of dominent colours
+        colour_counts = sorted(paletted.getcolors(), reverse = True)
+
+        # Gets the top dominent colours
+        palette = []
+        for i in range(self.colours):
+
+            # Gets the index of the item
+            pindex = colour_counts[i][1]
+
+            # Palette is just a list of values (not tuples), 
+            # so we need to stride over items
+            palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.HSV))
+
+        return array(palette)
+    
+    # Used with palette images
+    def from_palette_image(self, source_copy: Pim.Image) -> ndarray[Colour]:
+        
+        # Gets the colours in the image
+        colours = source_copy.getcolors()
+
+        # Updates colour count
+        self.colours = len(colours)
+
+        # Gets Colours in the palette
+        palette = []
+        for i in range(source_copy.width):
+            palette.append(Colour(*colour[i][1]) for colour in colours)
+
+        return array(palette)
+
