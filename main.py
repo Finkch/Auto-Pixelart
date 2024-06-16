@@ -3,7 +3,7 @@
 from image import Image
 
 from input import *
-from visualise import show_colour_wheel, show_palette
+from visualise import show_colour_wheel
 from performance import run_test
 
 from logger import logger
@@ -102,7 +102,6 @@ def visualise_palette():
     # use_HSV = choose_colour_type()
 
     # Converts image to a palette
-    show_palette(image)
     show_colour_wheel(image)
     
 
