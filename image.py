@@ -126,7 +126,7 @@ class Image():
 
         # If colours already exist, return them
         if self.colours:
-            return self.colours
+            return array([colour.copy(use_HSV) for colour in self.colours])
 
         # Use RGB or HSV.
         # Prioritises passes arguments.
@@ -152,7 +152,7 @@ class Image():
 
         # Returns existing palette, if there is one
         if self.palette:
-            return self.palette
+            return self.palette.copy(use_HSV)
 
         # Use RGB or HSV.
         # Prioritises passes arguments.
