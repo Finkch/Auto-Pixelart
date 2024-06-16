@@ -8,7 +8,7 @@ from palette import Palette
 from numpy import array, ndarray
 
 class Image():
-    def __init__(self, file: str, location: str = 'inputs', size: tuple = None, colours: int = None, HSV: bool = False) -> None:
+    def __init__(self, file: str, location: str = 'inputs', size: tuple = None, colours: int = None, HSV: bool = False, palette: str = None) -> None:
         self.file           = None
         self.palette_size   = None
         self.width          = None
@@ -124,6 +124,10 @@ class Image():
     # Gets a list of the image's colours
     def get_colours(self, use_HSV: bool = None) -> ndarray:
 
+        # If colours already exist, return them
+        if self.colours:
+            return self.colours
+
         # Use RGB or HSV.
         # Prioritises passes arguments.
         HSV = use_HSV
@@ -145,6 +149,10 @@ class Image():
     
     # Returns the RGB/HSV for the chosen palette
     def get_palette(self, use_HSV: bool = None) -> Palette:
+
+        # Returns existing palette, if there is one
+        if self.palette:
+            return self.palette
 
         # Use RGB or HSV.
         # Prioritises passes arguments.
