@@ -29,13 +29,18 @@ class Colour:
         # Gets HSV for self
         self.get_HSV()
 
-    def copy(self):
+    def copy(self, use_HSV: bool = None):
+
+        HSV = self.use_HSV
+        if not use_HSV == None:
+            HSV = use_HSV
+
         return Colour(
             self.R,
             self.G,
             self.B,
             self.frequency,
-            self.use_HSV
+            HSV
         )
 
     # Calling the colour returns its RGB or HSV
