@@ -25,7 +25,9 @@ class Image():
 
         self.set_palette_size(colours)
         self.load(file, location, size, mode)
-        
+
+        if palette:
+            self.set_palette(palette)
 
 
     # Loads an image from a file
@@ -45,7 +47,9 @@ class Image():
         self.source = image
         self.set_resolution(self.source.size)
         self.colours = self.get_colours()
-        self.palette = self.get_palette()
+
+        if self.palette_size > 0:
+            self.palette = self.get_palette()
 
 
     # A few setters
@@ -73,6 +77,10 @@ class Image():
             self.palette_size = 1 # TODO
         else:
             self.palette_size = int(size)
+
+    def set_palette(self, palette: str, colours: int = 8) -> None:
+        self.palette = Palette(Pim.open(palette), colours = colours)
+        self.palette_size = self.palette.colours
 
     # Updates the name and path
     def update_name(self, name: str, extension: str = None) -> None:
