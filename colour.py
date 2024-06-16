@@ -107,44 +107,46 @@ class Colour:
 
         if self.HSV:
             return self.HSV
+        
 
         # Maps RGP to the range [0,1]
-        r = self.R / 255
-        g = self.G / 255
-        b = self.B / 255
+        r = self.R / 255.0
+        g = self.G / 255.0
+        b = self.B / 255.0
 
         # Initialises values
         h, s, v = None, None, None
 
         # Used in calculations
-        cmax = max(r, g, b)
-        cmin = min(r, g, b)
-        diff = cmax - cmin
+        mx = max(r, g, b)
+        mn = min(r, g, b)
+        diff = mx - mn
 
 
         # Finds hue
-        if cmax == cmin:
+        if diff == 0:
             h = 0
-        elif cmax == r:
-            h = (60 * ((g - b) / diff) + 360) % 360
-        elif (cmax == g):
-            h = (60 * ((b - r) / diff) + 120) % 360
-        elif (cmax == b):
-            h = (60 * ((r - g) / diff) + 240) % 360
+        elif mx == r:
+            h = (60 * (g - b) / diff + 360) % 360
+        elif mx == g:
+            h = (60 * (b - r) / diff + 120) % 360
+        elif mx == b:
+            h = (60 * (r - g) / diff + 240) % 360
         
         # Finds saturation
-        if cmax == 0:
+        if mx == 0:
             s = 0
         else:
-            s = diff / cmax * 100
-
+            s = diff / mx
+        
         # Finds value
-        v = cmax * 100
+        v = mx
 
-        # Gets values
-        self.H = int(round(h, 0))
-        self.S = int(round(s, 0))
-        self.V = int(round(v, 0))
+
+        # Normalises
+        self.H = int(round(h / 360 * 255, 0))
+        self.S = int(round(s * 255, 0))
+        self.V = int(round(v * 255, 0))
         self.HSV = (self.H, self.S, self.V)
         return self.HSV
 
