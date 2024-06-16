@@ -106,7 +106,7 @@ class Image():
             case 'n': method = NEAREST
             case 's': method = LANCZOS
             case _:   ValueError(f'Unknown resampling method "{method}"')
-
+            
         self.source = self.source.resize(self.get_size(scale, absolute), resample = method)
         self.update_size()
     
@@ -144,8 +144,15 @@ class Image():
         return self.colours
     
     # Returns the RGB/HSV for the chosen palette
-    def get_palette(self) -> Palette:
-        self.palette = Palette(self.source, self.palette_size, self.is_HSV)
+    def get_palette(self, use_HSV: bool = None) -> Palette:
+
+        # Use RGB or HSV.
+        # Prioritises passes arguments.
+        HSV = use_HSV
+        if use_HSV == None:
+            HSV = self.is_HSV
+
+        self.palette = Palette(self.source, self.palette_size, HSV)
         return self.palette.palette
         
         
