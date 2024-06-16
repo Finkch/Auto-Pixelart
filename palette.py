@@ -8,7 +8,7 @@ from colour import Colour
 class Palette:
     def __init__(self, source: Pim.Image, colours: int = 8, HSV: bool = False) -> None:
         self.source = source
-        self.colours = colours
+        self.colours = int(colours)
         self.HSV = HSV
         self.palette = self.get()
 
