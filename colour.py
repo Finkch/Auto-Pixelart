@@ -29,6 +29,15 @@ class Colour:
         # Gets HSV for self
         self.get_HSV()
 
+    def copy(self):
+        return Colour(
+            self.R,
+            self.G,
+            self.B,
+            self.frequency,
+            self.use_HSV
+        )
+
     # Calling the colour returns its RGB or HSV
     def __call__(self) -> tuple[float]:
         if self.use_HSV:
