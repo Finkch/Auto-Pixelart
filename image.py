@@ -23,8 +23,9 @@ class Image():
 
         mode = 'HSV' if self.is_HSV else 'RGB'
 
-        self.load(file, location, size, mode)
         self.set_palette_size(colours)
+        self.load(file, location, size, mode)
+        
 
 
     # Loads an image from a file
@@ -33,8 +34,7 @@ class Image():
         
         # Creates the source image
         if location == 'inputs':
-            self.source = Pim.open(self.path)
-            self.set_resolution(None)
+            self.set(Pim.open(self.path))
         else:
             self.set_resolution(size)
             colour = 'blue' if self.is_HSV else 'white'
@@ -44,6 +44,8 @@ class Image():
     def set(self, image: Pim.Image) -> None:
         self.source = image
         self.set_resolution(self.source.size)
+        self.colours = self.get_colours()
+        self.palette = self.get_palette()
 
 
     # A few setters
@@ -124,8 +126,13 @@ class Image():
     # Gets a list of the image's colours
     def get_colours(self, use_HSV: bool = None) -> ndarray:
 
-        # If colours already exist, return them
-        if self.colours:
+        # If colours already exist, return them.
+        # Pah, I can't check if it's None because numpy arrays
+        # find that ambiguous, but I can't any() it because None
+        # isn't iterable - it's a catch 22. Hence this weird solution.
+        #   Cheers to:
+        #   https://stackoverflow.com/questions/41928835/how-to-access-the-nonetype-type
+        if isinstance(use_HSV, type(None)):
             return array([colour.copy(use_HSV) for colour in self.colours])
 
         # Use RGB or HSV.
@@ -139,13 +146,13 @@ class Image():
 
         match self.source.mode:
             case 'RGB':
-                self.colours = array([Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = HSV) for frequency_colour in cols])
+                colours = array([Colour(*frequency_colour[1], frequency = frequency_colour[0], use_HSV = HSV) for frequency_colour in cols])
             case 'P':
-                self.colours = None
+                colours = None
             case _:
                 ValueError(f'Invalid image mode "{self.source.mode}"')
 
-        return self.colours
+        return colours
     
     # Returns the RGB/HSV for the chosen palette
     def get_palette(self, use_HSV: bool = None) -> Palette:
@@ -160,7 +167,7 @@ class Image():
         if use_HSV == None:
             HSV = self.is_HSV
 
-        self.palette = Palette(self.source, self.palette_size, HSV)
-        return self.palette.palette
+        palette = Palette(self.source, self.palette_size, HSV)
+        return palette
         
         
