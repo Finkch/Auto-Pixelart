@@ -27,8 +27,7 @@ class Colour:
         self.HSV = None
 
         # Gets HSV for self
-        if use_HSV:
-            self.get_HSV()
+        self.get_HSV()
 
     # Calling the colour returns its RGB or HSV
     def __call__(self) -> tuple[float]:
