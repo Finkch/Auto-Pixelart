@@ -37,7 +37,8 @@ class Image():
             self.set_resolution(None)
         else:
             self.set_resolution(size)
-            self.source = Pim.new(mode, self.size, color = 'white')
+            colour = 'blue' if self.is_HSV else 'white'
+            self.source = Pim.new(mode, self.size, color = colour)
 
     # Sets source to be a PIL image
     def set(self, image: Pim.Image) -> None:
