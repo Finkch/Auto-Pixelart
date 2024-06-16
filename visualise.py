@@ -1,12 +1,14 @@
 # For making little images to I can have a better idea at what's going on
 
 from image import Image
-from PIL import Image as Pim
+import plotly.graph_objects as go
+import plotly.express as px
 
-from math import log
+from math import log, sin, cos, pi
 
 from logger import logger
 from colour import *
+from numpy import array, ndarray
 
 
 # Given an image, show it's palette
@@ -16,7 +18,7 @@ def show_palette(image: Image) -> None:
     palette = image.get_palette()
 
     width   = min(len(palette), 16)
-    height  = int(len(palette) / 16)
+    height  = int(len(palette) / 16) + 1
 
     # Creates output image
     output = Image(
@@ -127,10 +129,14 @@ def show_colour_wheel(image: Image):
     # Grabs the colours
     colours = image.get_colours(use_HSV = True)
 
+    # Gets the palette associated with the colours
+    palette = image.get_palette(use_HSV = True)
+
     # Dimensions of the visualisation
     d = 256
     bw = 4
     bh = 4
+    r = 4
 
     # Output image
     output = Image(
@@ -156,7 +162,7 @@ def show_colour_wheel(image: Image):
             pixel_map[d + bw +  i, d + j] = (i, 255, 255)
 
 
-    # Paints the palette
+    # Paints the colours
     for colour in colours:
         h = colour.H
         s = colour.S
@@ -165,9 +171,72 @@ def show_colour_wheel(image: Image):
         pixel_map[h, s] = (h, s, 255)
         pixel_map[d + bh + h, v] = (h, 255, v)
 
+    # Paints the palette
+    for colour in palette:
+        h = colour.H
+        s = colour.S
+        v = colour.V
+
+        ss = int(s + 255 / 3) % 255
+        vv = int(v + 255 / 3) % 255
+
+
+        # Paints a circle
+        for k in range(r):
+            for rads in range(int(r ** 2)):
+                i = int(k * cos(rads / (r ** 2) * 2 * pi))
+                j =  int(k * sin(rads / (r ** 2) * 2 * pi))
+                try:
+                    pixel_map[h + i, s + j] = (h, ss, 255)
+                    pixel_map[d + bh + h + i, v + j] = (h, 255, vv)
+                except Exception:
+                    pass # In case this draws out-of-bounds
+
+
     output.save()
     return output
 
+# Plots in 3D.
+# Doesn't get the colours right because I can't
+# find a library to do it corecctly.
+def plot_3d(colours: ndarray) -> None:
+    
+    # Extracts H, S, and V each as an array
+    arr = array([(colour.HSV) for colour in colours])
+    h = arr[:, 0]
+    s = arr[:, 1]
+    v = arr[:, 2]
+
+    # Create a scatter plot with color based on z coordinate
+    scatter = go.Scatter3d(
+        x=h,
+        y=s,
+        z=v,
+        mode='markers',
+        marker=dict(
+            size=5,
+            color=h,                # Color based on z values
+            colorscale='HSV',   # Color scale
+            colorbar=dict(title='Z Value'),
+            opacity=0.8
+        )
+    )
+
+    # Create a layout
+    layout = go.Layout(
+        title='3D Scatter Plot with Color based on Z',
+        scene=dict(
+            xaxis_title='Hue',
+            yaxis_title='Saturation',
+            zaxis_title='Value'
+        )
+    )
+
+    # Create a figure
+    fig = go.Figure(data=[scatter], layout=layout)
+
+    # Show the plot
+    fig.show()
 
 
 # Returns a list of possible ways to visualise the palette.
