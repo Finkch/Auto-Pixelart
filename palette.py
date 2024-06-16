@@ -37,6 +37,10 @@ class Palette:
         # Gets a copy of the image to process
         image = self.source.copy()
 
+        # Automatically grabs the palette size for palette images
+        if self.colours == -1:
+            self.colours = len(image.getcolors(image.width * image.height))
+
         # Reduces image size to speed up the computation
         if dwidth:
             dheight = int(dwidth / image.width * image.height)
