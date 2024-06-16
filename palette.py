@@ -131,9 +131,7 @@ class Palette:
         self.colours = len(colours)
 
         # Gets Colours in the palette
-        palette = []
-        for i in range(source_copy.width):
-            palette.append(Colour(*colour[i][1]) for colour in colours)
+        palette = [Colour(*colour[1]) for colour in colours]
 
         return array(palette)
 
