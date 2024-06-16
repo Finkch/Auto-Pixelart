@@ -98,11 +98,9 @@ def show_colour_wheel(image: Image):
     colours = image.get_colours(use_HSV = True)
 
     # Gets the palette associated with the colours
-    palette = image.get_palette(use_HSV = True)
-
+    palette = image.get_palette(use_HSV = True).palette
 
     # Saves just the palette
-    image.palette.HSV = image.is_HSV
     image.palette.save(image.file_name)
 
 
