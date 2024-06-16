@@ -11,38 +11,6 @@ from colour import *
 from numpy import array, ndarray
 
 
-# Given an image, show it's palette
-def show_palette(image: Image) -> None:
-    
-    # Obtains the palette
-    palette = image.get_palette()
-
-    width   = min(len(palette), 16)
-    height  = int(len(palette) / 16) + 1
-
-    # Creates output image
-    output = Image(
-        file        =  f'palette_{image.file}', 
-        location    = 'outputs',
-        size        = (width, height)
-    )
-
-    # Gets access to the pixels
-    pixel_map = output.source.load()
-
-    # Colours the image to be the 
-    for i in range(width):
-        for j in range(height):
-            pixel_map[i, j] = palette[i + j * 16].RGB
-
-
-    # Makes the image a reasonable size
-    output.resize(150 * width)
-    output.save()
-    return output
-
-
-
 # Given an image, visualises its colours
 def show_colours(image: Image, choose = weighted_colour, choose_name = 'weighted', use_HSV = False):
 
@@ -131,6 +99,12 @@ def show_colour_wheel(image: Image):
 
     # Gets the palette associated with the colours
     palette = image.get_palette(use_HSV = True)
+
+
+    # Saves just the palette
+    image.palette.HSV = image.is_HSV
+    image.palette.save(image.file_name)
+
 
     # Dimensions of the visualisation
     d = 256

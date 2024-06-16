@@ -2,6 +2,7 @@
 
 from numpy import array, ndarray
 import PIL.Image as Pim
+from PIL.Image import NEAREST
 from colour import Colour
 
 class Palette:
@@ -48,5 +49,44 @@ class Palette:
             palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.HSV))
 
         return array(palette)
-        
-        
+    
+    # Saves the palette as an image
+    def save(self, file_name: str) -> None:
+
+        # Gets the dimensions of the image
+        width   = min(len(self.palette), 16)
+        height  = int(len(self.palette) / 16) + 1
+
+        # Gets the required image mode
+        mode = 'HSV' if self.HSV else 'RGB'
+        colour = 'blue' if self.HSV else 'white' # RGB blue is white in HSV
+
+        # Creates output image
+        output = Pim.new(
+            mode    = mode, 
+            size    = (width, height), 
+            color   = colour
+        )
+
+        # Gets access to the pixels
+        pixel_map = output.load()
+
+        # Colours the image to be the 
+        for i in range(width):
+            for j in range(height):
+                pixel_map[i, j] = self.palette[i + j * 16].RGB
+
+
+        # HSV files cannot be saved, annoyingly
+        if self.HSV:
+            output = output.convert('RGB')
+
+        # Saves minimum sized image
+        output.save(f'palettes/{file_name}.png')
+
+        # Saves a reasonably sized version
+        output = output.resize((width * 150, height * 150), resample = NEAREST)
+        output.save(f'palettes/{file_name}_large.png')
+
+            
+            
