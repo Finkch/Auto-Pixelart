@@ -1,19 +1,16 @@
 # For making little images to I can have a better idea at what's going on
 
 from image import Image
-
-import plotly.graph_objects as go
-import plotly.express as px
 import matplotlib.pyplot as plt
+import numpy as np
 
 from math import log, sin, cos, pi
 
-from logger import logger
 from colour import *
-from numpy import array, ndarray, round
-import numpy as np
-
+from numpy import array
 from colorsys import hsv_to_rgb
+
+from logger import logger
 
 
 # Given an image, visualises its colours
