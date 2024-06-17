@@ -122,13 +122,15 @@ class Palette:
             dheight = int(dwidth / image.width * image.height)
             image.thumbnail((dwidth, dheight))
 
-        return # TODO
+        match self.mode:
+            case 'k': return kmeans_reduce(image, self.colours)
+            case _:   raise ValueError(f'Unknown palette mode "{self.mode}"')
 
 
 
 # Methods for reducing palettes
 # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
-def get_auto(image: Pim.Image, colours: int = 8) -> ndarray[Colour]:
+def kmeans_reduce(image: Pim.Image, colours: int = 8) -> ndarray[Colour]:
 
     # Reduces the colours in the image.
     # Internally, k-mean clustering is used
