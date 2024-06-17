@@ -3,6 +3,9 @@ inputs/*
 outputs/*
 logs/*
 
+# Debugging script
+debug.py
+
 # Scripts to facilitate testing
 *.sh
 
