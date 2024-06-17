@@ -49,13 +49,18 @@ def process_image():
     downscaler, downscaler_name, need_palette = choose_downscale()
     
     palette_size = 'd'
+    palette_mode = 'k'
     if need_palette:
+        palette_mode, palette_name = choose_palette_mode()
         palette_size = choose_palette_size()
+
+        downscaler_name += palette_name
+
 
     upscale_width = choose_upscale()
 
     # Creates the input and output images
-    input: Image    = Image(file)
+    input: Image    = Image(file, palette_mode = palette_mode)
 
     # Defaults to input image's width
     if not width:
@@ -65,7 +70,8 @@ def process_image():
         file        = input.file, 
         location    = 'outputs',
         size        = input.get_size(width),
-        colours     = palette_size
+        colours     = palette_size,
+        palette_mode = palette_mode
     )
 
     # Updates the output image's name
