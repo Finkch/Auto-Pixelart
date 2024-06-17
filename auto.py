@@ -38,13 +38,17 @@ def auto(args: list, kwargs: dict) -> None:
     if 'p' in kwargs:
         palette = kwargs['p']
 
+    palette_mode = 's'
+    if 'pm' in kwargs:
+        palette_mode = kwargs['pm']
+
 
     # Gets the downscaler.
     #   Defaults to 'k', k-mean clustering
     downscaler, downscaler_name, need_palette = choose_downscale(method)
 
     # Obtains input and output images
-    input: Image    = Image(args[0], colours = colours, palette = palette)
+    input: Image    = Image(args[0], colours = colours, palette = palette, palette_mode = palette_mode)
     output: Image   = Image(
         file        = input.file, 
         location    = 'outputs',
