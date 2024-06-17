@@ -125,6 +125,7 @@ class Palette:
         match self.mode:
             case 'k': return self.kmeans_reduce(image, self.colours)
             case 'r': return self.recursive_reduce(image, self.colours)
+            case 'e': return self.reduce_extremal1(image, self.colours)
             case _:   raise ValueError(f'Unknown palette mode "{self.mode}"')
 
 
@@ -189,11 +190,11 @@ class Palette:
         return self.recursive_step(new_palette_image, next_colours)
 
     # Normal approach, except append the most different hue
-    def get_extremal1(self, image: Pim.Image) -> ndarray[Colour]:
+    def reduce_extremal1(self, image: Pim.Image, colours: int = 8) -> ndarray[Colour]:
 
         # Get a reduced colour set such that the most
         # different hue is still representative
-        palette_256 = self.get_auto(image, 256)
+        palette_256 = self.kmeans_reduce(image, 256)
 
         # Converts the data to ndarrays
         palette = array([
@@ -205,7 +206,7 @@ class Palette:
         extreme_h = max(palette, key = lambda x: abs(x[0] - median_h))
         
         # Creates the palette, one smaller than desired
-        new_palette = self.get_auto(image, self.colours - 1)
+        new_palette = self.kmeans_reduce(image, colours - 1)
 
         # Add the extremal hue
         new_palette = np.append(new_palette, Colour(*extreme_h))
