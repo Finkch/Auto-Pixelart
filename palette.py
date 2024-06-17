@@ -63,8 +63,6 @@ class Palette:
         # Gets access to the pixels
         pixel_map = output.load()
 
-        print(width, height)
-
         # Colours the image to be the 
         for j in range(height):
             for i in range(width):
