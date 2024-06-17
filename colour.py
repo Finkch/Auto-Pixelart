@@ -171,7 +171,8 @@ def average_colour(colours: list[Colour], weights: list[int] | None = None) -> C
         average([colour.R for colour in colours], weights = weights),
         average([colour.G for colour in colours], weights = weights),
         average([colour.B for colour in colours], weights = weights),
-        frequency = average([colour.frequency for colour in colours]) if not weights else average(weights)
+        frequency = average([colour.frequency for colour in colours]) if not weights else average(weights),
+        use_HSV = colours[0].use_HSV
     )
 
 # Same as average_colour(), but where the weights are the frequencies
