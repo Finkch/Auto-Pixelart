@@ -2,8 +2,13 @@
 
 from numpy import array, ndarray
 import PIL.Image as Pim
+from PIL.ImageFilter import Kernel
 from PIL.Image import NEAREST
 from colour import Colour
+import cv2
+from sklearn.cluster import KMeans
+
+from logger import logger
 
 class Palette:
     def __init__(self, source: Pim.Image, colours: int = 8, HSV: bool = False) -> None:
@@ -79,7 +84,7 @@ class Palette:
 
         return output
 
-            
+    # Gets best representation for the image's palette.
     def get(self, dwidth: int = None) -> ndarray[Colour]:
 
         # Gets a copy of the image to process
@@ -94,9 +99,8 @@ class Palette:
             dheight = int(dwidth / image.width * image.height)
             image.thumbnail((dwidth, dheight))
 
-        return self.get_auto(image)
+        return self.get_m(image)
 
-    # Gets best representation for the image's palette.
     # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
     def get_auto(self, image: Pim.Image) -> ndarray[Colour]:
 
@@ -135,4 +139,50 @@ class Palette:
 
         return array(palette)
 
+    def get_m(self, image: Pim.Image) -> ndarray[Colour]:
+
+        # # Converts the image to greyscale,
+        # # which is mode 'L'
+        # greyscale = image.convert('L')
+
+        # # Performs edge detection via convulition
+        # edges = greyscale.filter(Kernel(
+        #     (3, 3),
+        #     # (
+        #     #     -1, -1, -1,
+        #     #     -1, 8, -1,
+        #     #     -1, -1, -1
+        #     # ),
+        #     (
+        #         0, -1, 0,
+        #         -1, 4, -1,
+        #         0, -1, 0
+        #     ),
+        #     scale = 1
+        # ))
+
+        # # Gets the greyscale values.
+        # # Remember, 0 is black and 255 is white.
+        # grey_map = greyscale.load()
+        # pixel_map = image.load()
+
+        hsv_im = image.convert('HSV')
+        h = array(hsv_im.getchannel('H').getcolors())
+        
+        # Reshapes the data
+        hr = h[:, ::-1]
+
+        logger.log('h', h)
+        logger.log('hr', hr)
+
+
+        k = self.colours
+        kmeans = KMeans(n_clusters = k, random_state = 0)
+        kmeans.fit(hr)
+        
+        labels = kmeans.labels_
+
+        # shaped_h = labels.reshape()
+
+        logger.log('labels', labels)
 
