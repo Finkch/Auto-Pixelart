@@ -23,6 +23,9 @@ class Image():
 
         mode = 'HSV' if self.is_HSV else 'RGB'
 
+        if not file:
+            return
+
         self.set_palette_size(colours)
         self.load(file, location, size, mode)
 
@@ -112,6 +115,9 @@ class Image():
     # Scales source to given size.
     # Valid choices for method inlcude `n` = `NEAREST` and `s` `SINC/LANCZOS`
     def resize(self, scale: int | float, absolute: bool = True, method: int = 'n') -> None:
+        if not self.file:
+            return
+        
         match method:
             case 'n': method = NEAREST
             case 's': method = LANCZOS
@@ -123,6 +129,9 @@ class Image():
 
     # Saves the source image
     def save(self) -> None:
+        if not self.file:
+            return
+
         if not self.source:
             raise ReferenceError('Cannot save image because image source does not exist.')
         
