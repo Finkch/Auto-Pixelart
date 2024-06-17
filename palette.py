@@ -183,8 +183,11 @@ class Palette:
         # Next step of recursion
         return self.get_recursive_step(new_palette_image, next_colours)
     
+    # Normal approach, except append the most different hue
     def get_extremal1(self, image: Pim.Image) -> ndarray[Colour]:
 
+        # Get a reduced colour set such that the most
+        # different hue is still representative
         palette_256 = self.get_auto(image, 256)
 
         # Converts the data to ndarrays
@@ -192,12 +195,14 @@ class Palette:
             array(colour()) for colour in palette_256
         ])
         
-
         # Finds the most different hue from the median
         median_h = np.median(palette[:, 0]) # Median hue
         extreme_h = max(palette, key = lambda x: abs(x[0] - median_h))
         
+        # Creates the palette, one smaller than desired
         new_palette = self.get_auto(image, self.colours - 1)
+
+        # Add the extremal hue
         new_palette = np.append(new_palette, Colour(*extreme_h))
 
         return new_palette
