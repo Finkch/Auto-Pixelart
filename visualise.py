@@ -202,7 +202,11 @@ def show_3d(image: Image, HSV: bool = True) -> Image:
 
     # Gets the marker size.
     # Uses very similar mapping to show_colour().
-    size = (2 * ((np.log(frequencies) / np.log(maxi.frequency)) / 2 + 0.5)) ** 5
+    alphas = ((np.log(frequencies) / np.log(maxi.frequency)) / 2 + 0.5) ** 5
+    sizes = 2
+
+    # sizes = (2 * ((np.log(frequencies) / np.log(maxi.frequency)) / 2 + 0.5)) ** 5
+    # alphas = 0.02
 
 
 
@@ -237,7 +241,7 @@ def show_3d(image: Image, HSV: bool = True) -> Image:
     ax = fig.add_subplot(111, projection='3d')
 
     # Plot each point with the corresponding color
-    ax.scatter(h, s, v, c = colours_RGB, marker = 'o', s = size, alpha = 0.05)
+    ax.scatter(h, s, v, c = colours_RGB, marker = 'o', s = sizes, alpha = alphas)
     ax.scatter(ph, ps, pv, c = palette_RGB, marker = 'X', s = psize)
 
     # Set labels
