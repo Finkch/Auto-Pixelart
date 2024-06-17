@@ -126,7 +126,7 @@ def choose_downscale(choice: str = None) -> tuple[str, str]:
         'Bilinear',
         'Bicubic',
         'Sinc',
-        'k-Means Palette'
+        'Palette Reduction'
     ]
 
     prompts = [
@@ -134,7 +134,7 @@ def choose_downscale(choice: str = None) -> tuple[str, str]:
         '[l]\tBilinear\t(Downscaling)',
         '[c]\tBicubic\t(Downscaling)',
         '[s]\tSinc/Lanczos\t(Downscaling)',
-        '[k]\tk-Means Palette'
+        '[k]\tPalette reduction'
     ]
 
     if not choice:
@@ -161,6 +161,31 @@ def choose_downscale(choice: str = None) -> tuple[str, str]:
         method_names[valid_choices.index(choice)], 
         need_palette
     )
+
+def choose_palette_mode() -> tuple:
+
+    preable = 'Choose a palette selection method:'
+
+    valid_choices = ['k', 'r', 'e', 's']
+
+    prompts = [
+        '[k]\tk-means clusters',
+        '[e]\tk-mean clusters, keeping an extremal hue',
+        '[r]\tRecursive palette quantisation',
+        '[s]\tMost simlar reduction'
+    ]
+
+    reduction_names = [
+        ', k-means',
+        ', k-means extremal1',
+        ', recursive',
+        ', most similar',
+    ]
+
+    choice = prompt(preable, valid_choices, prompts)
+
+    return choice, reduction_names[valid_choices.index(choice)]
+    
 
 
 # Prompts user for desired number of colours in the palette
