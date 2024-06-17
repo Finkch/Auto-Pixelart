@@ -5,6 +5,8 @@ logs/*
 
 # Debugging script
 debug.py
+temp
+temp/*
 
 # Scripts to facilitate testing
 *.sh
