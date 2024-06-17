@@ -2,12 +2,13 @@
 
 from numpy import array, ndarray
 import numpy as np
+
 import PIL.Image as Pim
-from PIL.ImageFilter import Kernel
-from PIL.Image import NEAREST
 from colour import Colour
+
+from PIL.Image import NEAREST
+
 from math import ceil
-from sklearn.cluster import KMeans
 from colour import average_colour
 
 from logger import logger
