@@ -124,6 +124,7 @@ class Palette:
 
         match self.mode:
             case 'k': return self.kmeans_reduce(image, self.colours)
+            case 'r': return self.recursive_reduce(image, self.colours)
             case _:   raise ValueError(f'Unknown palette mode "{self.mode}"')
 
 
@@ -156,27 +157,23 @@ class Palette:
 
 
     # Recursively finds the palette
-    def get_recursive(self, image: Pim.Image, colours: int) -> ndarray[Colour]:
+    def recursive_reduce(self, image: Pim.Image, colours: int = 8) -> ndarray[Colour]:
         
         starting_size = 256
 
         # Gets the palette image using large colour count
-        palette = self.get_auto(image, starting_size)
-        palette_image = self.image()
-
+        palette = self.kmeans_reduce(image, starting_size)
+        palette_image = self.image(palette)
 
         # Uses recursion to reduce the palette until it's the desired size
-        return self.get_recursive_step(palette_image, starting_size)
+        return self.recursive_step(palette_image, starting_size, colours)
 
-    def get_recursive_step(self, palette_image: Pim.Image, colours: int) -> ndarray[Colour]:
-        
-        nim = palette_image.convert('RGB').resize((palette_image.width * 150, palette_image.height * 150) ,resample = NEAREST)
-        nim.save(f'temp/palette_{colours}.png')
+    def recursive_step(self, palette_image: Pim.Image, colours: int, base: int = 8) -> ndarray[Colour]:
 
         # Base case.
         # Returns the palette
-        if colours == self.colours:
-            return self.get_auto(palette_image)
+        if colours == base:
+            return self.kmeans_reduce(palette_image)
 
         # Finds the required number of colours for the next step.
         # Halves the number of colours from this step, unless it
@@ -185,10 +182,11 @@ class Palette:
         if next_colours < self.colours:
             next_colours = self.colours
 
+        # Quantises the image down to the next set of colours
         new_palette_image = palette_image.quantize(next_colours, dither = 0)
 
         # Next step of recursion
-        return self.get_recursive_step(new_palette_image, next_colours)
+        return self.recursive_step(new_palette_image, next_colours)
 
     # Normal approach, except append the most different hue
     def get_extremal1(self, image: Pim.Image) -> ndarray[Colour]:
