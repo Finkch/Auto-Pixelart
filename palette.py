@@ -123,126 +123,128 @@ class Palette:
             image.thumbnail((dwidth, dheight))
 
         match self.mode:
-            case 'k': return kmeans_reduce(image, self.colours)
+            case 'k': return self.kmeans_reduce(image, self.colours)
             case _:   raise ValueError(f'Unknown palette mode "{self.mode}"')
 
 
 
-# Methods for reducing palettes
-# Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
-def kmeans_reduce(image: Pim.Image, colours: int = 8) -> ndarray[Colour]:
+    # Methods for reducing palettes
+    # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
+    def kmeans_reduce(self, image: Pim.Image, colours: int = 8) -> ndarray[Colour]:
 
-    # Reduces the colours in the image.
-    # Internally, k-mean clustering is used
-    paletted = image.convert('P', palette = Pim.ADAPTIVE, colors = colours)
-    image_palette = paletted.getpalette()
+        # Reduces the colours in the image.
+        # Internally, k-mean clustering is used
+        paletted = image.convert('P', palette = Pim.ADAPTIVE, colors = colours)
+        image_palette = paletted.getpalette()
 
-    # Retrieves a list of dominent colours
-    colour_counts = sorted(paletted.getcolors(), reverse = True)
+        # Retrieves a list of dominent colours
+        colour_counts = sorted(paletted.getcolors(), reverse = True)
 
-    # Gets the top dominent colours
-    palette = []
-    for i in range(len(colour_counts)):
+        # Gets the top dominent colours
+        palette = []
+        for i in range(len(colour_counts)):
 
-        # Gets the index of the item
-        pindex = colour_counts[i][1]
+            # Gets the index of the item
+            pindex = colour_counts[i][1]
 
-        # Palette is just a list of values (not tuples), 
-        # so we need to stride over items
-        palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.HSV))
+            # Palette is just a list of values (not tuples), 
+            # so we need to stride over items
+            palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.HSV))
 
-    return array(palette)
-
-# Recursively finds the palette
-def get_recursive(self, image: Pim.Image) -> ndarray[Colour]:
-    
-    starting_size = 256
-
-    # Gets the palette image using large colour count
-    self.palette = self.get_auto(image, starting_size)
-    palette_image = self.image()
+        return array(palette)
 
 
-    # Uses recursion to reduce the palette until it's the desired size
-    return self.get_recursive_step(palette_image, starting_size)
 
-def get_recursive_step(self, palette_image: Pim.Image, colours: int) -> ndarray[Colour]:
-    
-    nim = palette_image.convert('RGB').resize((palette_image.width * 150, palette_image.height * 150) ,resample = NEAREST)
-    nim.save(f'temp/palette_{colours}.png')
+    # Recursively finds the palette
+    def get_recursive(self, image: Pim.Image, colours: int) -> ndarray[Colour]:
+        
+        starting_size = 256
 
-    # Base case.
-    # Returns the palette
-    if colours == self.colours:
-        return self.get_auto(palette_image)
-
-    # Finds the required number of colours for the next step.
-    # Halves the number of colours from this step, unless it
-    # would cause a miss of the base case.
-    next_colours = int(colours / 2)
-    if next_colours < self.colours:
-        next_colours = self.colours
-
-    new_palette_image = palette_image.quantize(next_colours, dither = 0)
-
-    # Next step of recursion
-    return self.get_recursive_step(new_palette_image, next_colours)
-
-# Normal approach, except append the most different hue
-def get_extremal1(self, image: Pim.Image) -> ndarray[Colour]:
-
-    # Get a reduced colour set such that the most
-    # different hue is still representative
-    palette_256 = self.get_auto(image, 256)
-
-    # Converts the data to ndarrays
-    palette = array([
-        array(colour()) for colour in palette_256
-    ])
-    
-    # Finds the most different hue from the median
-    median_h = np.median(palette[:, 0]) # Median hue
-    extreme_h = max(palette, key = lambda x: abs(x[0] - median_h))
-    
-    # Creates the palette, one smaller than desired
-    new_palette = self.get_auto(image, self.colours - 1)
-
-    # Add the extremal hue
-    new_palette = np.append(new_palette, Colour(*extreme_h))
-
-    return new_palette
-
-# Iteratively reduces a palette by averaging pairs of
-# the most similar hues
-def get_reduce_similar(self, image: Pim.Image) -> ndarray[Colour]:
-    
-    # Get a reduced colour that is still representative.
-    # Uses Python lists since we care about modifying
-    # the shape of the array.
-    palette = list(self.get_auto(image, 256))
+        # Gets the palette image using large colour count
+        palette = self.get_auto(image, starting_size)
+        palette_image = self.image()
 
 
-    # Iteratively reduces
-    while len(palette) > self.colours:
+        # Uses recursion to reduce the palette until it's the desired size
+        return self.get_recursive_step(palette_image, starting_size)
 
-        # Finds the most similar pair
-        x, y = -1, -1
-        mini = 255
-        for i in range(len(palette) - 1):
-            for j in range(i + 1, len(palette)):
-                diff = min( # Hue is ciruclar
-                    abs(palette[i].H - palette[j].H), 
-                    255 - abs(palette[i].H - palette[j].H)
-                )
+    def get_recursive_step(self, palette_image: Pim.Image, colours: int) -> ndarray[Colour]:
+        
+        nim = palette_image.convert('RGB').resize((palette_image.width * 150, palette_image.height * 150) ,resample = NEAREST)
+        nim.save(f'temp/palette_{colours}.png')
 
-                # If this pair of colours is more similar
-                # than the last pair, update
-                if diff < mini:
-                    mini = diff
-                    x, y = i, j
+        # Base case.
+        # Returns the palette
+        if colours == self.colours:
+            return self.get_auto(palette_image)
 
-        # Averages the colour and adds it back to the palette.
-        # Notice y is popped first sice y > x.
-        palette.append(average_colour([palette.pop(y), palette.pop(x)]))
+        # Finds the required number of colours for the next step.
+        # Halves the number of colours from this step, unless it
+        # would cause a miss of the base case.
+        next_colours = int(colours / 2)
+        if next_colours < self.colours:
+            next_colours = self.colours
 
-    return palette
+        new_palette_image = palette_image.quantize(next_colours, dither = 0)
+
+        # Next step of recursion
+        return self.get_recursive_step(new_palette_image, next_colours)
+
+    # Normal approach, except append the most different hue
+    def get_extremal1(self, image: Pim.Image) -> ndarray[Colour]:
+
+        # Get a reduced colour set such that the most
+        # different hue is still representative
+        palette_256 = self.get_auto(image, 256)
+
+        # Converts the data to ndarrays
+        palette = array([
+            array(colour()) for colour in palette_256
+        ])
+        
+        # Finds the most different hue from the median
+        median_h = np.median(palette[:, 0]) # Median hue
+        extreme_h = max(palette, key = lambda x: abs(x[0] - median_h))
+        
+        # Creates the palette, one smaller than desired
+        new_palette = self.get_auto(image, self.colours - 1)
+
+        # Add the extremal hue
+        new_palette = np.append(new_palette, Colour(*extreme_h))
+
+        return new_palette
+
+    # Iteratively reduces a palette by averaging pairs of
+    # the most similar hues
+    def get_reduce_similar(self, image: Pim.Image) -> ndarray[Colour]:
+        
+        # Get a reduced colour that is still representative.
+        # Uses Python lists since we care about modifying
+        # the shape of the array.
+        palette = list(self.get_auto(image, 256))
+
+
+        # Iteratively reduces
+        while len(palette) > self.colours:
+
+            # Finds the most similar pair
+            x, y = -1, -1
+            mini = 255
+            for i in range(len(palette) - 1):
+                for j in range(i + 1, len(palette)):
+                    diff = min( # Hue is ciruclar
+                        abs(palette[i].H - palette[j].H), 
+                        255 - abs(palette[i].H - palette[j].H)
+                    )
+
+                    # If this pair of colours is more similar
+                    # than the last pair, update
+                    if diff < mini:
+                        mini = diff
+                        x, y = i, j
+
+            # Averages the colour and adds it back to the palette.
+            # Notice y is popped first sice y > x.
+            palette.append(average_colour([palette.pop(y), palette.pop(x)]))
+
+        return palette
