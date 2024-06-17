@@ -126,6 +126,7 @@ class Palette:
             case 'k': return self.kmeans_reduce(image, self.colours)
             case 'r': return self.recursive_reduce(image, self.colours)
             case 'e': return self.reduce_extremal1(image, self.colours)
+            case 's': return self.reduce_similar(image, self.colours)
             case _:   raise ValueError(f'Unknown palette mode "{self.mode}"')
 
 
@@ -215,16 +216,16 @@ class Palette:
 
     # Iteratively reduces a palette by averaging pairs of
     # the most similar hues
-    def get_reduce_similar(self, image: Pim.Image) -> ndarray[Colour]:
+    def reduce_similar(self, image: Pim.Image, colours: int = 8) -> ndarray[Colour]:
         
         # Get a reduced colour that is still representative.
         # Uses Python lists since we care about modifying
         # the shape of the array.
-        palette = list(self.get_auto(image, 256))
+        palette = list(self.kmeans_reduce(image, 256))
 
 
         # Iteratively reduces
-        while len(palette) > self.colours:
+        while len(palette) > colours:
 
             # Finds the most similar pair
             x, y = -1, -1
