@@ -148,48 +148,6 @@ class Palette:
 
         return array(palette)
 
-    def get_m(self, image: Pim.Image) -> ndarray[Colour]:
-
-        # # Converts the image to greyscale,
-        # # which is mode 'L'
-        # greyscale = image.convert('L')
-
-        # # Performs edge detection via convulition
-        # edges = greyscale.filter(Kernel(
-        #     (3, 3),
-        #     # (
-        #     #     -1, -1, -1,
-        #     #     -1, 8, -1,
-        #     #     -1, -1, -1
-        #     # ),
-        #     (
-        #         0, -1, 0,
-        #         -1, 4, -1,
-        #         0, -1, 0
-        #     ),
-        #     scale = 1
-        # ))
-
-        # # Gets the greyscale values.
-        # # Remember, 0 is black and 255 is white.
-        # grey_map = greyscale.load()
-        # pixel_map = image.load()
-
-        hsv_im = image.convert('HSV')
-        h = array(hsv_im.getchannel('H').getcolors())
-        
-        # Reshapes the data
-        hr = h[:, ::-1]
-
-
-        k = self.colours
-        kmeans = KMeans(n_clusters = k, random_state = 0)
-        kmeans.fit(hr)
-        
-        labels = kmeans.labels_
-
-        # shaped_h = labels.reshape()
-
     # Recursively finds the palette
     def get_recursive(self, image: Pim.Image) -> ndarray[Colour]:
         
