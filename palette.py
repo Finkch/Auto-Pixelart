@@ -1,11 +1,12 @@
 # Finds and defines palettes
 
 from numpy import array, ndarray
+import numpy as np
 import PIL.Image as Pim
 from PIL.ImageFilter import Kernel
 from PIL.Image import NEAREST
 from colour import Colour
-import cv2
+from math import ceil
 from sklearn.cluster import KMeans
 
 from logger import logger
@@ -36,11 +37,14 @@ class Palette:
 
     
     # Returns an image representation of the palette
-    def image(self) -> Pim.Image:
+    def image(self, palette: ndarray[Colour] = None) -> Pim.Image:
+
+        if isinstance(palette, type(None)):
+            palette = self.palette
 
         # Gets the dimensions of the image
-        width   = min(len(self.palette), 16)
-        height  = int(len(self.palette) / 16) + 1
+        width   = min(len(palette), 16)
+        height  = int(ceil(len(palette) / 16))
 
         # Gets the required image mode
         mode = 'HSV' if self.HSV else 'RGB'
@@ -56,10 +60,12 @@ class Palette:
         # Gets access to the pixels
         pixel_map = output.load()
 
+        print(width, height)
+
         # Colours the image to be the 
-        for i in range(width):
-            for j in range(height):
-                pixel_map[i, j] = self.palette[i + j * 16].RGB
+        for j in range(height):
+            for i in range(width):
+                pixel_map[i, j] = palette[i + j * 16]()
 
 
         # HSV files cannot be saved, annoyingly
@@ -99,14 +105,17 @@ class Palette:
             dheight = int(dwidth / image.width * image.height)
             image.thumbnail((dwidth, dheight))
 
-        return self.get_auto(image)
+        return self.get_extremal1(image)
 
     # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
-    def get_auto(self, image: Pim.Image) -> ndarray[Colour]:
+    def get_auto(self, image: Pim.Image, colours: int = None) -> ndarray[Colour]:
+
+        if not colours:
+            colours = self.colours
 
         # Reduces the colours in the image.
         # Internally, k-mean clustering is used
-        paletted = image.convert('P', palette = Pim.ADAPTIVE, colors = self.colours)
+        paletted = image.convert('P', palette = Pim.ADAPTIVE, colors = colours)
         image_palette = paletted.getpalette()
 
         # Retrieves a list of dominent colours
@@ -114,7 +123,7 @@ class Palette:
 
         # Gets the top dominent colours
         palette = []
-        for i in range(self.colours):
+        for i in range(len(colour_counts)):
 
             # Gets the index of the item
             pindex = colour_counts[i][1]
@@ -172,9 +181,6 @@ class Palette:
         # Reshapes the data
         hr = h[:, ::-1]
 
-        logger.log('h', h)
-        logger.log('hr', hr)
-
 
         k = self.colours
         kmeans = KMeans(n_clusters = k, random_state = 0)
@@ -184,5 +190,57 @@ class Palette:
 
         # shaped_h = labels.reshape()
 
-        logger.log('labels', labels)
+    # Recursively finds the palette
+    def get_recursive(self, image: Pim.Image) -> ndarray[Colour]:
+        
+        starting_size = 256
+
+        # Gets the palette image using large colour count
+        self.palette = self.get_auto(image, starting_size)
+        palette_image = self.image()
+
+
+        # Uses recursion to reduce the palette until it's the desired size
+        return self.get_recursive_step(palette_image, starting_size)
+
+    def get_recursive_step(self, palette_image: Pim.Image, colours: int) -> ndarray[Colour]:
+        
+        nim = palette_image.convert('RGB').resize((palette_image.width * 150, palette_image.height * 150) ,resample = NEAREST)
+        nim.save(f'temp/palette_{colours}.png')
+
+        # Base case.
+        # Returns the palette
+        if colours == self.colours:
+            return self.get_auto(palette_image)
+
+        # Finds the required number of colours for the next step.
+        # Halves the number of colours from this step, unless it
+        # would cause a miss of the base case.
+        next_colours = int(colours / 2)
+        if next_colours < self.colours:
+            next_colours = self.colours
+
+        new_palette_image = palette_image.quantize(next_colours, dither = 0)
+
+        # Next step of recursion
+        return self.get_recursive_step(new_palette_image, next_colours)
+    
+    def get_extremal1(self, image: Pim.Image) -> ndarray[Colour]:
+
+        palette_256 = self.get_auto(image, 256)
+
+        # Converts the data to ndarrays
+        palette = array([
+            array(colour()) for colour in palette_256
+        ])
+        
+
+        # Finds the most different hue from the median
+        median_h = np.median(palette[:, 0]) # Median hue
+        extreme_h = max(palette, key = lambda x: abs(x[0] - median_h))
+        
+        new_palette = self.get_auto(image, self.colours - 1)
+        new_palette = np.append(new_palette, Colour(*extreme_h))
+
+        return new_palette
 
