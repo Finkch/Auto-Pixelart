@@ -90,6 +90,20 @@ class Palette:
 
         return output
 
+    # Used with palette images
+    def from_palette_image(self, source_copy: Pim.Image) -> ndarray[Colour]:
+        
+        # Gets the colours in the image
+        colours = source_copy.getcolors()
+
+        # Updates colour count
+        self.colours = len(colours)
+
+        # Gets Colours in the palette
+        palette = [Colour(*colour[1]) for colour in colours]
+
+        return array(palette)
+
     # Gets best representation for the image's palette.
     def get(self, dwidth: int = None) -> ndarray[Colour]:
 
@@ -131,20 +145,6 @@ class Palette:
             # Palette is just a list of values (not tuples), 
             # so we need to stride over items
             palette.append(Colour(*image_palette[pindex * 3 : pindex * 3 + 3], use_HSV = self.HSV))
-
-        return array(palette)
-    
-    # Used with palette images
-    def from_palette_image(self, source_copy: Pim.Image) -> ndarray[Colour]:
-        
-        # Gets the colours in the image
-        colours = source_copy.getcolors()
-
-        # Updates colour count
-        self.colours = len(colours)
-
-        # Gets Colours in the palette
-        palette = [Colour(*colour[1]) for colour in colours]
 
         return array(palette)
 
