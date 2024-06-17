@@ -99,7 +99,7 @@ class Palette:
             dheight = int(dwidth / image.width * image.height)
             image.thumbnail((dwidth, dheight))
 
-        return self.get_m(image)
+        return self.get_auto(image)
 
     # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
     def get_auto(self, image: Pim.Image) -> ndarray[Colour]:
