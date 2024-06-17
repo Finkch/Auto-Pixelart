@@ -26,16 +26,20 @@ class Palette:
         return array([colour() for colour in self.palette])
     
     # Returns a deep copy of the palette
-    def copy(self, use_HSV: bool = None):
+    def copy(self, use_HSV: bool = None, mode: str = None):
 
         HSV = self.HSV
         if not use_HSV == None:
             HSV = use_HSV
 
+        if not mode:
+            mode = self.mode
+
         return Palette(
             self.image(),
             self.colours,
-            HSV
+            HSV,
+            mode
         )
 
     
