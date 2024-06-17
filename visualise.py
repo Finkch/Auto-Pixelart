@@ -177,48 +177,6 @@ def show_colour_wheel(image: Image):
 
     return output
 
-# Plots in 3D.
-# Doesn't get the colours right because I can't
-# find a library to do it corecctly.
-def plot_3d(colours: ndarray) -> None:
-    
-    # Extracts H, S, and V each as an array
-    arr = array([(colour.HSV) for colour in colours])
-    h = arr[:, 0]
-    s = arr[:, 1]
-    v = arr[:, 2]
-
-    # Create a scatter plot with color based on z coordinate
-    scatter = go.Scatter3d(
-        x=h,
-        y=s,
-        z=v,
-        mode='markers',
-        marker=dict(
-            size=5,
-            color=h,                # Color based on z values
-            colorscale='HSV',   # Color scale
-            colorbar=dict(title='Z Value'),
-            opacity=0.8
-        )
-    )
-
-    # Create a layout
-    layout = go.Layout(
-        title='3D Scatter Plot with Color based on Z',
-        scene=dict(
-            xaxis_title='Hue',
-            yaxis_title='Saturation',
-            zaxis_title='Value'
-        )
-    )
-
-    # Create a figure
-    fig = go.Figure(data=[scatter], layout=layout)
-
-    # Show the plot
-    fig.show()
-
 # Uses HSV to plot in 3D
 def show_3d(image: Image, HSV: bool = True) -> Image:
     
