@@ -8,6 +8,7 @@ from PIL.Image import NEAREST
 from colour import Colour
 from math import ceil
 from sklearn.cluster import KMeans
+from colour import average_colour
 
 from logger import logger
 
@@ -119,7 +120,7 @@ class Palette:
             dheight = int(dwidth / image.width * image.height)
             image.thumbnail((dwidth, dheight))
 
-        return self.get_extremal1(image)
+        return self.get_reduce_similar(image)
 
     # Based on StackOverflow code: https://stackoverflow.com/questions/3241929/how-to-find-the-dominant-most-common-color-in-an-image
     def get_auto(self, image: Pim.Image, colours: int = None) -> ndarray[Colour]:
@@ -206,4 +207,38 @@ class Palette:
         new_palette = np.append(new_palette, Colour(*extreme_h))
 
         return new_palette
+    
+    # Iteratively reduces a palette by averaging pairs of
+    # the most similar hues
+    def get_reduce_similar(self, image: Pim.Image) -> ndarray[Colour]:
+        
+        # Get a reduced colour that is still representative.
+        # Uses Python lists since we care about modifying
+        # the shape of the array.
+        palette = list(self.get_auto(image, 256))
 
+
+        # Iteratively reduces
+        while len(palette) > self.colours:
+
+            # Finds the most similar pair
+            x, y = -1, -1
+            mini = 255
+            for i in range(len(palette) - 1):
+                for j in range(i + 1, len(palette)):
+                    diff = min( # Hue is ciruclar
+                        abs(palette[i].H - palette[j].H), 
+                        255 - abs(palette[i].H - palette[j].H)
+                    )
+
+                    # If this pair of colours is more similar
+                    # than the last pair, update
+                    if diff < mini:
+                        mini = diff
+                        x, y = i, j
+
+            # Averages the colour and adds it back to the palette.
+            # Notice y is popped first sice y > x.
+            palette.append(average_colour([palette.pop(y), palette.pop(x)]))
+
+        return palette
