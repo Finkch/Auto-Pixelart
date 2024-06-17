@@ -1,14 +1,19 @@
 # For making little images to I can have a better idea at what's going on
 
 from image import Image
+
 import plotly.graph_objects as go
 import plotly.express as px
+import matplotlib.pyplot as plt
 
 from math import log, sin, cos, pi
 
 from logger import logger
 from colour import *
-from numpy import array, ndarray
+from numpy import array, ndarray, round
+import numpy as np
+
+from colorsys import hsv_to_rgb
 
 
 # Given an image, visualises its colours
@@ -48,7 +53,11 @@ def show_colours(image: Image, choose = weighted_colour, choose_name = 'weighted
 
 
     # Creates a white image, which will be editted to show the palette
-    palette = Image(f'colours_{image.file_name} ({choose_name}, {col_type}).{image.file_extension}', location = 'outputs', size =(im_width, im_height))
+    palette = Image(
+        f'colours_{image.file_name} ({choose_name}, {col_type}).{image.file_extension}', 
+        location = 'outputs', 
+        size =(im_width, im_height)
+    )
 
     # Obtains the map to pixels in the new image
     pixels = palette.source.load()
@@ -88,7 +97,6 @@ def show_colours(image: Image, choose = weighted_colour, choose_name = 'weighted
                 pixels[i + x_off, j + y_off] = colour.RGB
 
     # Saves the image
-    palette.save()
     return palette
 
 # Paints a colour wheel to visualise an image's palette
@@ -167,8 +175,6 @@ def show_colour_wheel(image: Image):
     # Upsizes the output
     output.resize(scale = 0.5, absolute = False)
 
-
-    output.save()
     return output
 
 # Plots in 3D.
@@ -212,6 +218,87 @@ def plot_3d(colours: ndarray) -> None:
 
     # Show the plot
     fig.show()
+
+# Uses HSV to plot in 3D
+def show_3d(image: Image, HSV: bool = True) -> Image:
+    
+    # This is a plot, not an image. No need to save
+    output = Image(None)
+
+    # Separetes the colour and frequency components
+    image_colours = image.get_colours(use_HSV = HSV)[::5]
+    colours = array([colour() for colour in image_colours])
+    frequencies = array([colour.frequency for colour in image_colours]) 
+
+    # Separates the colour into its components
+    h = colours[:, 0]
+    s = colours[:, 1]
+    v = colours[:, 2]
+
+    # Converts the colours to an appropriate range of 0-1 (and to RGB)
+    if HSV:
+        colours_RGB = array([hsv_to_rgb(*(colour / 255)) for colour in colours])
+    else:
+        colours_RGB = colours / 255
+    
+
+    # Finds the most occuring colour for normalisation
+    maxi = max(image_colours, key = lambda x: x.frequency)
+
+    # Gets the marker size.
+    # Uses very similar mapping to show_colour().
+    size = (2 * ((np.log(frequencies) / np.log(maxi.frequency)) / 2 + 0.5)) ** 5
+
+
+
+    # Gets the palette associated with the colours
+    palette = image.get_palette(use_HSV = HSV).palette
+    palette_colours = array([colour() for colour in palette])
+
+    # Separates the colour into its components
+    ph = palette_colours[:, 0]
+    ps = palette_colours[:, 1]
+    pv = palette_colours[:, 2]
+
+    if HSV:
+        palette_RGB = array([hsv_to_rgb(*(colour / 255)) for colour in palette_colours])
+        
+        # Adds an offset to the hue
+        palette_RGB[:, 0] += 1 / 3
+        palette_RGB[:, 0] %= 1
+    else:
+        palette_RGB = palette_colours / 255
+
+        # Swaps order of colours for better visibility (most of the time)
+        palette_RGB[:, 0], palette_RGB[:, 1], palette_RGB[:, 2] = palette_RGB[:, 1], palette_RGB[:, 2], palette_RGB[:, 0]
+
+    # Size of each point
+    psize = 100
+
+    
+
+    # Create the 3D plot
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot each point with the corresponding color
+    ax.scatter(h, s, v, c = colours_RGB, marker = 'o', s = size, alpha = 0.05)
+    ax.scatter(ph, ps, pv, c = palette_RGB, marker = 'X', s = psize)
+
+    # Set labels
+    if HSV:
+        ax.set_xlabel('Hue')
+        ax.set_ylabel('Saturation')
+        ax.set_zlabel('Value')
+    else:
+        ax.set_xlabel('R')
+        ax.set_ylabel('G')
+        ax.set_zlabel('B')
+
+    plt.show()
+
+    return output
+
 
 
 # Returns a list of possible ways to visualise the palette.
