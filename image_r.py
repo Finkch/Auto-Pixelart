@@ -1,17 +1,22 @@
 # Encapsulates PIL.Image
 
+from __future__ import annotations
+
 import PIL.Image as Pim
 from PIL.Image import NEAREST, LANCZOS
 from colour_r import ColourList
 from palette_r import Palette
 
 class Image:
-    def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB') -> None:
+    def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB', source: Pim.Image = None) -> None:
         self.set_file(file, location)
 
         self.mode   = mode
 
-        self.source = self.read()
+        if not source:
+            self.source = self.read()
+        else:
+            self.source = source.convert(self.mode)
             
 
         self.width  = self.source.width
@@ -20,6 +25,7 @@ class Image:
 
     # Reads an Pim.Image
     def read(self) -> Pim.Image:
+
         source = Pim.open(f'{self.location}/{self.file}',)
         
         # Ensures the image is in the right mode
