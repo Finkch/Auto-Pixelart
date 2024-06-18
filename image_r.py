@@ -2,6 +2,7 @@
 
 import PIL.Image as Pim
 from PIL.Image import NEAREST, LANCZOS
+from colour_r import ColourList
 
 class Image:
     def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB') -> None:
@@ -55,3 +56,7 @@ class Image:
         self.file_extension = file[file.index('.') + 1:]
         
         self.location = location
+
+    # Getters
+    def colours(self) -> ColourList:
+        return ColourList(self.source.getcolors())
