@@ -21,6 +21,9 @@ class ColourList:
     def __len__(self) -> int:
         return len(self.colours)
     
+    def __getitem__(self, index) -> tuple:
+        return self.data[index]
+    
     # Given a tuple of colour, returns the most similar
     # that exists in the ColourList
     def similar(self, colour: tuple) -> tuple:
