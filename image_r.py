@@ -11,8 +11,6 @@ class Image:
         self.mode   = mode
 
         self.source = self.read()
-        if self.mode != self.source.mode:
-            self.source = self.convert(self.mode)
             
 
         self.width  = self.source.width
@@ -21,7 +19,13 @@ class Image:
 
     # Reads an Pim.Image
     def read(self) -> Pim.Image:
-        return Pim.open(f'{self.location}/{self.file}')
+        source = Pim.open(f'{self.location}/{self.file}',)
+        
+        # Ensures the image is in the right mode
+        if self.mode != source.mode:
+            source = source.convert(self.mode)
+
+        return source
     
     # Saves an image
     def save(self, file_name: str = None, location: str = 'outputs', extension: str = None) -> None:
