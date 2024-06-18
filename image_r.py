@@ -4,7 +4,7 @@ import PIL.Image as Pim
 from PIL.Image import NEAREST, LANCZOS
 
 class Image:
-    def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB'):
+    def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB') -> None:
         self.set_file(file, location)
 
         self.mode   = mode
