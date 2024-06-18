@@ -70,3 +70,8 @@ def colour_difference_HSV(a: tuple, b: tuple) -> float:
         (a[1][2] - b[1][2]) ** 2
     ])
 
+def colour_difference_H(a: tuple, b: tuple) -> float:
+    return min( # Hue is circular
+            abs(a[1][0] - b[1][0]), 
+            255 - abs(a[1][0] - b[1][0])
+        )
