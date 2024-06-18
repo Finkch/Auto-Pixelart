@@ -121,3 +121,41 @@ class Palette:
 
         # Builds new Palette
         return Palette(ColourList(image.getcolors(image.width * image.height), image.mode))
+    
+    def reduce_similar(self, size: int) -> Palette:
+        
+        # Speeds up the process but first reducing to a smaller
+        # palette that still is representative
+        palette = self.reduce_kmeans(256).palette
+
+        # Gets a copy of the colours, sorted by ascending frequency.
+        # Although the order does not matter much.
+        data = sorted(palette.data, key = lambda c: c[0])
+
+        # Gets the function used to find the difference between colours
+        colour_difference = colour_difference_HSV if palette.mode == 'HSV' else colour_difference_RGB
+
+        # Iteratively reduces the palette
+        while len(data) > size:
+
+            # Finds the most similar pair
+            x, y = -1, -1
+            mini = 1e9 # A really big number
+            for i in range(len(data) - 1):
+                for j in range(i + 1, len(data)):
+
+                    diff = colour_difference(data[i], data[j])
+
+                    # If this pair of colours is more similar
+                    # than the last pair, update
+                    if diff < mini:
+                        mini = diff
+                        x, y = i, j
+
+            # Averages the colour and adds it back to the palette.
+            # Notice y is popped first sice y > x.
+            data.append(average_colour(
+                    ColourList([data.pop(y), data.pop(x)], self.palette.mode)
+            ))
+
+        return Palette(ColourList(data, mode = self.palette.mode))
