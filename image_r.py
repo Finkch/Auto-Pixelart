@@ -65,12 +65,12 @@ class Image:
     # Method can be:
     #   'n': Nearest neighbour
     #   'l': Lanczos/sinc method
-    def resize(self, size: tuple, method: str = 'n') -> Pim.Image:
+    def resize(self, size: tuple, method: str = 'n') -> Image:
         match method:
             case 'n':
-                return self.source.resize(size, resample = NEAREST)
+                return self.copy(self.source.resize(size, resample = NEAREST))
             case 'l':
-                return self.source.resize(size, resample = LANCZOS)
+                return self.copy(self.source.resize(size, resample = LANCZOS))
             
     # Conforms the source's colours to a palette
     def palettise(self, palette: Palette) -> Image:
