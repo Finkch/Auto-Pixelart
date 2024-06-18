@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from numpy import array, ndarray
-from colour_r import ColourList
+from colour_r import *
 
 import PIL.Image as Pim
 
@@ -21,6 +21,9 @@ class Palette:
     # Other magic methods
     def __len__(self) -> int:
         return len(self.palette)
+    
+    def __getitem__(self, index: int) -> tuple:
+        return tuple(self.palette.colours[index])
     
     # Paints the palette into a PIL.Image.
     # This paints unfairly, painting one pixel of each
@@ -55,7 +58,7 @@ class Palette:
                 x, y = i % length, int(i / length)
 
                 # Paints the pixel the appropriate colour
-                pixels[x, y] = data[j][1]
+                pixels[x, y] = tuple(data[j][1])
 
                 # Trims off colours that are too infrequent
                 if j == datas - 1:
@@ -64,7 +67,7 @@ class Palette:
                     # Finds colours that are below frequency cutoff
                     s = None
                     for k in range(datas):
-                        if data[k][1] == f:
+                        if data[k][0] == f:
                             s = k
                             break
 
@@ -86,7 +89,7 @@ class Palette:
 
         # Paints the image with the palette
         for i in range(len(self)):
-            pixels[i, 0] = self.palette.colours[i]
+            pixels[i, 0] = self[i]
 
         # Upscales the image
         if upscale_factor > 1:
@@ -101,7 +104,8 @@ class Palette:
     # Reduction methods
     def reduce_kmeans(self, size: int) -> Palette:
         
-        # Paints an image
+        # Paints an image of the palette so PIL's native
+        # k-mean clustering can be used.
         image = self.paint_unfair()
 
         # Can't quantise HSV images
