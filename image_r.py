@@ -78,10 +78,14 @@ class Image:
         # Gets the flattened palette
         colours = list(palette.palette.colours.flatten())
 
+        # Creates an image containing the palette
         palette_image = Pim.new('P', (len(colours), 1))
         palette_image.putpalette(colours)
 
-        return self.copy(self.source.quantize(palette = palette_image, dither = 0))
+        # Quantises the source to the palette
+        source = self.source.quantize(palette = palette_image, dither = 0)
+
+        return self.copy(source)
     
     # Setters
     def set_file(self, file: str, location: str = 'inputs') -> None:
