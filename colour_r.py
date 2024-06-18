@@ -4,7 +4,8 @@ from numpy import array, ndarray, average
 
 class ColourList:
     def __init__(self, image_colours: list, mode: str = 'RGB') -> None:
-        image_colours = array(image_colours)
+
+        image_colours = array([(x, array(y)) for x, y in image_colours], dtype=object)
 
         self.data           = image_colours
         self.colours        = image_colours[:, 1]
