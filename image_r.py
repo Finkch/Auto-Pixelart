@@ -46,12 +46,15 @@ class Image:
         self.source.save(f'{location}/{file_name}.{extension}')
 
     # Makes a deep copy of this Image
-    def copy(self) -> Image:
+    def copy(self, source: Pim.Image = None) -> Image:
+        if not source:
+            source = self.source.copy()
+        
         return Image(
             self.file,
             self.location,
             self.mode,
-            self.source.copy()
+            source
         )
 
     # Converts image to a mode
