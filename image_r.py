@@ -71,7 +71,18 @@ class Image:
                 return self.source.resize(size, resample = NEAREST)
             case 'l':
                 return self.source.resize(size, resample = LANCZOS)
+            
+    # Conforms the source's colours to a palette
+    def palettise(self, palette: Palette) -> Image:
+        
+        # Gets the flattened palette
+        colours = list(palette.palette.colours.flatten())
 
+        palette_image = Pim.new('P', (len(colours), 1))
+        palette_image.putpalette(colours)
+
+        return self.copy(self.source.quantize(palette = palette_image, dither = 0))
+    
     # Setters
     def set_file(self, file: str, location: str = 'inputs') -> None:
         self.file = file
