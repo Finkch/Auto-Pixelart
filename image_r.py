@@ -3,6 +3,7 @@
 import PIL.Image as Pim
 from PIL.Image import NEAREST, LANCZOS
 from colour_r import ColourList
+from palette_r import Palette
 
 class Image:
     def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB') -> None:
@@ -64,3 +65,6 @@ class Image:
     # Getters
     def colours(self) -> ColourList:
         return ColourList(self.source.getcolors(self.width * self.height), self.mode)
+    
+    def palette(self) -> Palette:
+        return Palette(self.colours())
