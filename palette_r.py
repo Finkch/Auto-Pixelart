@@ -97,3 +97,23 @@ class Palette:
         
         return image
 
+
+    # Reduction methods
+    def reduce_kmeans(self, size: int) -> Palette:
+        
+        # Paints an image
+        image = self.paint_unfair()
+
+        # Can't quantise HSV images
+        if image.mode != 'RGB':
+            image = image.convert('RGB')
+
+        # Uses PIL for k-means clustering
+        image = image.quantize(size)
+
+        # Puts the image back into the correct mode
+        if image.mode != self.palette.mode:
+            image = image.convert(self.palette.mode)
+
+        # Builds new Palette
+        return Palette(ColourList(image.getcolors(image.width * image.height), image.mode))
