@@ -1,14 +1,20 @@
 # Contains an object to represent colour
 
-from numpy import array, ndarray, average
+from numpy import array, ndarray, average, round
 
 class ColourList:
     def __init__(self, image_colours: list, mode: str = 'RGB') -> None:
 
-        image_colours = array([(x, array(y)) for x, y in image_colours], dtype=object)
+        # We have to do some slight acrobatics here in order to
+        # get the colours themselves into a numpy array. If we
+        # place the colour arrays directly into data, then because
+        # the datatype would be (int, ndarray), it defaults to object
+        # and stores the ndarray as a generic object, losing all
+        # the advantages of using an array.
+        image_colours       = array(image_colours, dtype = object)
 
         self.data           = image_colours
-        self.colours        = image_colours[:, 1]
+        self.colours        = array([array(colour[1]) for colour in image_colours])
         self.frequencies    = image_colours[:, 0]
 
         self.mode = mode
@@ -36,18 +42,16 @@ class ColourList:
 
 # Averages colours
 def average_colour(colours: ColourList) -> tuple:
-    return (
-
+    return [
         # Frequency is summed as the new colour would represent
         # a larger portion of the image
         sum(colours.frequencies),
-        (
-            average(colours.colours[:, 0], colours.frequencies), # Averages each channel
-            average(colours.colours[:, 1], colours.frequencies),
-            average(colours.colours[:, 2], colours.frequencies),
+        ( # Averages each channel
+            int(round(average(colours.colours[:, 0], weights = colours.frequencies))),
+            int(round(average(colours.colours[:, 1], weights = colours.frequencies))),
+            int(round(average(colours.colours[:, 2], weights = colours.frequencies))),
         )
-    )
-
+    ]
 # Finds the difference between a pair of colours
 def colour_difference_RGB(a: tuple, b: tuple) -> float:
     return sum([
@@ -65,3 +69,4 @@ def colour_difference_HSV(a: tuple, b: tuple) -> float:
         (a[1][1] - b[1][1]) ** 2,
         (a[1][2] - b[1][2]) ** 2
     ])
+
