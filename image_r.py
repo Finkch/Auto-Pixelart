@@ -63,4 +63,4 @@ class Image:
 
     # Getters
     def colours(self) -> ColourList:
-        return ColourList(self.source.getcolors())
+        return ColourList(self.source.getcolors(), self.mode)
