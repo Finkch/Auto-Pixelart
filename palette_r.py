@@ -22,3 +22,78 @@ class Palette:
     def __len__(self) -> int:
         return len(self.palette)
     
+    # Paints the palette into a PIL.Image.
+    # This paints unfairly, painting one pixel of each
+    # colour before repeating, painting a colour no more
+    # times than its frequency.
+    def paint_unfair(self, downscale_factor: int = 1):
+        length = int((sum(self.palette.frequencies) / downscale_factor) ** 0.5)
+        area = int(length ** 2) # This order is to prevent rounding errors
+
+        # Sorts colours by decreasing occurances
+        data = sorted(self.palette.data, reverse = True, key = lambda c: c[0])
+
+        # Creates new PIL image
+        image = Pim.new(self.palette.mode, (length, length))
+        pixels = image.load()
+
+        # Paints new image
+        f = 0   # Frequency cutoff
+        i = 0   # Iteration
+        while i < area:
+
+            # Recomputes len of data for slight increase in efficiency
+            datas = len(data)
+            for j in range(datas):
+
+                # Since i is incremented in this loop, we need to check
+                # the break condition here as well.
+                if i >= area:
+                    break
+
+                # Finds x, y coordiantes on the image
+                x, y = i % length, int(i / length)
+
+                # Paints the pixel the appropriate colour
+                pixels[x, y] = data[j][1]
+
+                # Trims off colours that are too infrequent
+                if j == datas - 1:
+                    f += 1
+
+                    # Finds colours that are below frequency cutoff
+                    s = None
+                    for k in range(datas):
+                        if data[k][1] == f:
+                            s = k
+                            break
+
+                    # Trims data. Since data is sorted, we only neeed
+                    # the index of the first item below the cutoff
+                    if s:
+                        data = data[:s]
+                i += 1
+
+        return image
+    
+    # Paints the palette as a palette.
+    # One tall, one pixel per colour.
+    def paint(self, upscale_factor: int = 1) -> Pim.Image:
+        
+        # Creates a new image
+        image = Pim.new(self.palette.mode, (len(self), 1))
+        pixels = image.load()
+
+        # Paints the image with the palette
+        for i in range(len(self)):
+            pixels[i, 0] = self.palette.colours[i]
+
+        # Upscales the image
+        if upscale_factor > 1:
+            image = image.resize(
+                (image.width * upscale_factor, image.height * upscale_factor), 
+                resample = Pim.NEAREST
+            )
+        
+        return image
+
