@@ -69,7 +69,12 @@ class Image:
     # Method can be:
     #   'n': Nearest neighbour
     #   'l': Lanczos/sinc method
-    def resize(self, size: tuple, method: str = 'n') -> Image:
+    def resize(self, width: int, method: str = 'n') -> Image:
+
+        # Gets the height that preserves aspect ratio
+        height = int(width / self.width * self.height)
+        size = (width, height)
+
         match method:
             case 'n':
                 return self.copy(self.source.resize(size, resample = NEAREST))
@@ -97,14 +102,11 @@ class Image:
         # Constrains the image palette
         image = self.palettise(palette)
 
-        # Gets the height that preserves aspect ratio
-        height = int(width / self.width * self.height)
-
         # Downscales to make it, y'know, pixel art
-        image = image.resize((width, height), 'n')
+        image = image.resize(width, 'n')
 
         # Upscales to match original resolution
-        image = image.resize(self.size, 'n')
+        image = image.resize(self.width, 'n')
 
         return image
     
