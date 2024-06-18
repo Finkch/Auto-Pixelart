@@ -87,6 +87,23 @@ class Image:
 
         return self.copy(source)
     
+    # Turns the source image into pixel art
+    def pixelate(self, width: int, palette: Palette) -> Image:
+
+        # Constrains the image palette
+        image = self.palettise(palette)
+
+        # Gets the height that preserves aspect ratio
+        height = int(width / self.width * self.height)
+
+        # Downscales to make it, y'know, pixel art
+        image = image.resize((width, height), 'n')
+
+        # Upscales to match original resolution
+        image = image.resize(self.size, 'n')
+
+        return image
+    
     # Setters
     def set_file(self, file: str, location: str = 'inputs') -> None:
         self.file = file
