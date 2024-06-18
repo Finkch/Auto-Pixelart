@@ -5,7 +5,7 @@ from numpy import array, ndarray
 class ColourList:
     def __init__(self, image_colours: list) -> None:
         image_colours = array(image_colours)
-        
+
         self.data           = image_colours
         self.colours        = image_colours[:, 1]
         self.frequencies    = image_colours[:, 0]
@@ -13,6 +13,10 @@ class ColourList:
     # Returns colour data
     def __call__(self) -> ndarray:
         return self.colours
+    
+    # Other magic methods
+    def __len__(self) -> int:
+        return len(self.colours)
     
     # Given a tuple of colour, returns the most similar
     # that exists in the ColourList
