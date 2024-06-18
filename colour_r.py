@@ -1,9 +1,11 @@
 # Contains an object to represent colour
 
-from numpy import ndarray
+from numpy import array, ndarray
 
 class ColourList:
-    def __init__(self, image_colours: ndarray) -> None:
+    def __init__(self, image_colours: list) -> None:
+        image_colours = array(image_colours)
+        
         self.data           = image_colours
         self.colours        = image_colours[:, 1]
         self.frequencies    = image_colours[:, 0]
