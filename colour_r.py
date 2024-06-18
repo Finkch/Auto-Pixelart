@@ -1,6 +1,6 @@
 # Contains an object to represent colour
 
-from numpy import array, ndarray
+from numpy import array, ndarray, average
 
 class ColourList:
     def __init__(self, image_colours: list, mode: str = 'RGB') -> None:
@@ -30,3 +30,16 @@ class ColourList:
             ])
         )
 
+# Averages colours
+def average_colour(colours: ColourList) -> tuple:
+    return (
+
+        # Frequency is summed as the new colour would represent
+        # a larger portion of the image
+        sum(colours.frequencies),
+        (
+            average(colours.colours[:, 0], colours.frequencies), # Averages each channel
+            average(colours.colours[:, 1], colours.frequencies),
+            average(colours.colours[:, 2], colours.frequencies),
+        )
+    )
