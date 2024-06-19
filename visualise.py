@@ -6,12 +6,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import PIL.Image as Pim
 
-from math import log, sin, cos, pi
+from math import sin, cos, pi
 
 from numpy import array
 from colorsys import hsv_to_rgb
-
-from logger import logger
 
 # Paints a colour wheel to visualise an image's palette
 def show_colour_wheel(image: Image, palette: Palette) -> None:
