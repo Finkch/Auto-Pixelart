@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from numpy import array, ndarray, average, round
+from numpy import array, ndarray, average, round, column_stack
 from colorsys import hsv_to_rgb, rgb_to_hsv
+
+from logger import logger
 
 class ColourList:
     def __init__(self, image_colours: list, mode: str = 'RGB') -> None:
@@ -36,27 +38,47 @@ class ColourList:
     # Converts colours to a different mode
     def convert(self, mode: str) -> ColourList:
         if self.mode == mode:
-            return ColourList(self.data)
+            return ColourList(self.data, mode)
         
+        
+        # Converts each item to RGB/HSV appropriately.
+        # Has to transform from 0-255 to 0-1 amd back up to 0-255.
+        # Plus, it has to be an int at the end.
+        # The colour array is transformed separately to packing it
+        # with frequency because otherwise the data would be in an
+        # array of data-type "object", preventing correct casting.
         if self.mode == 'RGB' and mode == 'HSV':
+            
+            # Transforms colour
+            hsv = array(round(
+                255 * array(
+                    [rgb_to_hsv(*(self.colours[i] / 255)) for i in range(len(self.data))]
+                )
+            ), dtype=int)            
+
             return ColourList(
-                [(
-                    self.frequencies[i], 
-                    255 * array(rgb_to_hsv(self.colours[i] / 255), 
-                    dtype = int
-                    )) 
-                for i in range(len(self.data))], 
+                [( # Packs frequency and colour together
+                    self.frequencies[i],
+                    hsv[i]
+                ) for i in range(len(self.data))],
                 mode = mode
             )
 
+
         if self.mode == 'HSV' and mode == 'RGB':
+            
+            # Transforms colour
+            rgb = array(round(
+                255 * array(
+                    [hsv_to_rgb(*(self.colours[i] / 255)) for i in range(len(self.data))]
+                )
+            ), dtype=int)
+
             return ColourList(
-                [(
-                    self.frequencies[i], 
-                    255 * array(hsv_to_rgb(self.colours[i] / 255), 
-                    dtype = int
-                    )) 
-                for i in range(len(self.data))], 
+                [( # Packs frequency and colour together
+                    self.frequencies[i],
+                    rgb[i]
+                ) for i in range(len(self.data))],
                 mode = mode
             )
 
