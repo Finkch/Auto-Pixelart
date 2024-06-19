@@ -218,7 +218,7 @@ class Palette(ColourList):
         
         # Sets default values
         if extremals == None:
-            extremals = int(size / 4)
+            extremals = min(int(size / 4), 1)
 
         # Gets a reduced colour set
         colours = sorted(self.reduce_kmeans(256).data, reverse = True, key = lambda c: c[0])
@@ -251,7 +251,7 @@ class Palette(ColourList):
         
         # Gets default
         if not dissimilars:
-            dissimilars = int(size / 4)
+            dissimilars = min(int(size / 4), 1)
 
         # Gets the palette of similar colours
         palette = self.reduce_similar(size - dissimilars)
