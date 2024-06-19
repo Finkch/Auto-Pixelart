@@ -19,6 +19,10 @@ class Palette(ColourList):
     def __getitem__(self, index: int) -> tuple:
         return tuple(self.colours[index])
     
+    # Overloads super class's convert, albeit inefficiently
+    def convert(self, mode: str) -> Palette:
+        return Palette(super().convert(mode).data, mode)
+    
     # Paints the palette into a PIL.Image.
     # This paints unfairly, painting one pixel of each
     # colour before repeating, painting a colour no more

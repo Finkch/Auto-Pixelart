@@ -1,6 +1,9 @@
 # Contains an object to represent colour
 
+from __future__ import annotations
+
 from numpy import array, ndarray, average, round
+from colorsys import hsv_to_rgb, rgb_to_hsv
 
 class ColourList:
     def __init__(self, image_colours: list, mode: str = 'RGB') -> None:
@@ -29,6 +32,35 @@ class ColourList:
     
     def __getitem__(self, index) -> tuple:
         return self.data[index]
+    
+    # Converts colours to a different mode
+    def convert(self, mode: str) -> ColourList:
+        if self.mode == mode:
+            return ColourList(self.data)
+        
+        if self.mode == 'RGB' and mode == 'HSV':
+            return ColourList(
+                [(
+                    self.frequencies[i], 
+                    255 * array(rgb_to_hsv(self.colours[i] / 255), 
+                    dtype = int
+                    )) 
+                for i in range(len(self.data))], 
+                mode = mode
+            )
+
+        if self.mode == 'HSV' and mode == 'RGB':
+            return ColourList(
+                [(
+                    self.frequencies[i], 
+                    255 * array(hsv_to_rgb(self.colours[i] / 255), 
+                    dtype = int
+                    )) 
+                for i in range(len(self.data))], 
+                mode = mode
+            )
+
+        raise ValueError(f'Cannot convert from mode "{self.mode}" to "{mode}".')
     
     # Given a tuple of colour, returns the most similar
     # that exists in the ColourList
