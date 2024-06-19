@@ -62,8 +62,14 @@ class Image:
         )
 
     # Converts image to a mode
-    def convert(self, mode: str) -> Pim.Image:
-        return self.source.convert(mode)
+    def convert(self, mode: str) -> Image:
+        return Image(
+            self.file,
+            self.location,
+            mode,
+            self.source.convert(mode)
+        )
+    
     
     # Resizes image.
     # Method can be:
