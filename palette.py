@@ -249,6 +249,10 @@ class Palette(ColourList):
     # dissimilar colours.
     def reduce_similar_dissimilar(self, size: int, dissimilars: int = None) -> Palette:
         
+        # Gets default
+        if not dissimilars:
+            dissimilars = int(size / 4)
+
         # Gets the palette of similar colours
         palette = self.reduce_similar(size - dissimilars)
 
