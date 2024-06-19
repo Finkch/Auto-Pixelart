@@ -10,34 +10,28 @@ import PIL.Image as Pim
 from logger import logger
 
 
-class Palette:
-    def __init__(self, colours: ColourList) -> None:
-        self.palette    = colours
-
-    # Calling a Palette returns its colours
-    def __call__(self) -> ndarray:
-        return self.palette()
+class Palette(ColourList):
+    def __init__(self, image_colours: list, mode: str = 'RGB') -> None:
+        super().__init__(image_colours, mode)
     
-    # Other magic methods
-    def __len__(self) -> int:
-        return len(self.palette)
-    
+    # Not that indexing a ColourList gives a frequency-colour pair,
+    # indexing a Palette only yields colour.
     def __getitem__(self, index: int) -> tuple:
-        return tuple(self.palette.colours[index])
+        return tuple(self.colours[index])
     
     # Paints the palette into a PIL.Image.
     # This paints unfairly, painting one pixel of each
     # colour before repeating, painting a colour no more
     # times than its frequency.
     def paint_unfair(self, downscale_factor: int = 1):
-        length = int((sum(self.palette.frequencies) / downscale_factor) ** 0.5)
+        length = int((sum(self.frequencies) / downscale_factor) ** 0.5)
         area = int(length ** 2) # This order is to prevent rounding errors
 
         # Sorts colours by decreasing occurances
-        data = sorted(self.palette.data, reverse = True, key = lambda c: c[0])
+        data = sorted(self.data, reverse = True, key = lambda c: c[0])
 
         # Creates new PIL image
-        image = Pim.new(self.palette.mode, (length, length))
+        image = Pim.new(self.mode, (length, length))
         pixels = image.load()
 
         # Paints new image
@@ -84,7 +78,7 @@ class Palette:
     def paint(self, upscale_factor: int = 1) -> Pim.Image:
         
         # Creates a new image
-        image = Pim.new(self.palette.mode, (len(self), 1))
+        image = Pim.new(self.mode, (len(self), 1))
         pixels = image.load()
 
         # Paints the image with the palette
@@ -116,17 +110,17 @@ class Palette:
         image = image.quantize(size)
 
         # Puts the image back into the correct mode
-        if image.mode != self.palette.mode:
-            image = image.convert(self.palette.mode)
+        if image.mode != self.mode:
+            image = image.convert(self.mode)
 
         # Builds new Palette
-        return Palette(ColourList(image.getcolors(image.width * image.height), image.mode))
+        return Palette(image.getcolors(image.width * image.height), image.mode)
     
     def reduce_similar(self, size: int) -> Palette:
         
         # Speeds up the process but first reducing to a smaller
         # palette that still is representative
-        palette = self.reduce_kmeans(256).palette
+        palette = self.reduce_kmeans(256)
 
         # Gets a copy of the colours, sorted by ascending frequency.
         # Although the order does not matter much.
@@ -155,7 +149,7 @@ class Palette:
             # Averages the colour and adds it back to the palette.
             # Notice y is popped first sice y > x.
             data.append(average_colour(
-                    ColourList([data.pop(y), data.pop(x)], self.palette.mode)
+                    ColourList([data.pop(y), data.pop(x)], self.mode)
             ))
 
-        return Palette(ColourList(data, mode = self.palette.mode))
+        return Palette(ColourList(data, mode = self.mode))

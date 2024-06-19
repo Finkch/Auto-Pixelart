@@ -85,7 +85,7 @@ class Image:
     def palettise(self, palette: Palette) -> Image:
         
         # Gets the flattened palette
-        colours = list(palette.palette.colours.flatten())
+        colours = list(palette.colours.flatten())
 
         # Creates an image containing the palette
         palette_image = Pim.new('P', (len(colours), 1))
@@ -123,4 +123,4 @@ class Image:
         return ColourList(self.source.getcolors(self.width * self.height), self.mode)
     
     def palette(self) -> Palette:
-        return Palette(self.colours())
+        return Palette(self.source.getcolors(self.width * self.height), self.mode)
