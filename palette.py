@@ -107,6 +107,7 @@ class Palette(ColourList):
         match mode:
             case 'k': return self.reduce_kmeans(size)
             case 's': return self.reduce_similar(size)
+            case 'd': return self.reduce_dissimilar(size)
             case _:   raise ValueError(f'No such palette mode as "{mode}"')
 
     def reduce_kmeans(self, size: int) -> Palette:
@@ -169,7 +170,7 @@ class Palette(ColourList):
     
     # Starts with the most dominent colour, then iteratively
     # adds the most didsimilar colour.
-    def reduce_dissimilar(self, size: int):
+    def reduce_dissimilar(self, size: int) -> Palette:
         
         # Speeds up the process but first reducing to a smaller
         # palette that still is representative
