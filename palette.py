@@ -118,7 +118,7 @@ class Palette(ColourList):
             image = image.convert(self.mode)
 
         # Builds new Palette
-        return Palette(image.getcolors(image.width * image.height), image.mode)
+        return Palette(image.getcolors(image.width * image.height), self.mode)
     
     def reduce_similar(self, size: int) -> Palette:
         
@@ -131,7 +131,7 @@ class Palette(ColourList):
         data = sorted(palette.data, key = lambda c: c[0])
 
         # Gets the function used to find the difference between colours
-        colour_difference = colour_difference_HSV if palette.mode == 'HSV' else colour_difference_RGB
+        colour_difference = colour_difference_HSV if self.mode == 'HSV' else colour_difference_RGB
 
         # Iteratively reduces the palette
         while len(data) > size:
@@ -156,4 +156,4 @@ class Palette(ColourList):
                     ColourList([data.pop(y), data.pop(x)], self.mode)
             ))
 
-        return Palette(ColourList(data, mode = self.mode))
+        return Palette(data, mode = self.mode)
