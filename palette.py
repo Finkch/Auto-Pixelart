@@ -103,11 +103,12 @@ class Palette(ColourList):
     # Valid modes are:
     #   'k':    k-means clustering
     #   's':    combine similar
-    def reduce(self, size: int, mode: str = 's') -> Palette:
+    def reduce(self, size: int, mode: str = 's', *args) -> Palette:
         match mode:
             case 'k': return self.reduce_kmeans(size)
             case 's': return self.reduce_similar(size)
             case 'd': return self.reduce_dissimilar(size)
+            case 'e': return self.reduce_extremal(size, args[0])
             case _:   raise ValueError(f'No such palette mode as "{mode}"')
 
     def reduce_kmeans(self, size: int) -> Palette:
