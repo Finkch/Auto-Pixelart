@@ -11,6 +11,7 @@ from math import log, sin, cos, pi
 from numpy import array
 from colorsys import hsv_to_rgb
 
+from logger import logger
 
 # Paints a colour wheel to visualise an image's palette
 def show_colour_wheel(image: Image, palette: Palette) -> None:
@@ -82,65 +83,46 @@ def show_colour_wheel(image: Image, palette: Palette) -> None:
     source.save(f'outputs/palette_{image.file_name}.png')
 
 # Uses HSV to plot in 3D
-def show_3d(image: Image, HSV: bool = True) -> Image:
-    
-    # This is a plot, not an image. No need to save
-    output = Image(None)
+def show_3d(image: Image, palette: Palette) -> None:
 
-    # Separetes the colour and frequency components
-    image_colours = image.get_colours(use_HSV = HSV)[::5]
-    colours = array([colour() for colour in image_colours])
-    frequencies = array([colour.frequency for colour in image_colours]) 
-
-    # Separates the colour into its components
-    h = colours[:, 0]
-    s = colours[:, 1]
-    v = colours[:, 2]
+    # Grabs components of the colourlist
+    colours = image.colours()
+    data = colours.data[::5]                    # Step of 5 for performance
+    frequencies = data[:, 0].astype('float')    # To prevent np.log int-type issues
+    colours = colours.colours[::5]
 
     # Converts the colours to an appropriate range of 0-1 (and to RGB)
-    if HSV:
+    if image.mode == 'HSV':
         colours_RGB = array([hsv_to_rgb(*(colour / 255)) for colour in colours])
     else:
         colours_RGB = colours / 255
     
 
     # Finds the most occuring colour for normalisation
-    maxi = max(image_colours, key = lambda x: x.frequency)
+    maxi = max(data, key = lambda x: x[0])
 
     # Gets the marker size.
     # Uses very similar mapping to show_colour().
-    alphas = ((np.log(frequencies) / np.log(maxi.frequency)) / 2 + 0.5) ** 5
+    alphas = ((np.log(frequencies) / np.log(maxi[0])) / 2 + 0.5) ** 5
     sizes = 2
 
-    # sizes = (2 * ((np.log(frequencies) / np.log(maxi.frequency)) / 2 + 0.5)) ** 5
-    # alphas = 0.02
 
-
-
-    # Gets the palette associated with the colours
-    palette = image.get_palette(use_HSV = HSV).palette
-    palette_colours = array([colour() for colour in palette])
-
-    # Separates the colour into its components
-    ph = palette_colours[:, 0]
-    ps = palette_colours[:, 1]
-    pv = palette_colours[:, 2]
-
-    if HSV:
-        palette_RGB = array([hsv_to_rgb(*(colour / 255)) for colour in palette_colours])
+    # Maps the colours to an appropriate range and shifts the palette
+    # marker colours away form the cooridnate colours to improve visibility
+    if image.mode == 'HSV':
+        palette_RGB = array([hsv_to_rgb(*(colour / 255)) for colour in palette.colours])
         
         # Adds an offset to the hue
         palette_RGB[:, 0] += 1 / 3
         palette_RGB[:, 0] %= 1
     else:
-        palette_RGB = palette_colours / 255
+        palette_RGB = palette.colours / 255
 
         # Swaps order of colours for better visibility (most of the time)
         palette_RGB[:, 0], palette_RGB[:, 1], palette_RGB[:, 2] = palette_RGB[:, 1], palette_RGB[:, 2], palette_RGB[:, 0]
 
     # Size of each point
     psize = 100
-
     
 
     # Create the 3D plot
@@ -148,11 +130,21 @@ def show_3d(image: Image, HSV: bool = True) -> Image:
     ax = fig.add_subplot(111, projection='3d')
 
     # Plot each point with the corresponding color
-    ax.scatter(h, s, v, c = colours_RGB, marker = 'o', s = sizes, alpha = alphas)
-    ax.scatter(ph, ps, pv, c = palette_RGB, marker = 'X', s = psize)
+    ax.scatter(
+        colours[:, 0], 
+        colours[:, 1], 
+        colours[:, 2], 
+        c = colours_RGB, marker = 'o', s = sizes, alpha = alphas
+    )
+    ax.scatter(
+        palette.colours[:, 0], 
+        palette.colours[:, 1], 
+        palette.colours[:, 2], 
+        c = palette_RGB, marker = 'X', s = psize
+    )
 
     # Set labels
-    if HSV:
+    if image.mode == 'HSV':
         ax.set_xlabel('Hue')
         ax.set_ylabel('Saturation')
         ax.set_zlabel('Value')
@@ -162,5 +154,3 @@ def show_3d(image: Image, HSV: bool = True) -> Image:
         ax.set_zlabel('B')
 
     plt.show()
-
-    return output
