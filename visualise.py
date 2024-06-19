@@ -91,6 +91,10 @@ def show_colour_wheel(image: Image, palette: Palette) -> None:
 # Uses HSV to plot in 3D
 def show_3d(image: Image, palette: Palette) -> None:
 
+    # Converts the image and palette to HSV
+    image = image.convert('HSV')
+    palette = palette.convert('HSV')
+
     # Grabs components of the colourlist
     colours = image.colours()
     data = colours.data[::5]                    # Step of 5 for performance
