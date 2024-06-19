@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from numpy import array, ndarray
-from colour_r import *
+from colour import *
 
 import PIL.Image as Pim
 

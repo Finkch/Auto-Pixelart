@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import PIL.Image as Pim
 from PIL.Image import NEAREST, LANCZOS
-from colour_r import ColourList
-from palette_r import Palette
+from colour import ColourList
+from palette import Palette
 
 class Image:
     def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB', source: Pim.Image = None) -> None:
