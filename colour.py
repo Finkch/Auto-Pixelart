@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-from numpy import array, ndarray, average, round, column_stack
+from numpy import array, ndarray, average, round
 from colorsys import hsv_to_rgb, rgb_to_hsv
-
-from logger import logger
 
 class ColourList:
     def __init__(self, image_colours: list, mode: str = 'RGB') -> None:
@@ -40,7 +38,7 @@ class ColourList:
         if self.mode == mode:
             return ColourList(self.data, mode)
         
-        
+
         # Converts each item to RGB/HSV appropriately.
         # Has to transform from 0-255 to 0-1 amd back up to 0-255.
         # Plus, it has to be an int at the end.

@@ -2,12 +2,9 @@
 
 from __future__ import annotations
 
-from numpy import array, ndarray
 from colour import *
 
 import PIL.Image as Pim
-
-from logger import logger
 
 
 class Palette(ColourList):
