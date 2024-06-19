@@ -103,6 +103,8 @@ class Palette(ColourList):
     # Valid modes are:
     #   'k':    k-means clustering
     #   's':    combine similar
+    #   'd':    build by dissimilar
+    #   'e':    n-extremal method
     def reduce(self, size: int, mode: str = 's', *args) -> Palette:
         match mode:
             case 'k': return self.reduce_kmeans(size)
@@ -111,6 +113,8 @@ class Palette(ColourList):
             case 'e': return self.reduce_extremal(size, args[0])
             case _:   raise ValueError(f'No such palette mode as "{mode}"')
 
+    # Uses k-means clustering to build the palette.
+    # Uses PIL's quantisation to do it quickly.
     def reduce_kmeans(self, size: int) -> Palette:
         
         # Paints an image of the palette so PIL's native
@@ -131,6 +135,8 @@ class Palette(ColourList):
         # Builds new Palette
         return Palette(image.getcolors(image.width * image.height), self.mode)
     
+    # Takes the top n colours (256 by default) found by k-means and
+    # reduces it down by combining the most similar colours.
     def reduce_similar(self, size: int) -> Palette:
         
         # Speeds up the process but first reducing to a smaller
