@@ -198,3 +198,40 @@ class Palette(ColourList):
             palette = palette.add(colours.pop())
         
         return palette
+    
+    # Combines kmeans and dissimilar strategies.
+    # Creates a kmeans palette of size `size - extremals`, then
+    # populates the rest of the palette with dissimilar values.
+    # If `extremals` is None, then `extremals = int(size / 4)`.
+    #
+    # NOTE: this method approached kmeans if `extremals = 0` and it
+    # becomes dissimilar if `extremals = size - 1`.
+    def reduce_extremal(self, size: int, extremals: int = None) -> Palette:
+        
+        # Sets default values
+        if extremals == None:
+            extremals = int(size / 4)
+
+        # Gets a reduced colour set
+        colours = sorted(self.reduce_kmeans(256).data, reverse = True, key = lambda c: c[0])
+
+        # Gets the starting palette, removing the colours from the list
+        palette = colours[:size - extremals]
+        colours = colours[size - extremals:]
+
+        # Converts the palette to a Palette
+        palette = Palette(palette, self.mode)
+
+        # Iterativey adds the most disimilar colour
+        while len(palette) < size:
+
+            # Sorts by disimilarity to the current palette
+            colours = sorted(
+                colours,
+                key = lambda c: palette.similarity(c[1])
+            )
+
+            # Adds the least similar colour to the palette
+            palette = palette.add(colours.pop())
+        
+        return palette
