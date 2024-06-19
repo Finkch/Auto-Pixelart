@@ -1,17 +1,14 @@
 # This file is to run tests to determine performance
 
 from time import time_ns as timer
-from logger import logger
 
 from performance_tests.test_logarithms import test_logarithms
-from performance_tests.test_sampling import *
-from performance_tests.test_colour import *
 
 
 # A list of tests and their names
 #   Order must match!
-performance_functions = [test_logarithms, test_nearest_neighbour, test_bilinear, test_RGB_HSV, test_image_RGB_HSV, test_get_palette, test_kmeans]
-performance_names = ['Logarithms', 'Nearest Neighbour', 'Bilinear', 'RGB vs. HSV', 'Image RGB vs HSV', 'Downscaling for image palette', 'k-mean variations']
+performance_functions = [test_logarithms]
+performance_names = ['Logarithms']
 
 
 # Runs a trial of tests
