@@ -15,6 +15,10 @@ class Palette(ColourList):
     # indexing a Palette only yields colour.
     def __getitem__(self, index: int) -> tuple:
         return tuple(self.colours[index])
+
+    # Adds item to the palette, albeit inefficiently
+    def add(self, colour: tuple) -> Palette:
+        return Palette(super().add(colour).data, self.mode)
     
     # Overloads super class's convert, albeit inefficiently
     def convert(self, mode: str) -> Palette:
@@ -162,3 +166,4 @@ class Palette(ColourList):
             ))
 
         return Palette(data, mode = self.mode)
+    

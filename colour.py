@@ -33,6 +33,13 @@ class ColourList:
     def __getitem__(self, index) -> tuple:
         return self.data[index]
     
+    # Add a colour to the list.
+    # This is not a fast operation due to numpy array modification.
+    def add(self, colour: tuple) -> ColourList:
+        colours = self.data
+        colours.append(colour)
+        return ColourList(colours, self.mode)
+    
     # Converts colours to a different mode
     def convert(self, mode: str) -> ColourList:
         if self.mode == mode:
