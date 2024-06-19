@@ -36,7 +36,7 @@ class ColourList:
     # Add a colour to the list.
     # This is not a fast operation due to numpy array modification.
     def add(self, colour: tuple) -> ColourList:
-        colours = self.data
+        colours = list(self.data)
         colours.append(colour)
         return ColourList(colours, self.mode)
     
