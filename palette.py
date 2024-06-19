@@ -95,8 +95,15 @@ class Palette(ColourList):
         
         return image
 
+    # Reduction methods.
+    # Valid modes are:
+    #   'k':    k-means clustering
+    #   's':    combine similar
+    def reduce(self, size: int, mode: str = 's') -> Palette:
+        match mode:
+            case 'k': return self.reduce_kmeans(size)
+            case 's': return self.reduce_similar(size)
 
-    # Reduction methods
     def reduce_kmeans(self, size: int) -> Palette:
         
         # Paints an image of the palette so PIL's native
