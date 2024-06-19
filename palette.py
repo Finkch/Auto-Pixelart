@@ -103,6 +103,7 @@ class Palette(ColourList):
         match mode:
             case 'k': return self.reduce_kmeans(size)
             case 's': return self.reduce_similar(size)
+            case _:   raise ValueError(f'No such palette mode as "{mode}"')
 
     def reduce_kmeans(self, size: int) -> Palette:
         
