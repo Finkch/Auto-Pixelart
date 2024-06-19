@@ -107,11 +107,12 @@ class Palette(ColourList):
     #   'e':    n-extremal method
     def reduce(self, size: int, mode: str = 's', *args) -> Palette:
         match mode:
-            case 'k': return self.reduce_kmeans(size)
-            case 's': return self.reduce_similar(size)
-            case 'd': return self.reduce_dissimilar(size)
-            case 'e': return self.reduce_extremal(size, *args)
-            case _:   raise ValueError(f'No such palette mode as "{mode}"')
+            case 'k':   return self.reduce_kmeans(size)
+            case 's':   return self.reduce_similar(size)
+            case 'd':   return self.reduce_dissimilar(size)
+            case 'e':   return self.reduce_extremal(size, *args)
+            case 'sd':  return self.reduce_similar_dissimilar(size, *args)
+            case _:     raise ValueError(f'No such palette mode as "{mode}"')
 
     # Uses k-means clustering to build the palette.
     # Uses PIL's quantisation to do it quickly.
@@ -228,6 +229,31 @@ class Palette(ColourList):
 
         # Converts the palette to a Palette
         palette = Palette(palette, self.mode)
+
+        # Iterativey adds the most disimilar colour
+        while len(palette) < size:
+
+            # Sorts by disimilarity to the current palette
+            colours = sorted(
+                colours,
+                key = lambda c: palette.similarity(c[1])
+            )
+
+            # Adds the least similar colour to the palette
+            palette = palette.add(colours.pop())
+        
+        return palette
+    
+    # Reduces the palette down to `size - dissimilars` colours, then
+    # goes through again and adds `dissimilars` amount of the most
+    # dissimilar colours.
+    def reduce_similar_dissimilar(self, size: int, dissimilars: int = None) -> Palette:
+        
+        # Gets the palette of similar colours
+        palette = self.reduce_similar(size - dissimilars)
+
+        # Gets a reduced colour set
+        colours = sorted(self.reduce_kmeans(256).data, reverse = True, key = lambda c: c[0])
 
         # Iterativey adds the most disimilar colour
         while len(palette) < size:
