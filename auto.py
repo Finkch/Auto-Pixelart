@@ -3,9 +3,8 @@
 # command line set of arguments.
 
 from sys import argv
-from input import choose_downscale
 from image import Image
-from visualise import show_colours, show_colour_wheel, show_3d
+from visualise import show_colour_wheel, show_3d
 
 # Runs the program.
 #   arg[0]: input file name with extensions
@@ -22,64 +21,33 @@ def auto(args: list, kwargs: dict) -> None:
     if 'm' in kwargs:
         mode = kwargs['m']
 
-    method = 'k'
-    if 'd' in kwargs:
-        method = kwargs['d']
-
-    width = -1
+    width = 64
     if 'w' in kwargs:
         width = int(kwargs['w'])
 
     colours = 8
     if 'c' in kwargs:
-        colours = kwargs['c']
-
-    palette = None
-    if 'p' in kwargs:
-        palette = kwargs['p']
+        colours = int(kwargs['c'])
 
     palette_mode = 's'
-    if 'pm' in kwargs:
-        palette_mode = kwargs['pm']
+    if 'p' in kwargs:
+        palette_mode = kwargs['p']
 
 
-    # Gets the downscaler.
-    #   Defaults to 'k', k-mean clustering
-    downscaler, downscaler_name, need_palette = choose_downscale(method)
-
-    # Obtains input and output images
-    input: Image    = Image(args[0], colours = colours, palette = palette, palette_mode = palette_mode)
-    output: Image   = Image(
-        file        = input.file, 
-        location    = 'outputs',
-        size        = input.get_size(width),
-        colours     = input.palette_size
-    )
-
-    # Updates the name of the output
-    output.update_name(f'{input.file_name} ({downscaler_name})', extension = 'png')
+    # Obtains input image and palette
+    image: Image    = Image(args[0])
+    palette = image.palette().reduce(colours, palette_mode)
 
     match mode:
+
+        # Processes the image
         case 'p':
-            # Downscales the image
-            output = downscaler(input, output)
+            image.pixelate(width, palette).save()
 
         # Shows colours or palette
-        case 'vc':
-            output = show_colours(input, use_HSV = True)
-        case 'vw':
-            output = show_colour_wheel(input)
-        case 'v3':
-            output = show_3d(input)
-
-    # Upscales the image, if specified
-    if 'u' in kwargs:
-        output.resize(int(kwargs['u']))
-
-    # Saves the image
-    output.save()
-    print(f'See `{output.path}` for your image.\n')
-
+        case 'v':
+            show_colour_wheel(image, palette)
+            show_3d(image, palette)
 
 
 # Reads argv as a list, grabbing arguments
