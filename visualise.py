@@ -102,10 +102,7 @@ def show_3d(image: Image, palette: Palette) -> None:
     colours = colours.colours[::5]
 
     # Converts the colours to an appropriate range of 0-1 (and to RGB)
-    if image.mode == 'HSV':
-        colours_RGB = array([hsv_to_rgb(*(colour / 255)) for colour in colours])
-    else:
-        colours_RGB = colours / 255
+    colours_RGB = array([hsv_to_rgb(*(colour / 255)) for colour in colours])
     
 
     # Finds the most occuring colour for normalisation
@@ -119,17 +116,11 @@ def show_3d(image: Image, palette: Palette) -> None:
 
     # Maps the colours to an appropriate range and shifts the palette
     # marker colours away form the cooridnate colours to improve visibility
-    if image.mode == 'HSV':
-        palette_RGB = array([hsv_to_rgb(*(colour / 255)) for colour in palette.colours])
-        
-        # Adds an offset to the hue
-        palette_RGB[:, 0] += 1 / 3
-        palette_RGB[:, 0] %= 1
-    else:
-        palette_RGB = palette.colours / 255
-
-        # Swaps order of colours for better visibility (most of the time)
-        palette_RGB[:, 0], palette_RGB[:, 1], palette_RGB[:, 2] = palette_RGB[:, 1], palette_RGB[:, 2], palette_RGB[:, 0]
+    palette_RGB = array([hsv_to_rgb(*(colour / 255)) for colour in palette.colours])
+    
+    # Adds an offset to the hue
+    palette_RGB[:, 0] += 1 / 3
+    palette_RGB[:, 0] %= 1
 
     # Size of each point
     psize = 100
@@ -154,13 +145,8 @@ def show_3d(image: Image, palette: Palette) -> None:
     )
 
     # Set labels
-    if image.mode == 'HSV':
-        ax.set_xlabel('Hue')
-        ax.set_ylabel('Saturation')
-        ax.set_zlabel('Value')
-    else:
-        ax.set_xlabel('R')
-        ax.set_ylabel('G')
-        ax.set_zlabel('B')
+    ax.set_xlabel('Hue')
+    ax.set_ylabel('Saturation')
+    ax.set_zlabel('Value')
 
     plt.show()
