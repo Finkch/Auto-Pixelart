@@ -167,3 +167,33 @@ class Palette(ColourList):
 
         return Palette(data, mode = self.mode)
     
+    # Starts with the most dominent colour, then iteratively
+    # adds the most didsimilar colour.
+    def reduce_dissimilar(self, size: int):
+        
+        # Speeds up the process but first reducing to a smaller
+        # palette that still is representative
+        # NOTE: this is just a list!
+        colours = sorted(self.reduce_kmeans(256).data, key = lambda c: c[0])
+        
+        # Creates the base palette with the most dominent colour.
+        # Since the list is sorted, the most dominent item is last.
+        palette = [colours.pop()]
+
+        # Converts the palette to a Palette
+        palette = Palette(palette, self.mode)
+
+        
+        # Iterativey adds the most disimilar colour
+        while len(palette) < size:
+
+            # Sorts by disimilarity to the current palette
+            colours = sorted(
+                colours,
+                key = lambda c: palette.similarity(c[1])
+            )
+
+            # Adds the least similar colour to the palette
+            palette = palette.add(colours.pop())
+        
+        return palette
