@@ -16,14 +16,22 @@ from logger import logger
 # Paints a colour wheel to visualise an image's palette
 def show_colour_wheel(image: Image, palette: Palette) -> None:
     
-    # Converts the image to HSV
-    image = image.convert('HSV')
+    # Gets a copy of the RGB palette because we need RGB
+    # colours to paint in matplotlib
+    palette_rgb = palette.convert('RGB')
 
-    # Gets the palette associated with the colours
+    # Ensures palette and image are HSV
+    image = image.convert('HSV')
+    palette = palette.convert('HSV')
+
+    # Save the palette
+    palette_rgb.paint(150).save(f'outputs/palettestrip_{image.file_name}.png')
+
+
+    # Gets the colours in the image.
+    # Use a palette object for easier indexing
     colours = image.palette()
 
-    # Saves just the palette
-    palette.paint(150).convert('RGB').save(f'outputs/palettestrip_{image.file_name}.png')
 
     # Dimensions of the visualisation
     d = 256
