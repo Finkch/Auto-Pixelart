@@ -98,6 +98,15 @@ class ColourList:
                 (c[2] - colour[2]) ** 2
             ])
         )
+    
+    # Returns a dissimilarity score of the colour to the palette
+    def similarity(self, colour: tuple) -> float:
+        return min([sum([
+                (c[0] - colour[0]) ** 2,
+                (c[1] - colour[1]) ** 2,
+                (c[2] - colour[2]) ** 2
+            ]) for c in self.colours]
+        )
 
 # Averages colours
 def average_colour(colours: ColourList) -> tuple:
