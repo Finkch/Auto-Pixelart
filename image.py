@@ -46,8 +46,8 @@ class Image:
         self.source.save(f'{location}/{file_name}.{extension}')
 
     # Shows the image
-    def show(self) -> None:
-        self.source.show()
+    def show(self, title: str = None) -> None:
+        self.source.show(title)
 
     # Makes a deep copy of this Image
     def copy(self, source: Pim.Image = None) -> Image:
