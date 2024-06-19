@@ -110,7 +110,7 @@ class Palette(ColourList):
             case 'k': return self.reduce_kmeans(size)
             case 's': return self.reduce_similar(size)
             case 'd': return self.reduce_dissimilar(size)
-            case 'e': return self.reduce_extremal(size, args[0])
+            case 'e': return self.reduce_extremal(size, *args)
             case _:   raise ValueError(f'No such palette mode as "{mode}"')
 
     # Uses k-means clustering to build the palette.
