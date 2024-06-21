@@ -35,7 +35,7 @@ class Image:
         return source
     
     # Saves an image
-    def save(self, file_name: str = None, location: str = 'outputs', extension: str = None) -> None:
+    def save(self, file_name: str = None, location: str = 'outputs', extension: str = 'png') -> None:
         
         # Sets defaults
         if not extension:
@@ -43,7 +43,9 @@ class Image:
         if not file_name:
             file_name = self.file_name
 
-        self.source.save(f'{location}/{file_name}.{extension}')
+        # Converts the source to ensure consistent saving
+        source = self.source.convert('RGB')
+        source.save(f'{location}/{file_name}.{extension}')
 
     # Shows the image
     def show(self, title: str = None) -> None:
