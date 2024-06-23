@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import PIL.Image as Pim
+import PIL.ImageChops as Pic
 from PIL.ImageFilter import BLUR, SMOOTH, SMOOTH_MORE, SHARPEN, UnsharpMask, FIND_EDGES
 from PIL.Image import NEAREST as N
 from PIL.Image import LANCZOS as L
 from colour import ColourList
-from palette import Palette
+from palette import *
+
+from random import randint
 
 from logger import logger
 
@@ -222,3 +225,68 @@ class Image:
     # Given a second image and a masks, makes a composite image
     def composite(self, base: Image, mask: Image) -> Image:
         return self.copy(Pim.composite(base.source, self.source, mask.source))
+
+
+    # These next two methods are experimental.
+    # They try to add outlines to pixel art images
+    def outline(self) -> Image:
+
+        # Creates a mask of the edges
+        mask = self.convert('L')
+        mask = mask.filter(FIND_EDGES)
+
+        # Converts the image to palette mode
+        paletted = self.source.convert('P')
+        palette = paletted.getpalette()
+
+        # Maps the palette backwards
+        base = self.copy(paletted.remap_palette(
+            range(0, int(len(palette) / 3), -1),
+            palette
+        ))
+
+        # The backwards palette is mapped to the edges
+        pixel_art = self.composite(
+            base,
+            mask
+        )
+
+        return pixel_art
+    
+    def doutline(self) -> Image:
+        width = 128
+        
+        # Makes some pixel art of the image
+        palette = self.palette().reduce(mode = DISSIMILAR)
+        pixel_art = self.resize(width).palettise(palette)
+
+        # Creates an edge mask of the orignal image
+        mask = self.convert('L')
+        mask = mask.resize(width, LANCZOS)
+        mask = mask.filter(FIND_EDGES)
+
+        # Creates a mask of the pixel art
+        pa_mask = pixel_art.convert('L').filter(FIND_EDGES)
+
+
+        # Subtracts the mask such that the resulting mask are
+        # where detail has been lost in the edges
+        diff_mask = mask.copy(Pic.subtract(mask.source, pa_mask.source))
+
+        # Creates the image that adds detail to the edges.
+        # The base image is the single most different colour.
+        extreme_colour = self.palette().reduce(2, DISSIMILAR)[1]
+        base = pixel_art.copy(Pim.new(pixel_art.mode, pixel_art.size, extreme_colour))
+
+        # Creates the composite image
+        pixel_art = pixel_art.composite(
+            base,
+            diff_mask
+        )
+
+        # Palettises to ensure propre palette
+        pixel_art = pixel_art.palettise(palette).denoise().resize(self.width)
+        pixel_art.show()
+
+        return pixel_art
+        
