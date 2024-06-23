@@ -110,6 +110,12 @@ class ColourList:
 
 # Averages colours
 def average_colour(colours: ColourList) -> tuple:
+    if colours.mode == 'L':
+        return [
+            sum(colours.frequencies),
+            int(round(average(colours.colours, weights = colours.frequencies)))
+        ]
+
     return [
         # Frequency is summed as the new colour would represent
         # a larger portion of the image
