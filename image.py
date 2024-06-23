@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import PIL.Image as Pim
-from PIL.ImageFilter import BLUR, SMOOTH, SMOOTH_MORE, SHARPEN, UnsharpMask
+from PIL.ImageFilter import BLUR, SMOOTH, SMOOTH_MORE, SHARPEN, UnsharpMask, FIND_EDGES
 from PIL.Image import NEAREST as N
 from PIL.Image import LANCZOS as L
 from colour import ColourList, average_colour, colour_difference_HSV, colour_difference_RGB
@@ -143,11 +143,18 @@ class Image:
         self.location = location
 
     # Getters
+    def get_colours(self) -> tuple:
+        if self.mode == 'L':
+            colours = self.source.getcolors(self.width * self.height)
+            return [(colour[0], [colour[1]] * 3) for colour in colours]
+        
+        return self.source.getcolors(self.width * self.height)
+
     def colours(self) -> ColourList:
-        return ColourList(self.source.getcolors(self.width * self.height), self.mode)
+        return ColourList(self.get_colours(), self.mode)
     
     def palette(self) -> Palette:
-        return Palette(self.source.getcolors(self.width * self.height), self.mode)
+        return Palette(self.get_colours(), self.mode)
     
 
     # Denoises a pixel image.
@@ -211,5 +218,3 @@ class Image:
             return pixels[x, y]
         else:
             return dominent[1]
-
-
