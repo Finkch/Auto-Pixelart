@@ -120,7 +120,15 @@ def average_colour(colours: ColourList) -> tuple:
             int(round(average(colours.colours[:, 2], weights = colours.frequencies))),
         )
     ]
+
 # Finds the difference between a pair of colours
+def colour_difference(a: tuple, b: tuple, mode: str) -> float:
+    match mode:
+        case 'RGB': return colour_difference_RGB(a, b)
+        case 'HSV': return colour_difference_HSV(a, b)
+        case 'L':   return colour_difference_L(a, b)
+        case _:     raise ValueError(f'Invalid colour mode "{mode}"')
+
 def colour_difference_RGB(a: tuple, b: tuple) -> float:
     return sum([
         (a[1][0] - b[1][0]) ** 2,
@@ -143,3 +151,6 @@ def colour_difference_H(a: tuple, b: tuple) -> float:
             abs(a[1][0] - b[1][0]), 
             255 - abs(a[1][0] - b[1][0])
         )
+
+def colour_difference_L(a: tuple, b: tuple) -> float:
+    return (a[0] - b[0]) ** 2
