@@ -6,7 +6,7 @@ import PIL.Image as Pim
 from PIL.ImageFilter import BLUR, SMOOTH, SMOOTH_MORE, SHARPEN, UnsharpMask, FIND_EDGES
 from PIL.Image import NEAREST as N
 from PIL.Image import LANCZOS as L
-from colour import ColourList, average_colour, colour_difference_HSV, colour_difference_RGB
+from colour import ColourList
 from palette import Palette
 
 from logger import logger
@@ -218,3 +218,4 @@ class Image:
             return pixels[x, y]
         else:
             return dominent[1]
+ 
