@@ -6,6 +6,12 @@ from colour import *
 
 import PIL.Image as Pim
 
+SIMILAR     = 's'
+KMEANS      = 'k'
+DISSIMILAR  = 'd'
+EXTREMAL    = 'e'
+SIMDIS      = 'sd'
+
 
 class Palette(ColourList):
     def __init__(self, image_colours: list, mode: str = 'RGB') -> None:
