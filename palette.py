@@ -62,8 +62,11 @@ class Palette(ColourList):
                 # Finds x, y coordiantes on the image
                 x, y = i % length, int(i / length)
 
-                # Paints the pixel the appropriate colour
-                pixels[x, y] = tuple(data[j][1])
+                
+                if self.mode == 'L':
+                    pixels[x, y] = data[j][1][0]
+                else:
+                    pixels[x, y] = tuple(data[j][1])
 
                 # Trims off colours that are too infrequent
                 if j == datas - 1:
@@ -154,9 +157,6 @@ class Palette(ColourList):
         # Although the order does not matter much.
         data = sorted(palette.data, key = lambda c: c[0])
 
-        # Gets the function used to find the difference between colours
-        colour_difference = colour_difference_HSV if self.mode == 'HSV' else colour_difference_RGB
-
         # Iteratively reduces the palette
         while len(data) > size:
 
@@ -166,7 +166,7 @@ class Palette(ColourList):
             for i in range(len(data) - 1):
                 for j in range(i + 1, len(data)):
 
-                    diff = colour_difference(data[i], data[j])
+                    diff = colour_difference(data[i], data[j], self.mode)
 
                     # If this pair of colours is more similar
                     # than the last pair, update
