@@ -5,8 +5,10 @@ from __future__ import annotations
 import PIL.Image as Pim
 from PIL.ImageFilter import BLUR, SMOOTH, SMOOTH_MORE, SHARPEN, UnsharpMask
 from PIL.Image import NEAREST, LANCZOS
-from colour import ColourList
+from colour import ColourList, average_colour, colour_difference_HSV, colour_difference_RGB
 from palette import Palette
+
+from logger import logger
 
 class Image:
     def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB', source: Pim.Image = None) -> None:
@@ -138,3 +140,70 @@ class Image:
     
     def palette(self) -> Palette:
         return Palette(self.source.getcolors(self.width * self.height), self.mode)
+    
+
+    # Denoises a pixel image.
+    # If the difference between a given pixel and the average of
+    # its neighbours is less than a threshold, set it to its most
+    # dominent neighbour.
+    # Threshold is a percent.
+    def denoise(self, threshold: float = 60, radius: int = 2) -> Image:
+
+        # Grabs the pixel map
+        pixels = self.source.load()
+
+        # Loads new image to 
+        output = Pim.new(self.mode, self.size, 'white')
+        output_pixels = output.load()
+
+        # Goes over every pixel
+        for i in range(self.width):
+            for j in range(self.height):
+                output_pixels[i, j] = self.denoise_pixel(pixels, i, j, threshold, radius)
+
+        # Returns the denoised image
+        return self.copy(output)
+    
+    # Runs the denoising process for a single pixel
+    def denoise_pixel(self, pixels, x: int, y: int, threshold: float, radius: int) -> tuple:
+
+        # Gets the frequency-colour pairs of neighbours
+        neighbours = {}
+        for i in range(-radius, radius + 1):
+            for j in range(-radius, radius + 1):
+
+                # Makes sure not to access pixels that are out of
+                # bounds or the current pixel being inspected
+                if x + i < 0 or x + i >= self.width:
+                    continue
+                elif y + j < 0 or y + j >= self.height:
+                    continue
+                elif x == i and y == j:
+                    continue
+
+                # Gets the colour
+                colour = pixels[x + i, y + j]
+                
+                # Updates frequency
+                if colour not in neighbours:
+                    neighbours[colour] = 0
+                neighbours[colour] += 1
+
+        # Reshapes to make ColourList
+        colours = ColourList(
+            [(item[1], item[0]) for item in neighbours.items()], 
+            self.mode
+        )
+
+        # Grabs the most dominent colour
+        dominent = sorted(colours.data, reverse = True, key = lambda c: c[0])[0]
+        
+        logger.loga('diff', f'{dominent[0] / ((2 * (radius + 1)) ** 2) * 100}\tvs\t{threshold}')
+
+        # Returns the appropriate colour
+        if dominent[0] / ((2 * (radius + 1)) ** 2) * 100 <= threshold:
+            return pixels[x, y]
+        else:
+            return dominent[1]
+
+
