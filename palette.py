@@ -111,7 +111,7 @@ class Palette(ColourList):
     #   's':    combine similar
     #   'd':    build by dissimilar
     #   'e':    n-extremal method
-    def reduce(self, size: int = 8, mode: str = 's', *args) -> Palette:
+    def reduce(self, size: int = 8, mode: str = SIMILAR, *args) -> Palette:
         match mode:
             case 'k':   return self.reduce_kmeans(size)
             case 's':   return self.reduce_similar(size)
