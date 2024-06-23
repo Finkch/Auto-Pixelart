@@ -4,11 +4,15 @@ from __future__ import annotations
 
 import PIL.Image as Pim
 from PIL.ImageFilter import BLUR, SMOOTH, SMOOTH_MORE, SHARPEN, UnsharpMask
-from PIL.Image import NEAREST, LANCZOS
+from PIL.Image import NEAREST as N
+from PIL.Image import LANCZOS as L
 from colour import ColourList, average_colour, colour_difference_HSV, colour_difference_RGB
 from palette import Palette
 
 from logger import logger
+
+NEAREST = 'n'
+LANCZOS = 'l'
 
 class Image:
     def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB', source: Pim.Image = None) -> None:
@@ -80,7 +84,7 @@ class Image:
     # Method can be:
     #   'n': Nearest neighbour
     #   'l': Lanczos/sinc method
-    def resize(self, width: int, method: str = 'n') -> Image:
+    def resize(self, width: int, method: str = NEAREST) -> Image:
 
         # Gets the height that preserves aspect ratio
         height = int(width / self.width * self.height)
@@ -88,9 +92,9 @@ class Image:
 
         match method:
             case 'n':
-                return self.copy(self.source.resize(size, resample = NEAREST))
+                return self.copy(self.source.resize(size, resample = N))
             case 'l':
-                return self.copy(self.source.resize(size, resample = LANCZOS))
+                return self.copy(self.source.resize(size, resample = L))
             
     # Conforms the source's colours to a palette
     def palettise(self, palette: Palette) -> Image:
