@@ -108,13 +108,17 @@ class Image:
         return self.copy(source)
     
     # Turns the source image into pixel art
-    def pixelate(self, width: int, palette: Palette) -> Image:
+    def pixelate(self, width: int, palette: Palette, denoise: bool = False, *args) -> Image:
 
         # Constrains the image palette
         image = self.palettise(palette)
 
         # Downscales to make it, y'know, pixel art
         image = image.resize(width, 'n')
+
+        # Denoises
+        if denoise:
+            image = image.denoise(*args)
 
         # Upscales to match original resolution
         image = image.resize(self.width, 'n')
@@ -197,8 +201,6 @@ class Image:
 
         # Grabs the most dominent colour
         dominent = sorted(colours.data, reverse = True, key = lambda c: c[0])[0]
-        
-        logger.loga('diff', f'{dominent[0] / ((2 * (radius + 1)) ** 2) * 100}\tvs\t{threshold}')
 
         # Returns the appropriate colour
         if dominent[0] / ((2 * (radius + 1)) ** 2) * 100 <= threshold:
