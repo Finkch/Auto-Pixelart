@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import PIL.Image as Pim
+from PIL.ImageFilter import BLUR, SMOOTH, SMOOTH_MORE, SHARPEN, UnsharpMask
 from PIL.Image import NEAREST, LANCZOS
 from colour import ColourList
 from palette import Palette
@@ -117,6 +118,11 @@ class Image:
         image = image.resize(self.width, 'n')
 
         return image
+    
+    # Applies a filter to the image.
+    # Image filters are imported from PIL.
+    def filter(self, filter) -> Image:
+        return self.copy(self.source.filter(filter))
     
     # Setters
     def set_file(self, file: str, location: str = 'inputs') -> None:
