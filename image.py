@@ -218,4 +218,7 @@ class Image:
             return pixels[x, y]
         else:
             return dominent[1]
- 
+        
+    # Given a second image and a masks, makes a composite image
+    def composite(self, base: Image, mask: Image) -> Image:
+        return self.copy(Pim.composite(base.source, self.source, mask.source))
