@@ -43,6 +43,8 @@ class Video:
             frames.append(Image(f'{self.file_name}_{frame_count}.png', 'outputs', source = frame))
             frame_count += 1
 
+        return frames
+
     # Copies the video
     def copy(self, frames: list[Image] = None) -> Video:
         if not frames:
@@ -63,5 +65,6 @@ class Video:
         
         self.location = location
 
+        
 
 
