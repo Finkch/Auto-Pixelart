@@ -3,9 +3,8 @@
 
 import tkinter as tk
 from PIL import ImageTk
-from animation import Animataion
 
-def display(animation: Animataion, title: str) -> None:
+def display(animation, title: str) -> None:
     
     # Create a Tkinter window
     root = tk.Tk()
