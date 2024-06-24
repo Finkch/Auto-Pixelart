@@ -99,6 +99,16 @@ class Animataion:
         
         self.location = location
 
+    # Converts image types
+    def convert(self, mode: str) -> Animataion:
+        return Animataion(
+            self.file,
+            self.location,
+            mode,
+            [frame.convert(mode) for frame in self.frames],
+            self.duration
+        )
+
     # Resizes the animation
     def resize(self, width: int, method: str = NEAREST) -> Animataion:
         return self.copy([frame.resize(width, method) for frame in self.frames])
