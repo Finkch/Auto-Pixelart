@@ -3,9 +3,9 @@
 
 import tkinter as tk
 from PIL import ImageTk
-from video import Video
+from animation import Animataion
 
-def display(animation: Video) -> None:
+def display(animation: Animataion) -> None:
     
     # Create a Tkinter window
     root = tk.Tk()
