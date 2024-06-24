@@ -5,11 +5,11 @@ import tkinter as tk
 from PIL import ImageTk
 from animation import Animataion
 
-def display(animation: Animataion) -> None:
+def display(animation: Animataion, title: str) -> None:
     
     # Create a Tkinter window
     root = tk.Tk()
-    root.title(animation.file_name)
+    root.title(title)
 
     # Create a label to display the frames
     label = tk.Label(root)
