@@ -100,14 +100,18 @@ class Image:
                 return self.copy(self.source.resize(size, resample = L))
             
     # Conforms the source's colours to a palette
-    def palettise(self, palette: Palette) -> Image:
-        
-        # Gets the flattened palette
-        colours = list(palette.colours.flatten())
+    def palettise(self, palette: Palette | Pim.Image) -> Image:
 
-        # Creates an image containing the palette
-        palette_image = Pim.new('P', (len(colours), 1))
-        palette_image.putpalette(colours)
+        if type(palette, 'palette.Palette'):
+            # Gets the flattened palette
+            colours = list(palette.colours.flatten())
+
+            # Creates an image containing the palette
+            palette_image = Pim.new('P', (len(colours), 1))
+            palette_image.putpalette(colours)
+
+        else:
+            palette_image = palette
 
         # Quantises the source to the palette
         source = self.source.quantize(palette = palette_image, dither = 0)
