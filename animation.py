@@ -142,6 +142,20 @@ class Animataion:
 
         return self.copy(frames)
     
+    # Creates pixel art
+    def pixilate(self, width: int, palette: Palette) -> Animataion:
+
+        # Applies the palette to every frame
+        anim = self.palettise(palette)
+
+        # Downsizes to turn it into, y'know, pixel art
+        anim = anim.resize(width, NEAREST)
+
+        # Returns to the orignal size
+        anim = anim.resize(self.width, NEAREST)
+
+        return anim
+    
     # Flattens the colours in the image to try and enforce a pit of consistency
     def flatten(self, colours: int = 32) -> Animataion:
 
