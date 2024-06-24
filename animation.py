@@ -66,6 +66,16 @@ class Animataion:
         
         self.location = location
 
+    # Skips frames and increases duration, making for choppier animation
+    def skip(self, step: int) -> Animataion:
+        return Animataion(
+            self.file,
+            self.location,
+            self.mode,
+            self.frames[::step],
+            int(self.duration * step)
+        )
+
     # Applies a palette to every frame
     def palettise(self, palette: Palette) -> Animataion:
         
