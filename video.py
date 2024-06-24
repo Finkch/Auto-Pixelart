@@ -1,11 +1,14 @@
 # A temporal analogue to image
 
+from __future__ import annotations
+
 from image import Image
+from palette import Palette
 import PIL.Image as Pim
 import PIL.ImageSequence as Pis # Well, that's unfortunate naming
 
 class Video:
-    def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB') -> None:
+    def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB', source: list = None) -> None:
 
         # Sets path information
         self.set_file(file, location)
@@ -15,7 +18,11 @@ class Video:
         # A list of Images
         self.frames: list[Image] = None
 
-        self.frames = self.read()
+        # Sets the source
+        if not source:
+            self.frames = self.read()
+        else:
+            self.frames = source
 
     def read(self) -> list[Image]:
         match self.file_extension:
@@ -44,4 +51,5 @@ class Video:
         self.file_extension = file[file.index('.') + 1:]
         
         self.location = location
+
 
