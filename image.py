@@ -9,11 +9,6 @@ from PIL.Image import NEAREST as N
 from PIL.Image import LANCZOS as L
 from colour import ColourList
 from palette import *
-from palette import Palette as Pal
-
-from random import randint
-
-from logger import logger
 
 NEAREST = 'n'
 LANCZOS = 'l'
@@ -103,7 +98,7 @@ class Image:
     # Conforms the source's colours to a palette
     def palettise(self, palette: Palette | Pim.Image) -> Image:
 
-        if isinstance(palette, Pal):
+        if isinstance(palette, Palette):
             # Gets the flattened palette
             colours = list(palette.colours.flatten())
 
