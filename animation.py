@@ -126,6 +126,16 @@ class Animataion:
             self.frames[::step],
             int(self.duration * step)
         )
+    
+    # Flattens the colours in the image to try and enforce a pit of consistency
+    def flatten(self, colours: int = 32) -> Animataion:
+
+        # Forces a max on colours
+        colours = min(256, colours)
+
+        # Performs k-means cluster reduction on the first frame
+        palette = self.frames[0].palette().reduce(colours, KMEANS)
+        return self.palettise(palette)
 
     # Applies a palette to every frame
     def palettise(self, palette: Palette) -> Animataion:
@@ -155,16 +165,7 @@ class Animataion:
         anim = anim.resize(self.width, NEAREST)
 
         return anim
-    
-    # Flattens the colours in the image to try and enforce a pit of consistency
-    def flatten(self, colours: int = 32) -> Animataion:
 
-        # Forces a max on colours
-        colours = min(256, colours)
-
-        # Performs k-means cluster reduction on the first frame
-        palette = self.frames[0].palette().reduce(colours, KMEANS)
-        return self.palettise(palette)
         
 
 
