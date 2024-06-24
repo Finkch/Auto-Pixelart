@@ -15,6 +15,28 @@ class Video:
         # A list of Images
         self.frames: list[Image] = None
 
+        self.frames = self.read()
+
+    def read(self) -> list[Image]:
+        match self.file_extension:
+            case 'gif': return self.read_gif()
+            case _:     raise ValueError(f'Invalid video format "{self.file_extension}"')
+
+
+    def read_gif(self) -> list[Image]:
+        frames: list[Image] = []
+        frame_count = 0
+
+        # Opens the gif
+        gif = Pim.open(f'{self.location}/{self.file}')
+
+        # Adds each frame as an Image to the list
+        for frame in Pis.Iterator(gif):
+            frame = frame.convert(self.mode)
+            frames.append(Image(f'{self.file_name}_{frame_count}.png', 'outputs', source = frame))
+            frame_count += 1
+
+
     # Setters
     def set_file(self, file: str, location: str = 'inputs') -> None:
         self.file = file
