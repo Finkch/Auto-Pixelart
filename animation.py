@@ -54,7 +54,8 @@ class Animataion:
             self.file,
             self.location,
             self.mode,
-            frames
+            frames,
+            self.duration
         )
 
     # Setters
