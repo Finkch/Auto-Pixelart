@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from image import Image
-from palette import Palette
+from palette import *
 import PIL.Image as Pim
 import PIL.ImageSequence as Pis # Well, that's unfortunate naming
 
@@ -80,6 +80,16 @@ class Animataion:
         frames = [frame.palettise(palette_image) for frame in self.frames]
 
         return self.copy(frames)
+    
+    # Flattens the colours in the image to try and enforce a pit of consistency
+    def flatten(self, colours: int = 32) -> Animataion:
+
+        # Forces a max on colours
+        colours = min(256, colours)
+
+        # Performs k-means cluster reduction on the first frame
+        palette = self.frames[0].palette().reduce(colours, KMEANS)
+        return self.palettise(palette)
         
 
 
