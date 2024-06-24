@@ -19,17 +19,17 @@ def display(animation: Video) -> None:
     frames = animation.frames
 
     # Start the animation
-    update_frame(frames, 0, label, root)
+    update_frame(frames, 0, label, root, animation.duration)
 
     # Run the Tkinter event loop
     root.mainloop()
 
 # Function to update frames
-def update_frame(frames, frame_number, label, root):
+def update_frame(frames, frame_number, label, root, duration):
     frame = frames[frame_number].source
     frame_image = ImageTk.PhotoImage(frame)
     label.config(image=frame_image)
     label.image = frame_image
     frame_number = (frame_number + 1) % len(frames)
-    root.after(100, update_frame, frames, frame_number, label, root)
+    root.after(duration, update_frame, frames, frame_number, label, root, duration)
 
