@@ -5,8 +5,13 @@ from __future__ import annotations
 from image import Image
 from palette import *
 import PIL.Image as Pim
+from PIL.Image import NEAREST as N
+from PIL.Image import LANCZOS as L
 import PIL.ImageSequence as Pis # Well, that's unfortunate naming
 from display import display
+
+NEAREST = 'n'
+LANCZOS = 'l'
 
 class Animataion:
     def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB', source: list = None, duration: int = 100) -> None:
@@ -24,6 +29,10 @@ class Animataion:
             self.frames, self.duration = self.read()
         else:
             self.frames, self.duration = source, duration
+
+        self.width  = self.frames[0].width
+        self.height = self.frames[0].height
+        self.size   = self.frames[0].size
 
     def read(self) -> list[Image]:
         match self.file_extension:
