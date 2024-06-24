@@ -99,6 +99,10 @@ class Animataion:
         
         self.location = location
 
+    # Resizes the animation
+    def resize(self, width: int, method: str = NEAREST) -> Animataion:
+        return self.copy([frame.resize(width, method) for frame in self.frames])
+
     # Skips frames and increases duration, making for choppier animation
     def skip(self, step: int) -> Animataion:
         return Animataion(
