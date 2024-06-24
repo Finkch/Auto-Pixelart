@@ -43,6 +43,17 @@ class Video:
             frames.append(Image(f'{self.file_name}_{frame_count}.png', 'outputs', source = frame))
             frame_count += 1
 
+    # Copies the video
+    def copy(self, source: list[Image] = None) -> Video:
+        if not source:
+            source = [image.copy() for image in self.frames]
+        
+        return Video(
+            self.file,
+            self.location,
+            self.mode,
+            source
+        )
 
     # Setters
     def set_file(self, file: str, location: str = 'inputs') -> None:
