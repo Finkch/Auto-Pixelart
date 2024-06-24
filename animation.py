@@ -45,7 +45,7 @@ class Animataion:
 
         return frames, frame.info['duration']
 
-    # Copies the video
+    # Copies the animation
     def copy(self, frames: list[Image] = None) -> Animataion:
         if not frames:
             frames = [image.copy() for image in self.frames]
@@ -57,6 +57,24 @@ class Animataion:
             frames,
             self.duration
         )
+    
+    # Saves the animation
+    def save(self, file_name: str = None, location: str = 'outputs') -> None:
+        
+        # Sets defaults
+        if not file_name:
+            file_name = self.file_name
+
+        # Converts the source to ensure consistent saving
+        frames = [frame.source.convert('RGB') for frame in self.frames]
+        frames[0].save(
+            fp = f'{location}/{file_name}.gif', # Only supports gifs for now
+            save_all = True,
+            append_images = frames[1:],
+            duration = self.duration,
+            loop = 0
+        )
+        
 
     # Setters
     def set_file(self, file: str, location: str = 'inputs') -> None:
