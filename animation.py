@@ -6,6 +6,7 @@ from image import Image
 from palette import *
 import PIL.Image as Pim
 import PIL.ImageSequence as Pis # Well, that's unfortunate naming
+from display import display
 
 class Animataion:
     def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB', source: list = None, duration: int = 100) -> None:
@@ -74,7 +75,12 @@ class Animataion:
             duration = self.duration,
             loop = 0
         )
-        
+
+    # Shows the animation
+    def show(self, title = None):
+        if not title:
+            title = self.file_name
+        display(self, title)
 
     # Setters
     def set_file(self, file: str, location: str = 'inputs') -> None:
