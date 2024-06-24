@@ -44,15 +44,15 @@ class Video:
             frame_count += 1
 
     # Copies the video
-    def copy(self, source: list[Image] = None) -> Video:
-        if not source:
-            source = [image.copy() for image in self.frames]
+    def copy(self, frames: list[Image] = None) -> Video:
+        if not frames:
+            frames = [image.copy() for image in self.frames]
         
         return Video(
             self.file,
             self.location,
             self.mode,
-            source
+            frames
         )
 
     # Setters
@@ -62,5 +62,6 @@ class Video:
         self.file_extension = file[file.index('.') + 1:]
         
         self.location = location
+
 
 
