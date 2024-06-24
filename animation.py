@@ -112,6 +112,10 @@ class Animataion:
     # Resizes the animation
     def resize(self, width: int, method: str = NEAREST) -> Animataion:
         return self.copy([frame.resize(width, method) for frame in self.frames])
+    
+    # Applies a filter to each frame
+    def filter(self, filter) -> Animataion:
+        return self.copy([frame.filter(filter) for frame in self.frames])
 
     # Skips frames and increases duration, making for choppier animation
     def skip(self, step: int) -> Animataion:
