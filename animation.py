@@ -15,6 +15,7 @@ LANCZOS = 'l'
 
 FIRST_FRAME = 'f'
 APPEND      = 'a'
+EVERY       = 'e'
 
 class Animataion:
     def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB', source: list = None, duration: int = 100) -> None:
@@ -174,14 +175,23 @@ class Animataion:
         match mode:
             case 'f': return self.get_colours_frame(*args)
             case 'a': return self.get_colours_append(*args)
+            case 'e': return self.get_colour_every(*args)
             case _:   raise ValueError(f'Invalid colour acquisition mode "{mode}"')
 
     # Gets colours by looking at a given frame
     def get_colours_frame(self, frame: int = 0) -> list:
         return self.frames[frame].get_colours()
 
+    # Gets colours by adding thinner and thinner slices of temporally
+    # adjacent frames
     def get_colours_append(self) -> list:
         pass
+
+    # Gets colour by making a collage of every frame
+    def get_colour_every(self) -> list:
+        pass
+
+
 
         
 
