@@ -8,6 +8,7 @@ import PIL.Image as Pim
 from PIL.Image import NEAREST as N
 from PIL.Image import LANCZOS as L
 import PIL.ImageSequence as Pis # Well, that's unfortunate naming
+import cv2
 from display import display
 
 NEAREST = 'n'
@@ -41,6 +42,7 @@ class Animataion:
     def read(self) -> list[Image]:
         match self.file_extension:
             case 'gif': return self.read_gif()
+            case 'mp4': return self.read_mp4()
             case _:     raise ValueError(f'Invalid video format "{self.file_extension}"')
 
 
@@ -58,6 +60,38 @@ class Animataion:
             frame_count += 1
 
         return frames, frame.info['duration']
+    
+    def read_mp4(self) -> list[Image]:
+        frames = []
+        
+        # Captures the video
+        capture = cv2.VideoCapture(f'{self.location}/{self.file}')
+
+        # Calculates the duration of each frame
+        fps = capture.get(cv2.CAP_PROP_FPS)
+        duration = max(1, int(round(1000 / fps)))
+
+        # Reads the first frame
+        process, source = capture.read()
+
+        # Converts each frame to an Image
+        while process:
+
+            # Converts the data into the correct colour type
+            image_array = cv2.cvtColor(source, cv2.COLOR_BGR2HSV) if self.mode == 'HSV' else cv2.cvtColor(source, cv2.COLOR_BGR2RGB)
+
+            # Creates the image
+            frames.append(Image(
+                self.file,
+                self.location,
+                self.mode,
+                Pim.fromarray(image_array)
+            ))
+
+            # Reads next frame
+            process, source = capture.read()
+
+        return frames, duration
 
     # Copies the animation
     def copy(self, frames: list[Image] = None) -> Animataion:
