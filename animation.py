@@ -126,7 +126,7 @@ class Animataion:
         # Converts the source to ensure consistent saving
         frames = [frame.source.convert('RGB') for frame in self.frames]
         frames[0].save(
-            fp = f'{location}/{file_name}.{self.file_extension}',
+            fp = f'{location}/{file_name}.gif',
             save_all = True,
             append_images = frames[1:],
             duration = self.duration,
@@ -136,7 +136,7 @@ class Animataion:
     def save_mp4(self, file_name: str = None, location: str = 'outputs') -> None:
 
         # Converts frames to RGB
-        frames = [frame.convert('RGB') for frame in self.frames]
+        frames = [frame.source.convert('RGB') for frame in self.frames]
 
         # Gets the data format identifier
         fourcc = cv2.VideoWriter_fourcc(*'mp4v') # Codec, an encoder/decoder
@@ -146,7 +146,7 @@ class Animataion:
 
         # Writes each frame
         for frame in frames:
-            source = cv2.cvtColor(array(frame.source), cv2.COLOR_RGB2BGR)
+            source = cv2.cvtColor(array(frame), cv2.COLOR_RGB2BGR)
             writer.write(source)
 
         writer.release()
