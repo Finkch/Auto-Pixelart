@@ -170,14 +170,15 @@ class Animataion:
         return anim
     
     # Gets the colours from the animation
-    def get_colours(self, mode: str = FIRST_FRAME) -> list:
+    def get_colours(self, mode: str = FIRST_FRAME, *args) -> list:
         match mode:
-            case 'f': return self.get_colours_first_frame()
-            case 'a': return self.get_colours_append()
+            case 'f': return self.get_colours_frame(*args)
+            case 'a': return self.get_colours_append(*args)
             case _:   raise ValueError(f'Invalid colour acquisition mode "{mode}"')
 
-    def get_colours_first_frame(self) -> list:
-        return self.frames[0].get_colours()
+    # Gets colours by looking at a given frame
+    def get_colours_frame(self, frame: int = 0) -> list:
+        return self.frames[frame].get_colours()
 
     def get_colours_append(self) -> list:
         pass
