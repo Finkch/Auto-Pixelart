@@ -107,21 +107,49 @@ class Animataion:
         )
     
     # Saves the animation
-    def save(self, file_name: str = None, location: str = 'outputs') -> None:
+    def save(self, file_name: str = None, extension: str = None, location: str = 'outputs') -> None:
         
         # Sets defaults
         if not file_name:
             file_name = self.file_name
+        if not extension:
+            extension = self.file_extension
 
+        match extension:
+            case 'gif': self.save_gif(file_name, location)
+            case 'mp4': self.save_mp4(file_name, location)
+            case _:     raise ValueError(f'Invalid image type to save "{extension}"')
+
+ 
+    def save_gif(self, file_name: str = None, location: str = 'outputs') -> None:
+        
         # Converts the source to ensure consistent saving
         frames = [frame.source.convert('RGB') for frame in self.frames]
         frames[0].save(
-            fp = f'{location}/{file_name}.gif', # Only supports gifs for now
+            fp = f'{location}/{file_name}.{self.file_extension}',
             save_all = True,
             append_images = frames[1:],
             duration = self.duration,
             loop = 0
         )
+
+    def save_mp4(self, file_name: str = None, location: str = 'outputs') -> None:
+
+        # Converts frames to RGB
+        frames = [frame.convert('RGB') for frame in self.frames]
+
+        # Gets the data format identifier
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v') # Codec, an encoder/decoder
+
+        # Creates the video writer
+        writer = cv2.VideoWriter(f'{location}/{file_name}.mp4', fourcc, 1000 / self.duration, self.frames[0].size)
+
+        # Writes each frame
+        for frame in frames:
+            source = cv2.cvtColor(array(frame.source), cv2.COLOR_RGB2BGR)
+            writer.write(source)
+
+        writer.release()
 
     # Shows the animation
     def show(self, title = None):
