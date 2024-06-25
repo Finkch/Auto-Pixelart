@@ -177,7 +177,7 @@ class Animataion:
             case _:   raise ValueError(f'Invalid colour acquisition mode "{mode}"')
 
     def get_colours_first_frame(self) -> list:
-        pass
+        return self.frames[0].get_colours()
 
     def get_colours_append(self) -> list:
         pass
