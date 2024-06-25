@@ -247,11 +247,11 @@ class Animataion:
         return self.get_colours_append(0, 1, -1)
     
     # Getters
-    def colours(self, mode: str = APPEND) -> ColourList:
-        return ColourList(self.get_colours(mode), self.mode)
+    def colours(self, mode: str = APPEND, *args) -> ColourList:
+        return ColourList(self.get_colours(mode, *args), self.mode)
     
-    def palette(self, mode: str = APPEND) -> Palette:
-        return Palette(self.get_colours(mode), self.mode)
+    def palette(self, mode: str = APPEND, *args) -> Palette:
+        return Palette(self.get_colours(mode, *args), self.mode)
 
 
 
