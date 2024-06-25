@@ -156,6 +156,20 @@ class Animataion:
 
         return self.copy(frames)
     
+    # Creates a custom palette based on each frame
+    def framewise_palettise(self, colours: int, palette_mode: str = DISSIMILAR, alpha: float = 0.5, max_distance = 3) -> Animataion:
+        
+        # Iterates over all frames
+        frames = []
+        for i in range(len(self.frames)):
+
+            # Creates the palette by looking at the frame and its neighbours
+            palette = self.palette(APPEND, i, alpha, max_distance).reduce(colours, palette_mode)
+            frames.append(self.frames[i].palettise(palette))
+
+        return self.copy(frames)
+            
+            
     # Creates pixel art
     def pixilate(self, width: int, palette: Palette) -> Animataion:
 
