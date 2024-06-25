@@ -146,7 +146,7 @@ class Image:
         self.location = location
 
     # Getters
-    def get_colours(self) -> tuple:
+    def get_colours(self) -> list:
         if self.mode == 'L':
             colours = self.source.getcolors(self.width * self.height)
             return [(colour[0], [colour[1]] * 3) for colour in colours]
