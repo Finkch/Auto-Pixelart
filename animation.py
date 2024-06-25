@@ -171,7 +171,7 @@ class Animataion:
         return anim
     
     # Gets the colours from the animation
-    def get_colours(self, mode: str = FIRST_FRAME, *args) -> list:
+    def get_colours(self, mode: str = APPEND, *args) -> list:
         match mode:
             case 'f': return self.get_colours_frame(*args)
             case 'a': return self.get_colours_append(*args)
@@ -191,7 +191,7 @@ class Animataion:
     #   if alpha is 1, then there is no dropoff.
     #   if alpha is 0, then only consider the central frame
     #   if max_distance is -1, then look over all frames.
-    def get_colours_append(self, frame: int = 0,  alpha: float = 0.5, max_distance: int = 5) -> list:
+    def get_colours_append(self, frame: int = 0,  alpha: float = 0.5, max_distance: int = -1) -> list:
         
         # Base cases
         if alpha == 0 or max_distance == 0:
