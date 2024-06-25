@@ -13,6 +13,9 @@ from display import display
 NEAREST = 'n'
 LANCZOS = 'l'
 
+FIRST_FRAME = 'f'
+APPEND      = 'a'
+
 class Animataion:
     def __init__(self, file: str, location: str = 'inputs', mode: str = 'RGB', source: list = None, duration: int = 100) -> None:
 
@@ -165,6 +168,19 @@ class Animataion:
         anim = anim.resize(self.width, NEAREST)
 
         return anim
+    
+    # Gets the colours from the animation
+    def get_colours(self, mode: str = FIRST_FRAME) -> list:
+        match mode:
+            case 'f': return self.get_colours_first_frame()
+            case 'a': return self.get_colours_append()
+            case _:   raise ValueError(f'Invalid colour acquisition mode "{mode}"')
+
+    def get_colours_first_frame(self) -> list:
+        pass
+
+    def get_colours_append(self) -> list:
+        pass
 
         
 
