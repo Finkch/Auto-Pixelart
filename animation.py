@@ -173,9 +173,11 @@ class Animataion:
     # Creates pixel art
     def pixilate(self, width: int, palette: Palette = None) -> Animataion:
 
+        anim = self
+
         # Applies the palette to every frame
         if palette:
-            anim = self.palettise(palette)
+            anim = anim.palettise(palette)
 
         # Downsizes to turn it into, y'know, pixel art
         anim = anim.resize(width, NEAREST)
