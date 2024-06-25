@@ -183,9 +183,64 @@ class Animataion:
         return self.frames[frame].get_colours()
 
     # Gets colours by adding thinner and thinner slices of temporally
-    # adjacent frames
-    def get_colours_append(self) -> list:
-        pass
+    # adjacent frames.
+    #   frame: the central frame of the process.
+    #   alpha: the exponential dropoff as distance to the central frame increases.
+    #   max_distance: look no further ahead/behind than the max distance.
+    #
+    #   if alpha is 1, then there is no dropoff.
+    #   if alpha is 0, then only consider the central frame
+    #   if max_distance is -1, then look over all frames.
+    def get_colours_append(self, frame: int = 0,  alpha: float = 0.5, max_distance: int = 5) -> list:
+        
+        # Base cases
+        if alpha == 0 or max_distance == 0:
+            return self.get_colours_frame(frame)
+
+        # Gets the sources to speed up the process
+        frames = [frame.source for frame in self.frames]
+
+        # Gets the base frame
+        collage = frames[frame].copy()
+        base_width   = collage.width
+        base_height  = collage.height
+
+        # Sets default value
+        if max_distance == -1:
+            max_distance = len(self.frames)
+
+        # Iterates over the set of frames
+        for i in range(max(0, frame - max_distance), min(len(self.frames), frame + max_distance)):
+
+            # Calculates the distance, thus the scaling factor
+            d = abs(frame - i)
+            s = alpha ** d
+
+            # Calculates the width
+            swidth = int(base_width * s)
+
+            # Two cases where we should not append the image.
+            #   Don't append the central frame, since we already have that.
+            #   If the scaled with is negligable, just go to the next iteration.
+            if i == frame or swidth == 0:
+                continue
+
+            # Scales the image
+            simage = frames[i].resize((swidth, base_height))
+
+            # Creates new image
+            step = Pim.new(self.mode, (collage.width + swidth, base_height))
+            
+            # Pastes the two images in, making a collage
+            step.paste(collage, (0, 0))
+            step.paste(simage,  (collage.width, 0))
+
+            # Updates the collage
+            collage = step
+
+        # Returns the collage's colours
+        return collage.getcolors(collage.width * collage.height)
+
 
     # Gets colour by making a collage of every frame
     def get_colour_every(self) -> list:
