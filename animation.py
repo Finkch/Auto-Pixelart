@@ -244,7 +244,7 @@ class Animataion:
 
     # Gets colour by making a collage of every frame
     def get_colour_every(self) -> list:
-        pass
+        return self.get_colours_append(0, 1, -1)
 
 
 
